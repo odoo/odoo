@@ -11,8 +11,7 @@
                     <group>
                         <group>
                             <field name="event_id"/>
-                            <field name="notification_type"/>
-                            <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                            <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                             <field name="mail_state"/>
                         </group>
                         <group>
@@ -47,8 +46,7 @@
         <field name="arch" type="xml">
             <tree string="Event Mail Schedulers">
                 <field name="event_id"/>
-                <field name="notification_type"/>
-                <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                 <field name="scheduled_date"/>
                 <field name="mail_count_done"/>
                 <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"

@@ -236,7 +236,6 @@ class TestEventData(TestEventInternalsCommon):
             'event_type_mail_ids': [
                 Command.clear(),
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_nbr': 77,
                     'interval_unit': 'days',
                     'interval_type': 'after_event',
@@ -254,7 +253,6 @@ class TestEventData(TestEventInternalsCommon):
             'event_mail_ids': [
                 Command.clear(),
                 Command.create({
-                    'notification_type': 'mail',
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription'),
