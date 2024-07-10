@@ -5,11 +5,11 @@
             <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}" />
             <span t-esc="currentLanguage.display_name" class="ms-3"></span>
         </div>
-        <div t-if="selfOrder.config.self_ordering_image_home_ids.length > 0" t-on-click="start" class="d-flex flex-column vh-100 align-items-center overflow-hidden">
+        <div t-if="selfOrder.config._self_ordering_image_home_ids.length > 0" t-on-click="start" class="d-flex flex-column vh-100 align-items-center overflow-hidden">
             <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide w-100 h-100" data-bs-ride="true">
                 <div class="carousel-inner h-100 w-100">
                     <div
-                        t-foreach="selfOrder.config.self_ordering_image_home_ids"
+                        t-foreach="selfOrder.config._self_ordering_image_home_ids"
                         t-as="image"
                         t-key="image.id"
                         t-attf-class="carousel-item object-fit-cover h-100 w-100 {{activeImage}}"
