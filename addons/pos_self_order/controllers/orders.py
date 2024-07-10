@@ -135,7 +135,7 @@ class PosSelfOrderController(http.Controller):
         if not status:
             raise BadRequest("Something went wrong")
 
-        return self._generate_return_values(order, pos_config)
+        return {'order': order_sudo.read(order_sudo._load_pos_data_fields(pos_config.id), load=False), 'payment_status': status}
 
     @http.route('/pos-self-order/change-printer-status', auth='public', type='json', website=True)
     def change_printer_status(self, access_token, has_paper):
