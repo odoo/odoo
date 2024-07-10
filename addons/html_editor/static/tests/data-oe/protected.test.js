@@ -511,7 +511,54 @@ test("moving an unprotected node at a protected location, only add should be ign
     );
 });
 
-test("protected plugin has access to all mutation records to compute the cloneTree", async () => {
+test("sequentially added nodes under a protecting parent are correctly protected", async () => {
+    const { editor, el, plugins } = await setupEditor(
+        unformat(`
+            <div data-oe-protected="true">
+                <div class="a">
+                    <div class="b"></div>
+                </div>
+            </div>
+        `)
+    );
+    const protectedPlugin = plugins.get("protected_node");
+    let steps = editor.shared.getHistorySteps();
+    expect(steps.length).toBe(1);
+    const protecting = el.querySelector("[data-oe-protected='true']");
+    const element = editor.document.createElement("div");
+    const node = editor.document.createTextNode("a");
+    protecting.prepend(element);
+    element.prepend(node);
+    editor.dispatch("ADD_STEP");
+    expect(protectedPlugin.protectedNodes.has(element)).toBe(true);
+    expect(protectedPlugin.protectedNodes.has(node)).toBe(true);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div>a</div>
+                <div class="a">
+                    <div class="b"></div>
+                </div>
+            </div>
+        `)
+    );
+    node.remove();
+    editor.dispatch("ADD_STEP");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <div data-oe-protected="true" contenteditable="false">
+                <div></div>
+                <div class="a">
+                    <div class="b"></div>
+                </div>
+            </div>
+        `)
+    );
+    steps = editor.shared.getHistorySteps();
+    expect(steps.length).toBe(1);
+});
+
+test("protected plugin is robust against other plugins which can filter mutations", async () => {
     class FilterPlugin extends Plugin {
         static name = "filter_plugin";
         static resources(p) {
