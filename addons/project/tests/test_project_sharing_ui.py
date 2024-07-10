@@ -66,3 +66,23 @@ class TestProjectSharingUi(HttpCase):
             })],
         })
         self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
+
+    def test_03_project_sharing(self):
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'access_mode': 'edit',
+            'res_model': 'project.project',
+            'res_id': self.project_portal.id,
+            'partner_ids': [
+                Command.link(self.partner_portal.id),
+            ],
+        })
+        project_share_wizard.action_send_mail()
+
+        self.project_portal.write({
+            'task_ids': [Command.create({
+                'name': "Test Project Sharing",
+                'stage_id': self.project_portal.type_ids.filtered(lambda stage: stage.sequence == 10)[:1].id,
+            })],
+            'allow_milestones': False,
+        })
+        self.start_tour("/my/projects", 'portal_project_sharing_tour_with_disallowed_milestones', login='georges1')
