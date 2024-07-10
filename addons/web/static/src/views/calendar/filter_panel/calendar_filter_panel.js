@@ -43,6 +43,7 @@ export class CalendarFilterPanel extends Component {
                 {
                     placeholder: _t("Loading..."),
                     options: (request) => this.loadSource(section, request),
+                    optionTemplate: "web.CalendarFilterPanel.autocomplete.options",
                 },
             ],
             onSelect: (option, params = {}) => {
@@ -72,12 +73,14 @@ export class CalendarFilterPanel extends Component {
         const options = records.map((result) => ({
             value: result[0],
             label: result[1],
+            model: resModel,
         }));
 
         if (records.length > 7) {
             options.push({
                 label: _t("Search More..."),
                 action: () => this.onSearchMore(section, resModel, domain, request),
+                classList: "o_calendar_dropdown_option",
             });
         }
 
@@ -107,16 +110,23 @@ export class CalendarFilterPanel extends Component {
             });
         }
         const title = _t("Search: %s", section.label);
-        this.addDialog(SelectCreateDialog, {
+        const dialogProps = {
             title,
             noCreate: true,
-            multiSelect: false,
+            multiSelect: true,
             resModel,
             context: {},
             domain,
-            onSelected: ([resId]) => this.props.model.createFilter(section.fieldName, resId),
+            onSelected: (resId) => this.props.model.createFilter(section.fieldName, resId),
             dynamicFilters,
-        });
+        };
+
+        const updatedProps = this.updateSelectCreateDialogProps(dialogProps);
+        this.addDialog(SelectCreateDialog, updatedProps);
+    }
+
+    updateSelectCreateDialogProps(props) {
+        return props;
     }
 
     get nextFilterId() {

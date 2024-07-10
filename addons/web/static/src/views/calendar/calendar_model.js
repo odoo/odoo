@@ -156,17 +156,24 @@ export class CalendarModel extends Model {
 
     async createFilter(fieldName, filterValue) {
         const info = this.meta.filtersInfo[fieldName];
-        if (info && info.writeFieldName && info.writeResModel) {
+        if (!info || !info.writeFieldName || !info.writeResModel) {
+            return;
+        }
+
+        const normalizedFilterValue = Array.isArray(filterValue) ? filterValue : [filterValue];
+        const dataArray = normalizedFilterValue.map(value => {
             const data = {
                 user_id: user.userId,
-                [info.writeFieldName]: filterValue,
+                [info.writeFieldName]: value
             };
             if (info.filterFieldName) {
                 data[info.filterFieldName] = true;
             }
-            await this.orm.create(info.writeResModel, [data]);
-            await this.load();
-        }
+            return data;
+        });
+
+        await this.orm.create(info.writeResModel, dataArray);
+        await this.load();
     }
     async createRecord(record) {
         const rawRecord = this.buildRawRecord(record);
