@@ -33,14 +33,14 @@ class PickingType(models.Model):
         check_company=True, copy=False)
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
-        'stock.location', 'Default Source Location', compute='_compute_default_location_src_id',
+        'stock.location', 'Source Location', compute='_compute_default_location_src_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
     default_location_dest_id = fields.Many2one(
-        'stock.location', 'Default Destination Location', compute='_compute_default_location_dest_id',
+        'stock.location', 'Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
-    default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
+    default_location_return_id = fields.Many2one('stock.location', 'Return Location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",
         domain="[('return_location', '=', True)]")
     code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
@@ -61,7 +61,7 @@ class PickingType(models.Model):
         compute='_compute_use_existing_lots', store=True, readonly=False,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     print_label = fields.Boolean(
-        'Print Label', compute="_compute_print_label", store=True, readonly=False,
+        'Generate Shipping Labels', compute="_compute_print_label", store=True, readonly=False,
         help="Check this box if you want to generate shipping label in this operation.")
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(
