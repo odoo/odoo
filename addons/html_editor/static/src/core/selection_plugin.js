@@ -232,7 +232,7 @@ export class SelectionPlugin extends Plugin {
                 commonAncestorContainer: this.editable,
                 isCollapsed: true,
                 direction: DIRECTIONS.RIGHT,
-                textContent: "",
+                textContent: () => "",
                 inEditable,
             };
         } else {
@@ -274,7 +274,7 @@ export class SelectionPlugin extends Plugin {
                 commonAncestorContainer: range.commonAncestorContainer,
                 isCollapsed: range.collapsed,
                 direction,
-                textContent: range.collapsed ? "" : selection.toString(),
+                textContent: () => range.collapsed ? "" : selection.toString(),
                 inEditable,
             };
         }
