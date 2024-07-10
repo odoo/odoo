@@ -580,6 +580,18 @@ test.todo("should remove multiple color (6)", async () => {
             '<div>ab<font style="background: blue">c</font>[de]<font class="bg-o-color-1">f</font>gh</div>',
     });
 });
+test("undo remove format should return the element to it's original state", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><strong><em><u><s><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);">[sdsdsdsds]</font></s></u></em></strong></p>',
+        stepFunction: (editor) => {
+            editor.dispatch("FORMAT_REMOVE_FORMAT");
+            editor.dispatch("HISTORY_UNDO");
+        },
+        contentAfter:
+            '<p><strong><em><u><s><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);">[sdsdsdsds]</font></s></u></em></strong></p>',
+    });
+});
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");

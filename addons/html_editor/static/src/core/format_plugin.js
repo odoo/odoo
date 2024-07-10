@@ -134,8 +134,12 @@ export class FormatPlugin extends Plugin {
             if (!formatsSpecs[format].removeStyle || !this.hasSelectionFormat(format)) {
                 continue;
             }
-            this.formatSelection(format, { applyStyle: false });
+            this._formatSelection(format, { applyStyle: false });
         }
+        for (const callback of this.resources["removeFormat"] || []) {
+            callback();
+        }
+        this.dispatch("ADD_STEP");
     }
 
     /**
@@ -169,7 +173,13 @@ export class FormatPlugin extends Plugin {
         return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
     }
 
-    formatSelection(formatName, { applyStyle, formatProps } = {}) {
+    formatSelection(...args) {
+        if (this._formatSelection(...args)) {
+            this.dispatch("ADD_STEP");
+        }
+    }
+
+    _formatSelection(formatName, { applyStyle, formatProps } = {}) {
         // note: does it work if selection is in opposite direction?
         const selection = this.shared.splitSelection();
         if (typeof applyStyle === "undefined") {
@@ -331,7 +341,7 @@ export class FormatPlugin extends Plugin {
                 };
             }
             this.shared.setSelection(newSelection, { normalize: false });
-            this.dispatch("ADD_STEP");
+            return true;
         }
     }
 }
