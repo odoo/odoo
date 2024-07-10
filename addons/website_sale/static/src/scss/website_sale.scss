@@ -818,3 +818,7 @@ a.no-decoration {
         pointer-events: none;
     }
 }
+
+.accordion-button:not(.collapsed).bg-transparent::after {
+    background-image: escape-svg($accordion-button-icon);
+}

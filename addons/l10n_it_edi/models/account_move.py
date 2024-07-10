@@ -455,7 +455,7 @@ class AccountMove(models.Model):
             if tax_ids_with_tax_scope:
                 scopes += tax_ids_with_tax_scope.mapped('tax_scope')
             else:
-                scopes.append(line.product_id and line.product_id.type or 'consu')
+                scopes.append(line.product_id and line.product_id.type == 'service' and 'service' or 'consu')
 
         if set(scopes) == {'consu', 'service'}:
             return "both"
