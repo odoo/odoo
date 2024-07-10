@@ -446,7 +446,13 @@ class HrAttendance(models.Model):
             return True
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
-        return bool(demo_tag)
+        if demo_tag:
+            return True
+        return bool(self.env['ir.module.module'].search_count([
+            '&',
+                ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
+                ('demo', '=', True)
+        ]))
 
     def _load_demo_data(self):
         if self.has_demo_data():
@@ -581,7 +587,7 @@ class HrAttendance(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'message': _("t'as pas les droits ptdr"),
+                        'message': _("You don't have the rights to execute that action."),
                         'type': 'info',
                     }
             }
