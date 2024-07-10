@@ -100,9 +100,10 @@ class PosSession(models.Model):
             products = self.env['product.product'].search_read([('id', 'in', products)], fields=product_params['fields'], load=False)
             self._process_pos_ui_product_product(products)
 
-            result['custom']['pos_special_products_ids'].extend(
-                [product.id for product in reward_products if product.id not in [p["id"] for p in result['data']['product.product']]]
-            )
+            if not only_data:
+                result['custom']['pos_special_products_ids'].extend(
+                    [product.id for product in reward_products if product.id not in [p["id"] for p in result['data']['product.product']]]
+                )
             result['data']['product.product'].extend(products)
 
         # adapt loyalty
