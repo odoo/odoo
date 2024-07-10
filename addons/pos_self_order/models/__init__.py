@@ -2,6 +2,7 @@
 
 from . import ir_binary
 from . import ir_http
+from . import ir_attachment
 from . import pos_category
 from . import pos_config
 from . import pos_order
