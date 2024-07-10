@@ -141,7 +141,7 @@ export class Base {
         this.model.delete(this);
     }
     serialize(orm = false) {
-        const serializedData = this.model.serialize(this);
+        const serializedData = this.model.serialize(this, orm);
 
         if (orm) {
             const fields = this.model.modelFields;
@@ -585,14 +585,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 }
                 return ids.map((id) => records[model][id]);
             },
-            serialize(record) {
+            serialize(record, orm) {
                 const result = {};
                 for (const name in fields) {
                     const field = fields[name];
                     if (field.type === "many2one") {
-                        result[name] = record[name] ? record[name].id : null;
+                        result[name] = record[name]?.id || (!orm && record.raw[name]) || null;
                     } else if (X2MANY_TYPES.has(field.type)) {
-                        result[name] = [...record[name]].map((record) => record.id);
+                        const ids = [...record[name]].map((record) => record.id);
+                        result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
                     } else {
                         result[name] = record[name] || null;
                     }
