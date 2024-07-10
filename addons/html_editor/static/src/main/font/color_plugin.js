@@ -43,6 +43,7 @@ export class ColorPlugin extends Plugin {
             ],
         },
         onSelectionChange: p.updateSelectedColor.bind(p),
+        removeFormat: p.removeAllColor.bind(p),
     });
 
     setup() {
@@ -87,9 +88,6 @@ export class ColorPlugin extends Plugin {
             case "COLOR_RESET_PREVIEW":
                 this.previewableApplyColor.revert();
                 this.updateSelectedColor();
-                break;
-            case "FORMAT_REMOVE_FORMAT":
-                this.removeAllColor();
                 break;
         }
     }
