@@ -8,6 +8,7 @@ export class Attachment extends Record {
     /** @type {import("@mail/core/store_service").Store} */
     _store;
     accessToken;
+    author;
     checksum;
     extension;
     filename;
@@ -24,13 +25,26 @@ export class Attachment extends Record {
     uploading;
     /** @type {import("@mail/core/message_model").Message} */
     message;
+    /** @type {string} */
+    isSmallImg;
 
     /** @type {import("@mail/core/thread_model").Thread} */
     get originThread() {
         return this._store.threads[this.originThreadLocalId];
     }
 
+    get inChatter() {
+        return this.originThread?.type === "chatter";
+    }
+
     get isDeletable() {
+        if (this.inChatter) {
+            if (this._store.user?.isAdmin) {
+                return true;
+            } else if (this.author?.partnerId !== this._store.user.id) {
+                return false;
+            }
+        }
         if (this.message && this.originThread?.model === "discuss.channel") {
             return this.message.editable;
         }

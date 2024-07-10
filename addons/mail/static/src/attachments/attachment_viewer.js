@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Component, useRef, useState } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -20,6 +20,7 @@ export class AttachmentViewer extends Component {
         useAutofocus();
         this.imageRef = useRef("image");
         this.zoomerRef = useRef("zoomer");
+        this.attachmentService = useService("mail.attachment");
 
         this.isDragging = false;
         this.dragStartX = 0;
@@ -233,5 +234,10 @@ export class AttachmentViewer extends Component {
                     </body>
                 </html>`);
         printWindow.document.close();
+    }
+
+    onDeleteAttachement() {
+        this.attachmentService.delete(this.state.attachment);
+        this.props.close();
     }
 }
