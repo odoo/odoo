@@ -146,9 +146,14 @@ export function useMessageActions() {
         .map(([id, action]) => transformAction(component, id, action));
     const state = useState({
         get actions() {
-            return transformedActions
+            const actions = transformedActions
                 .filter((action) => action.condition)
                 .sort((a1, a2) => a1.sequence - a2.sequence);
+            if (actions.length > 0) {
+                actions.at(0).isFirst = true;
+                actions.at(-1).isLast = true;
+            }
+            return actions;
         },
     });
     return state;
