@@ -51,8 +51,8 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
-            ProductScreen.addOrderline("Desk Pad", "1", "2"),
-            ProductScreen.totalAmountIs("2.0"),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.totalAmountIs("1.98"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains(2, "Pos Employee2", false),
 
@@ -60,11 +60,15 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.clickLockButton(),
             PosHr.login("Pos Employee1", "2580"),
             TicketScreen.clickNewTicket(),
-            ProductScreen.addOrderline("Desk Pad", "1", "4"),
-            ProductScreen.totalAmountIs("4.0"),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.totalAmountIs("1.98"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains(2, "Pos Employee2", false),
             TicketScreen.nthRowContains(3, "Pos Employee1", false),
+
+            // Cash in/out should be accessible for all users.
+            Chrome.clickMenuOption("Cash In/Out"),
+            Dialog.discard(),
 
             // order for admin
             PosHr.clickCashierName(),
@@ -75,10 +79,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
-
-            // Close register should be accessible by the admin user.
-            Chrome.clickMenuOption("Cash In/Out"),
-            Dialog.discard(),
 
             // Close register should be accessible by the admin user.
             Chrome.clickMenuOption("Close Register"),

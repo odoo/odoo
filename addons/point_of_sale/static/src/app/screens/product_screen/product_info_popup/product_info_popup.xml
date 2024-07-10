@@ -97,7 +97,7 @@
             <t t-set-slot="footer">
                 <div class="d-flex w-100 justify-content-start gap-2">
                     <button class="btn btn-primary" t-on-click="props.close">Ok</button>
-                    <button class="btn btn-secondary" t-on-click="editProduct">Edit</button>
+                    <button t-if="allowProductEdition" class="btn btn-secondary" t-on-click="editProduct">Edit</button>
                 </div>
             </t>
         </Dialog>
