@@ -1040,6 +1040,8 @@ class ProductCategory(models.Model):
              "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product.",
         tracking=True,
     )
+    parent_route_ids = fields.Many2many(
+        'stock.route', string='Parent Routes', compute='_compute_parent_route_ids')
     total_route_ids = fields.Many2many(
         'stock.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
@@ -1051,14 +1053,20 @@ class ProductCategory(models.Model):
              "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
     filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
 
-    def _compute_total_route_ids(self):
+    @api.depends('parent_id')
+    def _compute_parent_route_ids(self):
         for category in self:
             base_cat = category
-            routes = category.route_ids
+            routes = self.env['stock.route']
             while base_cat.parent_id:
                 base_cat = base_cat.parent_id
                 routes |= base_cat.route_ids
-            category.total_route_ids = routes
+            category.parent_route_ids = routes - category.route_ids
+
+    @api.depends('route_ids', 'parent_route_ids')
+    def _compute_total_route_ids(self):
+        for category in self:
+            category.total_route_ids = category.route_ids | category.parent_route_ids
 
     def _search_filter_for_stock_putaway_rule(self, operator, value):
         assert operator == '='
