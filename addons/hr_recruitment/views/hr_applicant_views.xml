@@ -65,7 +65,7 @@
             <field name="partner_mobile_sanitized" invisible="1"/>
             <field name="emp_is_active" invisible="1"/>
             <header>
-                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
+                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active" data-hotkey="d"/>
                 <button string="Restore" name="toggle_active" type="object" invisible="active" data-hotkey="x"/>
