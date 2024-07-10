@@ -1481,7 +1481,7 @@ describe("save image", () => {
             expect(true).toBe(false);
             throw new Error("web_save should only be called through sendBeacon");
         });
-        onRpc(`/web_editor/modify_image/${imageRecord.id}`, async (request) => {
+        onRpc(`/html_editor/modify_image/${imageRecord.id}`, async (request) => {
             if (modifyImageCount === 0) {
                 const { params } = request.json();
                 expect(params.res_model).toBe("partner");
@@ -1544,7 +1544,7 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/web_editor/attachment/add_data", (request) => {
+        onRpc("/html_editor/attachment/add_data", (request) => {
             const { res_id, res_model } = request.json().params;
             expect.step(`add_data: ${res_model} ${res_id}`);
             return {
@@ -1593,7 +1593,7 @@ describe("save image", () => {
         ];
 
         const def = new Deferred();
-        onRpc("/web_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/attachment/add_data", async (request) => {
             const { res_id, res_model } = request.json().params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
             await def;
@@ -1661,7 +1661,7 @@ describe("save image", () => {
         ];
 
         const def = new Deferred();
-        onRpc("/web_editor/attachment/add_data", async (request) => {
+        onRpc("/html_editor/attachment/add_data", async (request) => {
             const { res_id, res_model } = request.json().params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
             await def;
@@ -1724,7 +1724,7 @@ describe("save image", () => {
                 txt: "<p class='test_target'><br></p>",
             },
         ];
-        onRpc("/web_editor/attachment/add_data", (request) => {
+        onRpc("/html_editor/attachment/add_data", (request) => {
             const { res_id, res_model } = request.json().params;
             expect.step(`add_data: ${res_model} ${res_id}`);
             return {
