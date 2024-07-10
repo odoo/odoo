@@ -451,7 +451,12 @@ patch(Order.prototype, {
                 paymentRewards.push(claimedReward);
             } else if (claimedReward.reward.reward_type === "product") {
                 productRewards.push(claimedReward);
-            } else if (!otherRewards.some(reward => reward.reward_identifier_code === claimedReward.reward_identifier_code)) {
+            } else if (
+                !otherRewards.some(
+                    (reward) =>
+                        reward.reward_identifier_code === claimedReward.reward_identifier_code
+                )
+            ) {
                 otherRewards.push(claimedReward);
             }
             this.orderlines.remove(line);
@@ -718,10 +723,10 @@ patch(Order.prototype, {
         if (program.is_nominative && !this.get_partner()) {
             return false;
         }
-        if (program.date_from && program.date_from.startOf('day') > DateTime.now()) {
+        if (program.date_from && program.date_from.startOf("day") > DateTime.now()) {
             return false;
         }
-        if (program.date_to && program.date_to.endOf('day') < DateTime.now()) {
+        if (program.date_to && program.date_to.endOf("day") < DateTime.now()) {
             return false;
         }
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
@@ -746,9 +751,7 @@ patch(Order.prototype, {
         const orderLines = this.get_orderlines();
         const linesPerRule = {};
         for (const line of orderLines) {
-            const reward = line.reward_id
-              ? this.pos.reward_by_id[line.reward_id]
-              : undefined;
+            const reward = line.reward_id ? this.pos.reward_by_id[line.reward_id] : undefined;
             const isDiscount = reward && reward.reward_type === "discount";
             const rewardProgram = reward && reward.program_id;
             // Skip lines for automatic discounts.
@@ -784,13 +787,15 @@ patch(Order.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(), 0
+                    (sum, line) => sum + line.get_price_with_tax(),
+                    0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(), 0
+                    (sum, line) => sum + line.get_price_without_tax(),
+                    0
                 );
-                const amountCheck = (rule.minimum_amount_tax_mode === 'incl' && amountWithTax)
-                    || amountWithoutTax;
+                const amountCheck =
+                    (rule.minimum_amount_tax_mode === "incl" && amountWithTax) || amountWithoutTax;
                 if (rule.minimum_amount > amountCheck) {
                     continue;
                 }
@@ -1405,7 +1410,10 @@ patch(Order.prototype, {
         }
         let freeQty;
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
@@ -1462,7 +1470,10 @@ patch(Order.prototype, {
     },
     _computePotentialFreeProductQty(reward, product, remainingPoints) {
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
                 const line = this.get_orderlines().find(
                     (line) => line.reward_product_id === product.id
                 );
@@ -1548,11 +1559,14 @@ patch(Order.prototype, {
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
-            if (rule.program_id.date_from && this.date_order < rule.program_id.date_from.startOf("day")) {
+            if (
+                rule.program_id.date_from &&
+                this.date_order < rule.program_id.date_from.startOf("day")
+            ) {
                 return _t("That promo code program is not yet valid.");
             }
             if (rule.program_id.date_to && this.date_order > rule.program_id.date_to.endOf("day")) {
-                return _t("That promo code program is expired.")
+                return _t("That promo code program is expired.");
             }
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
@@ -1603,7 +1617,7 @@ patch(Order.prototype, {
                     payload.program_id,
                     payload.partner_id,
                     payload.points,
-                    payload.expiration_date,
+                    payload.expiration_date
                 );
                 this.pos.couponCache[coupon.id] = coupon;
                 this.codeActivatedCoupons.push(coupon);
