@@ -101,7 +101,7 @@ export class LinkPastePlugin extends Plugin {
     removeFullySelectedLink(selection) {
         // Replace entire link if its label is fully selected.
         const link = closestElement(selection.anchorNode, "a");
-        if (link && cleanZWChars(selection.textContent) === cleanZWChars(link.innerText)) {
+        if (link && cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText)) {
             const start = leftPos(link);
             link.remove();
             // @doto @phoenix do we still want normalize:false?

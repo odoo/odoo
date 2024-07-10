@@ -190,7 +190,7 @@ export class ClipboardPlugin extends Plugin {
         const dataHtmlElement = this.document.createElement("data");
         dataHtmlElement.append(clonedContents);
         const odooHtml = dataHtmlElement.innerHTML;
-        const odooText = selection.textContent;
+        const odooText = selection.textContent();
         ev.clipboardData.setData("text/plain", odooText);
         ev.clipboardData.setData("text/html", odooHtml);
         ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
