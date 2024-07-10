@@ -368,14 +368,14 @@ test("normalize should set contenteditable attribute on protecting nodes and tha
     expect(lastStep.mutations.length).toBe(3);
     expect(lastStep.mutations[0].type).toBe("add");
     expect(lastStep.mutations[1].type).toBe("attributes");
-    expect(lastStep.mutations[1].value).toBe("false");
+    expect(lastStep.mutations[1].value).toBe("true");
     expect(historyPlugin.idToNodeMap.get(lastStep.mutations[1].id)).toBe(
-        el.querySelector(`[data-oe-protected="true"]`)
+        el.querySelector(`[data-oe-protected="false"]`)
     );
     expect(lastStep.mutations[2].type).toBe("attributes");
-    expect(lastStep.mutations[2].value).toBe("true");
+    expect(lastStep.mutations[2].value).toBe("false");
     expect(historyPlugin.idToNodeMap.get(lastStep.mutations[2].id)).toBe(
-        el.querySelector(`[data-oe-protected="false"]`)
+        el.querySelector(`[data-oe-protected="true"]`)
     );
     expect(getContent(el)).toBe(
         unformat(`
