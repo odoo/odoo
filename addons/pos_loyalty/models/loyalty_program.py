@@ -79,7 +79,7 @@ class LoyaltyProgram(models.Model):
         res = {k['program_id']: k['sum'] for k in res}
 
         for rec in self:
-            rec.pos_order_count = res[rec.id] or 0
+            rec.pos_order_count = res.get(rec.id) or 0
 
     def _compute_total_order_count(self):
         super()._compute_total_order_count()
