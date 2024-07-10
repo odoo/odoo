@@ -34,6 +34,12 @@ export class PartnerList extends Component {
         });
         useHotkey("enter", () => this.onEnter());
     }
+    async editPartner(p) {
+        const partner = await this.pos.editPartner(p);
+        if (partner) {
+            this.clickPartner(partner);
+        }
+    }
     async onEnter() {
         if (!this.state.query) {
             return;
