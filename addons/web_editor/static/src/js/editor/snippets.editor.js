@@ -377,7 +377,7 @@ var SnippetEditor = Widget.extend({
      * @returns {boolean}
      */
     isTargetVisible: function () {
-        return (this.$target[0].dataset.invisible !== '1');
+        return (this.$target[0].classList.contains("o_snippet_override_invisible"));
     },
     /**
      * Removes the associated snippet from the DOM and destroys the associated
@@ -4619,7 +4619,6 @@ class SnippetsMenu extends Component {
             const isMobilePreview = weUtils.isMobileView(this.$body[0]);
             for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
                 const isMobileHidden = invisibleOverrideEl.classList.contains("o_snippet_mobile_invisible");
-                invisibleOverrideEl.classList.remove('o_snippet_override_invisible');
                 if (isMobilePreview === isMobileHidden) {
                     invisibleOverrideEl.dataset.invisible = '1';
                 } else {
