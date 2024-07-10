@@ -53,14 +53,16 @@ export class ToolbarPlugin extends Plugin {
     handleSelectionChange(selection) {
         this.updateToolbarVisibility(selection);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
-            const selectedNodes = this.shared.getSelectedNodes();
-            if (
-                selectedNodes.length &&
-                selectedNodes[0].tagName &&
-                selectedNodes.every((el) => el.tagName === selectedNodes[0].tagName)
-            ) {
-                this.state.namespace = selectedNodes[0].tagName;
-            } else {
+            const selectedNodes = this.shared.getTraversedNodes();
+            let foundNamespace = false;
+            for (let i = 0; i < this.resources.toolbarNamespace.length && !foundNamespace; i++) {
+                const namespace = this.resources.toolbarNamespace[i];
+                if (namespace.isApplied(selectedNodes)) {
+                    this.state.namespace = namespace.id;
+                    foundNamespace = true;
+                }
+            }
+            if (!foundNamespace) {
                 this.state.namespace = undefined;
             }
             this.updateButtonsStates(selection);

@@ -52,7 +52,7 @@ export class MediaPlugin extends Plugin {
             toolbarGroup: {
                 id: "replace_image",
                 sequence: 29,
-                namespace: "IMG",
+                namespace: "image",
                 buttons: [
                     {
                         id: "replace_image",

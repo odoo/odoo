@@ -278,36 +278,44 @@ test("toolbar behave properly if selection has no range", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
-test("toolbar shows namespaced button groups when the namespaced element is selected", async () => {
-    await setupEditor(`
-        <img class="img-fluid" src="/web/static/img/logo.png">
-    `);
-    await click("img");
+test("toolbar correctly show namespace button group and stop showing when namespace change", async () => {
+    class TestPlugin extends Plugin {
+        static name = "TestPlugin";
+        static resources(p) {
+            return {
+                toolbarNamespace: [
+                    {
+                        id: "aNamespace",
+                        isApplied: (nodeList) => {
+                            return !!nodeList.find((node) => node.tagName === "DIV");
+                        },
+                    },
+                ],
+                toolbarGroup: [
+                    {
+                        id: "test_group",
+                        sequence: 24,
+                        namespace: "aNamespace",
+                        buttons: [
+                            {
+                                id: "test_btn",
+                                name: "Test Button",
+                                icon: "fa-square",
+                            },
+                        ],
+                    },
+                ],
+            };
+        }
+    }
+    const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
+        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+    });
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='image_shape']").toHaveCount(1);
-});
-
-test("toolbar stop showing namespaced button groups when namespaced element is unselected", async () => {
-    const { el } = await setupEditor(`
-        <div>
-            <p>Foo</p>
-            <img class="img-fluid" src="/web/static/img/logo.png">
-        </div>
-    `);
-    await click("img");
-    await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='image_shape']").toHaveCount(1);
-    setContent(
-        el,
-        `
-        <div>
-            <p>[Foo]</p>
-            <img class="img-fluid" src="/web/static/img/logo.png">
-        </div>
-    `
-    );
+    expect(".btn-group[name='test_group']").toHaveCount(1);
+    setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
     await animationFrame();
-    expect(".btn-group[name='image_shape']").toHaveCount(0);
+    expect(".btn-group[name='test_group']").toHaveCount(0);
 });
 
 test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
@@ -319,7 +327,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
                     {
                         id: "test_group",
                         sequence: 24,
-                        namespace: "IMG",
+                        namespace: "image",
                         buttons: [
                             {
                                 id: "test_btn",
@@ -339,7 +347,7 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
     await setupEditor(
         `
         <div>
-            <p>Foo</p>
+            <p>[Foo]</p>
             <img class="img-fluid" src="/web/static/img/logo.png">
         </div>
     `,
@@ -347,9 +355,10 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
         }
     );
+    await waitFor(".o-we-toolbar");
     expect.verifySteps([]);
     click("img");
-    await waitFor(".o-we-toolbar");
+    await animationFrame();
     expect.verifySteps(["image format evaluated"]);
 });
 
