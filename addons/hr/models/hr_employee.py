@@ -13,7 +13,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import format_date
+from odoo.tools import convert, format_date
 
 
 class HrEmployeePrivate(models.Model):
@@ -654,6 +654,12 @@ class HrEmployeePrivate(models.Model):
             ('widower', 'Widower'),
             ('divorced', 'Divorced')
         ]
+
+    def _load_scenario(self):
+        demo_tag = self.env.ref('hr_appraisal.employee_category_demo', raise_if_not_found=False)
+        if demo_tag:
+            return
+        convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
 
     # ---------------------------------------------------------
     # Business Methods

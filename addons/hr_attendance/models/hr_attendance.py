@@ -445,16 +445,19 @@ class HrAttendance(models.Model):
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
             return True
         # This record only exists if the scenario has been already launched
-        demo_tag = self.env.ref('hr_attendance.employee_category_demo', raise_if_not_found=False)
+        demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
         return bool(demo_tag)
 
     def _load_demo_data(self):
+        if self.has_demo_data():
+            return
+        self.env['hr.employee']._load_scenario()
         # Load employees, schedules, departments and partners
-        convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance_scenario.xml', None, mode='init', kind='data')
 
-        employee_sj = self.env.ref('hr_attendance.employee_sj')
-        employee_mw = self.env.ref('hr_attendance.employee_mw')
-        employee_eg = self.env.ref('hr_attendance.employee_eg')
+        employee_sj = self.env.ref('hr.employee_sj')
+        employee_mw = self.env.ref('hr.employee_mw')
+        employee_eg = self.env.ref('hr.employee_eg')
 
         # Retrieve employee from xml file
         # Calculate attendances records for the previous month and the current until today
@@ -573,6 +576,15 @@ class HrAttendance(models.Model):
         }
 
     def action_try_kiosk(self):
+        if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
+            return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'message': _("t'as pas les droits ptdr"),
+                        'type': 'info',
+                    }
+            }
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
