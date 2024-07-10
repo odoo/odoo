@@ -20,6 +20,10 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "click",
         },
         {
+            trigger: "button.o_switch_view.o_list",
+            run: "click",
+        },
+        {
             trigger: ".o_data_cell:contains(Visitor operator)",
             run: "click",
         },
