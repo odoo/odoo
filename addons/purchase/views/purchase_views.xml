@@ -234,7 +234,6 @@
                                         name="product_id"
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                         required="not display_type"
-                                        width="35%"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
