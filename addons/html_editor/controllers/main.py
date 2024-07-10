@@ -5,14 +5,52 @@ from base64 import b64decode
 from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
+import requests
+from os.path import join as opj
 
-from odoo import _, http, tools
+from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError
 from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.tools.misc import file_open
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+
+DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
+
+# Regex definitions to apply speed modification in SVG files
+# Note : These regex patterns are duplicated on the server side for
+# background images that are part of a CSS rule "background-image: ...". The
+# client-side regex patterns are used for images that are part of an
+# "src" attribute with a base64 encoded svg in the <img> tag. Perhaps we should
+# consider finding a solution to define them only once? The issue is that the
+# regex patterns in Python are slightly different from those in JavaScript.
+
+CSS_ANIMATION_RULE_REGEX = (
+        r"(?P<declaration>animation(-duration)?: .*?)"
+        + r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
+        + r"(?P<unit>ms|s)"
+        + r"(?P<separator>\s|;|\"|$)"
+)
+SVG_DUR_TIMECOUNT_VAL_REGEX = (
+        r"(?P<attribute_name>\sdur=\"\s*)"
+        + r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
+        + r"(?P<unit>h|min|ms|s)?\s*\""
+)
+CSS_ANIMATION_RATIO_REGEX = (
+    r"(--animation_ratio: (?P<ratio>\d*(\.\d+)?));"
+)
+
+
+def _get_shape_svg(self, module, *segments):
+    shape_path = opj(module, 'static', *segments)
+    try:
+        with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
+            return file.read()
+    except FileNotFoundError:
+        raise werkzeug.exceptions.NotFound()
 
 
 def get_existing_attachment(IrAttachment, vals):
@@ -37,6 +75,137 @@ def get_existing_attachment(IrAttachment, vals):
 
 
 class HTML_Editor(http.Controller):
+
+    def _get_shape_svg(self, module, *segments):
+        shape_path = opj(module, 'static', *segments)
+        try:
+            with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
+                return file.read()
+        except FileNotFoundError:
+            raise werkzeug.exceptions.NotFound()
+
+    def _update_svg_colors(self, options, svg):
+        user_colors = []
+        svg_options = {}
+        default_palette = {
+            '1': '#3AADAA',
+            '2': '#7C6576',
+            '3': '#F6F6F6',
+            '4': '#FFFFFF',
+            '5': '#383E45',
+        }
+        bundle_css = None
+        regex_hex = r'#[0-9A-F]{6,8}'
+        regex_rgba = r'rgba?\(\d{1,3}, ?\d{1,3}, ?\d{1,3}(?:, ?[0-9.]{1,4})?\)'
+        for key, value in options.items():
+            colorMatch = re.match('^c([1-5])$', key)
+            if colorMatch:
+                css_color_value = value
+                # Check that color is hex or rgb(a) to prevent arbitrary injection
+                if not re.match(r'(?i)^%s$|^%s$' % (regex_hex, regex_rgba), css_color_value.replace(' ', '')):
+                    if re.match('^o-color-([1-5])$', css_color_value):
+                        if not bundle_css:
+                            bundle = 'web.assets_frontend'
+                            asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
+                            bundle_css = asset.css().index_content
+                        color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
+                        if not color_search:
+                            raise werkzeug.exceptions.BadRequest()
+                        css_color_value = color_search.group(1)
+                    else:
+                        raise werkzeug.exceptions.BadRequest()
+                user_colors.append([tools.html_escape(css_color_value), colorMatch.group(1)])
+            else:
+                svg_options[key] = value
+
+        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
+        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
+        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
+
+        def subber(match):
+            key = match.group().upper()
+            return color_mapping[key] if key in color_mapping else key
+        return re.sub(regex, subber, svg), svg_options
+
+    def replace_animation_duration(self,
+                                   shape_animation_speed: float,
+                                   svg: str):
+        """
+        Replace animation durations in SVG and CSS with modified values.
+
+        This function takes a speed value and an SVG string containing
+        animations. It uses regular expressions to find and replace the
+        duration values in both CSS animation rules and SVG duration attributes
+        based on the provided speed.
+
+        Parameters:
+            - speed (float): The speed used to calculate the new animation
+            durations.
+            - svg (str): The SVG string containing animations.
+
+        Returns:
+        str: The modified SVG string with updated animation durations.
+        """
+        ratio = (1 + shape_animation_speed
+                 if shape_animation_speed >= 0
+                 else 1 / (1 - shape_animation_speed))
+
+        def callback_css_animation_rule(match):
+            # Extracting matched groups.
+            declaration, value, unit, separator = (
+                match.group("declaration"),
+                match.group("value"),
+                match.group("unit"),
+                match.group("separator"),
+            )
+            # Calculating new animation duration based on ratio.
+            value = str(float(value) / (ratio or 1))
+            # Constructing and returning the modified CSS animation rule.
+            return f"{declaration}{value}{unit}{separator}"
+
+        def callback_svg_dur_timecount_val(match):
+            attribute_name, value, unit = (
+                match.group("attribute_name"),
+                match.group("value"),
+                match.group("unit"),
+            )
+            # Calculating new duration based on ratio.
+            value = str(float(value) / (ratio or 1))
+            # Constructing and returning the modified SVG duration attribute.
+            return f'{attribute_name}{value}{unit or "s"}"'
+
+        def callback_css_animation_ratio(match):
+            ratio = match.group("ratio")
+            return f'--animation_ratio: {ratio};'
+
+        # Applying regex substitutions to modify animation speed in the
+        # 'svg' variable.
+        svg = re.sub(
+            CSS_ANIMATION_RULE_REGEX,
+            callback_css_animation_rule,
+            svg
+        )
+        svg = re.sub(
+            SVG_DUR_TIMECOUNT_VAL_REGEX,
+            callback_svg_dur_timecount_val,
+            svg
+        )
+        # Create or modify the css variable --animation_ratio for future
+        # purpose.
+        if re.match(CSS_ANIMATION_RATIO_REGEX, svg):
+            svg = re.sub(
+                CSS_ANIMATION_RATIO_REGEX,
+                callback_css_animation_ratio,
+                svg
+            )
+        else:
+            regex = r"<svg .*>"
+            declaration = f"--animation-ratio: {ratio}"
+            subst = ("\\g<0>\n\t<style>\n\t\t:root { \n\t\t\t" +
+                     declaration +
+                     ";\n\t\t}\n\t</style>")
+            svg = re.sub(regex, subst, svg, 0, re.MULTILINE)
+        return svg
 
     def _clean_context(self):
         # avoid allowed_company_ids which may erroneously restrict based on website
@@ -238,3 +407,99 @@ class HTML_Editor(http.Controller):
             return attachment.image_src
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+
+    @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='json', auth='user', methods=['POST'])
+    def save_library_media(self, media):
+        """
+        Saves images from the media library as new attachments, making them
+        dynamic SVGs if needed.
+            media = {
+                <media_id>: {
+                    'query': 'space separated search terms',
+                    'is_dynamic_svg': True/False,
+                    'dynamic_colors': maps color names to their color,
+                }, ...
+            }
+        """
+        attachments = []
+        ICP = request.env['ir.config_parameter'].sudo()
+        library_endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+
+        media_ids = ','.join(media.keys())
+        params = {
+            'dbuuid': ICP.get_param('database.uuid'),
+            'media_ids': media_ids,
+        }
+        response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
+        if response.status_code != requests.codes.ok:
+            raise Exception(_("ERROR: couldn't get download urls from media library."))
+
+        for id, url in response.json().items():
+            req = requests.get(url)
+            name = '_'.join([media[id]['query'], url.split('/')[-1]])
+            IrAttachment = request.env['ir.attachment']
+            attachment_data = {
+                'name': name,
+                'mimetype': req.headers['content-type'],
+                'public': True,
+                'raw': req.content,
+                'res_model': 'ir.ui.view',
+                'res_id': 0,
+            }
+            attachment = get_existing_attachment(IrAttachment, attachment_data)
+            # Need to bypass security check to write image with mimetype image/svg+xml
+            # ok because svgs come from whitelisted origin
+            if not attachment:
+                attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
+            if media[id]['is_dynamic_svg']:
+                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                attachment['url'] = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
+            attachments.append(attachment._get_media_info())
+
+        return attachments
+
+    @http.route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def shape(self, module, filename, **kwargs):
+        """
+        Returns a color-customized svg (background shape or illustration).
+        """
+        svg = None
+        if module == 'illustration':
+            attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
+            if (not attachment.exists()
+                    or attachment.type != 'binary'
+                    or not attachment.public
+                    or not attachment.url.startswith(request.httprequest.path)):
+                # Fallback to URL lookup to allow using shapes that were
+                # imported from data files.
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('type', '=', 'binary'),
+                    ('public', '=', True),
+                    ('url', '=', request.httprequest.path),
+                ], limit=1)
+                if not attachment:
+                    raise werkzeug.exceptions.NotFound()
+            svg = attachment.raw.decode('utf-8')
+        else:
+            svg = self._get_shape_svg(module, 'shapes', filename)
+
+        svg, options = self._update_svg_colors(kwargs, svg)
+        flip_value = options.get('flip', False)
+        if flip_value == 'x':
+            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ', 1)
+        elif flip_value == 'y':
+            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ', 1)
+        elif flip_value == 'xy':
+            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ', 1)
+
+        shape_animation_speed = float(options.get('shapeAnimationSpeed', 0.0))
+        if shape_animation_speed != 0.0:
+            svg = self.replace_animation_duration(
+                shape_animation_speed=shape_animation_speed,
+                svg=svg
+            )
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])
+
