@@ -95,8 +95,11 @@ class PosConfig(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         pos_config_ids = super().create(vals_list)
+        pos_config_ids._configure_pos_config()
+        return pos_config_ids
 
-        for pos_config_id in pos_config_ids:
+    def _configure_pos_config(self):
+        for pos_config_id in self:
             for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']:
                 image_path = opj("pos_self_order/static/img", image_name)
                 attachment = self.env['ir.attachment'].create({
@@ -116,8 +119,6 @@ class PosConfig(models.Model):
 
             if pos_config_id.module_pos_restaurant:
                 pos_config_id.self_ordering_mode = 'mobile'
-
-        return pos_config_ids
 
     def write(self, vals):
         for record in self:
@@ -227,6 +228,15 @@ class PosConfig(models.Model):
             "target": "new",
         }
 
+    def _get_self_ordering_attachment(self, images):
+        encoded_images = []
+        for image in images:
+            encoded_images.append({
+                'id': image.id,
+                'data': image.sudo().datas.decode('utf-8'),
+            })
+        return encoded_images
+
     def _load_self_data_models(self):
         return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'pos.combo', 'pos.combo.line',
             'res.company', 'account.tax', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
@@ -242,6 +252,7 @@ class PosConfig(models.Model):
                 'fields': config_fields,
             }
         }
+        response['pos.config']['data'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
         # Classic data loading
@@ -320,8 +331,8 @@ class PosConfig(models.Model):
     def _modify_pos_restaurant_config(self):
         pos_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
         if pos_config:
+            pos_config._configure_pos_config()
             pos_config.write({
-                'self_ordering_mode': 'mobile',
                 'self_ordering_service_mode': 'table',
                 'self_ordering_pay_after': 'meal'
             })
