@@ -33,6 +33,7 @@ export class ColorPlugin extends Plugin {
                     type: "foreground",
                     getUsedCustomColors: () => p.getUsedCustomColors("color"),
                     getSelectedColors: () => p.selectedColors,
+                        dispatch: p.dispatch.bind(p),
                 },
             },
             {
@@ -44,6 +45,7 @@ export class ColorPlugin extends Plugin {
                     type: "background",
                     getUsedCustomColors: () => p.getUsedCustomColors("background"),
                     getSelectedColors: () => p.selectedColors,
+                        dispatch: p.dispatch.bind(p),
                 },
             },
         ],

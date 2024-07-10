@@ -1,0 +1,24 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ToolbarItemSelector">
+        <Dropdown menuClass="'o_toolbar_item_selector_menu ' + (this.isVertical ? 'p-0' : '')">
+            <button class="btn btn-light">
+                <i t-if="state.currentItem.icon" t-attf-class="fa fa-fw {{state.currentItem.icon}}" t-att-aria-label="state.currentItem.name"/>
+                <t t-else="" t-esc="state.currentItem.name"/>
+            </button>
+            <t t-set-slot="content">
+                <div t-att-class="{
+                    'btn-group': this.isVertical,
+                }">
+                    <t t-foreach="this.items" t-as="item" t-key="item_index">
+                        <DropdownItem
+                            onSelected="() => this.onSelected(item)"
+                            class="item.icon ? 'd-flex align-items-center py-2' : ''">
+                                <i t-if="item.icon" t-attf-class="fa fa-fw {{item.icon}}"/>
+                                <div t-else="" class="user-select-none" t-esc="item.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

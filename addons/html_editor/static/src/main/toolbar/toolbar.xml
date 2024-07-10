@@ -1,19 +1,20 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.Toolbar">
-        <div class="o-we-toolbar bg-white d-flex align-items-center m-0"  t-att-class="props.class">
+        <div class="o-we-toolbar"
+            t-att-class="props.class + ' ' + (props.useDefaultClasses ? 'm-0 d-flex bg-white align-items-center' : '')">
             <t t-foreach="this.getFilteredButtonGroups()" t-as="buttonGroup" t-key="buttonGroup.id">
                 <span class="o-we-toolbar-vertical-seperator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
-                        <t t-if="state.buttonsAvailableState[button.id]">
+                        <t t-if="button.state.isAvailable">
                             <t t-if="button.Component">
-                                <t t-component="button.Component" t-props="button.props" dispatch.bind="props.toolbar.dispatch" getSelection.bind="props.toolbar.getSelection"/>
+                                <t t-component="button.Component" t-props="button.props"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"
-                                t-att-class="{
-                                    active: state.buttonsActiveState[button.id],
-                                    disabled: state.buttonsDisabledState[button.id]
+                                t-att-class=" {
+                                    active: button.state.isActive,
+                                    disabled: !button.state.isEnabled
                                 }"
                                 t-att-title="button.name"
                                 t-att-name="button.id"

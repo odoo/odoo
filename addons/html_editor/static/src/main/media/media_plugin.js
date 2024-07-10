@@ -25,8 +25,8 @@ export class MediaPlugin extends Plugin {
                 description: _t("Insert an image"),
                 category: "media",
                 fontawesome: "fa-file-image-o",
-                action() {
-                    p.openMediaDialog();
+                action(dispatch) {
+                    dispatch("INSERT_MEDIA");
                 },
             });
         }
@@ -36,8 +36,8 @@ export class MediaPlugin extends Plugin {
                 description: _t("Insert a video"),
                 category: "media",
                 fontawesome: "fa-file-video-o",
-                action() {
-                    p.openMediaDialog({
+                action(dispatch) {
+                    dispatch("INSERT_MEDIA", {
                         noVideos: false,
                         noImages: true,
                         noIcons: true,
@@ -80,6 +80,9 @@ export class MediaPlugin extends Plugin {
                 break;
             case "CLEAN_FOR_SAVE":
                 this.cleanForSave(payload.root);
+                break;
+            case "INSERT_MEDIA":
+                this.openMediaDialog(payload);
                 break;
             case "REPLACE_IMAGE": {
                 const selectedNodes = this.shared.getSelectedNodes();

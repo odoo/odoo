@@ -101,7 +101,7 @@
 // prevents selected images from being covered with a blue filter in edit mode
 // (Website, Email Marketing). This allows to see the correct final rendering
 // of an image when it is edited.
-body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
+body.editor_enable:not(:has(.o_layout.o_basic_theme)) .odoo-editor-editable {
     img::selection {
         background-color: transparent !important;
     }

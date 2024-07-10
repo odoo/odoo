@@ -129,9 +129,10 @@
             'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
             'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
-            'mass_mailing/static/src/xml/mass_mailing.xml',
             'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/tours/**/*',
+            'mass_mailing/static/src/fields/**/*',
+            ('remove', 'mass_mailing/static/src/fields/mass_mailing_html_field/mass_mailing_snippet_menu*'),
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
@@ -158,6 +159,12 @@
             ('include', 'web_editor.assets_snippets_menu'),
             'mass_mailing/static/src/fields/mass_mailing_html_field/mass_mailing_snippet_menu.js',
             'mass_mailing/static/src/fields/mass_mailing_html_field/mass_mailing_snippet_menu.xml'
+        ],
+        'mass_mailing.assets_mass_mailing_html_field': [
+            ('include', 'web_editor.backend_assets_wysiwyg'),
+            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'mass_mailing.assets_snippets_menu'),
+            ('include', 'mass_mailing.assets_wysiwyg'),
         ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',

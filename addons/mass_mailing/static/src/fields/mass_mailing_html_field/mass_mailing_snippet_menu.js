@@ -4,12 +4,24 @@ import { _t } from "@web/core/l10n/translation";
 import snippetsEditor from "@web_editor/js/editor/snippets.editor";
 import { MassMailingMobilePreviewDialog } from "../../js/mass_mailing_mobile_preview";
 import { markup, useEffect, useState } from "@odoo/owl";
+import { Toolbar } from "@html_editor/main/toolbar/toolbar";
 
 export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
     static tabs = Object.assign({}, snippetsEditor.SnippetsMenu.tabs, {
         DESIGN: "design",
     });
     static optionsTabStructure = [["design-options", _t("Design Options")]];
+    static props = {
+        ...snippetsEditor.SnippetsMenu.props,
+        linkToolProps: { type: Object, optional: true },
+        toolbarInfos: { type: Object, optional: true },
+        selectedTheme: { type: Object },
+        toggleCodeView: { type: Function },
+    };
+    static components = {
+        ...snippetsEditor.SnippetsMenu.components,
+        Toolbar,
+    };
 
     static template = "mass_mailing.SnippetsMenu";
 
@@ -22,45 +34,6 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      */
     setup() {
         super.setup();
-        this.fieldConfig = useState(this.env.fieldConfig);
-
-        let firstRender = true;
-        useEffect(
-            (selectedTheme) => {
-                // Avoid running this on first render as the template is already
-                // loaded for the selected theme by the normal flow.
-                if (firstRender) {
-                    firstRender = false;
-                    return;
-                }
-                this._loadSnippetsTemplates().then(() => {
-                    this.reloadSnippetDropzones();
-                });
-            },
-            () => [this.fieldConfig.selectedTheme]
-        );
-        // When the scrollable changes, it invalidates the current drag and
-        // drop config. In the case of the snippetsMenu, it can be altered,
-        // But in the case of snippetEditor, destroying them should be good
-        // enough.
-        useEffect(
-            ($scrollable) => {
-                this._mutex.exec(async () => {
-                    this.options.$scrollable = $scrollable;
-                    this._makeSnippetDraggable();
-                    await this._destroyEditors();
-                });
-            },
-            () => [this.fieldConfig.$scrollable]
-        );
-    }
-    /**
-     * @override
-     */
-    start() {
-        return super.start().then(() => {
-            this.$editable = this.options.wysiwyg.getEditable();
-        });
     }
     /**
      * @override
@@ -78,7 +51,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _computeSnippetTemplates(html) {
-        this.env.switchImages(this.fieldConfig.selectedTheme, $(html));
+        this.env.switchImages(this.props.selectedTheme, $(html));
         html.querySelectorAll("img").forEach((img) => img.setAttribute("loading", "lazy"));
         return super._computeSnippetTemplates(html);
     }
@@ -127,13 +100,13 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneOver() {
-        this.$editable.find(".o_editable").css("background-color", "");
+        this.getEditableArea().find(".o_editable").css("background-color", "");
     }
     /**
      * @override
      */
     _onDropZoneOut() {
-        const $oEditable = this.$editable.find(".o_editable");
+        const $oEditable = this.getEditableArea().find(".o_editable");
         if ($oEditable.find(".oe_drop_zone.oe_insert:not(.oe_vertical):only-child").length) {
             $oEditable[0].style.setProperty("background-color", "transparent", "important");
         }
@@ -142,7 +115,7 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneStart() {
-        const $oEditable = this.$editable.find(".o_editable");
+        const $oEditable = this.getEditableArea().find(".o_editable");
         if ($oEditable.find(".oe_drop_zone.oe_insert:not(.oe_vertical):only-child").length) {
             $oEditable[0].style.setProperty("background-color", "transparent", "important");
         }
@@ -151,20 +124,20 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @override
      */
     _onDropZoneStop() {
-        const $oEditable = this.$editable.find(".o_editable");
+        const $oEditable = this.getEditableArea().find(".o_editable");
         $oEditable.css("background-color", "");
         if (!$oEditable.find(".oe_drop_zone.oe_insert:not(.oe_vertical):only-child").length) {
             $oEditable.attr("contenteditable", true);
         }
         // Refocus again to save updates when calling `_onWysiwygBlur`
-        this.$editable.get(0).ownerDocument.defaultView.focus();
+        this.getEditableArea().get(0).ownerDocument.defaultView.focus();
     }
     /**
      * @override
      */
     _onSnippetRemoved() {
         super._onSnippetRemoved(...arguments);
-        const $oEditable = this.$editable.find(".o_editable");
+        const $oEditable = this.getEditableArea().find(".o_editable");
         if (!$oEditable.children().length) {
             $oEditable.empty(); // remove any superfluous whitespace
             $oEditable.attr("contenteditable", false);
@@ -192,20 +165,8 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
      * @private
      */
     _onCodeViewBtnClick(ev) {
-        const $codeview = this.options.wysiwyg.$iframe.contents().find("textarea.o_codeview");
-        this.options.wysiwyg.odooEditor.observerUnactive();
-        $codeview.toggleClass("d-none");
-        this.options.wysiwyg.getEditable().toggleClass("d-none");
-        this.options.wysiwyg.odooEditor.observerActive();
-
-        if ($codeview.hasClass("d-none")) {
-            this.options.wysiwyg.setValue(this.options.getCodeViewValue($codeview[0]));
-            this.options.wysiwyg.odooEditor.sanitize();
-            this.options.wysiwyg.odooEditor.historyStep(true);
-        } else {
-            $codeview.val(this.options.wysiwyg.getValue());
-        }
-        this.activateSnippet(false);
+        this.props.toggleCodeView();
+        this.isDraggable = !this.isDraggable;
     }
     /**
      * @private

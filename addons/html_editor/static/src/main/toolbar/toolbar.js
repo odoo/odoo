@@ -4,6 +4,7 @@ export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
     static props = {
         class: { type: String, optional: true },
+        useDefaultClasses: { type: Boolean, optional: true },
         toolbar: {
             type: Object,
             shape: {
@@ -14,9 +15,6 @@ export class Toolbar extends Component {
                 state: {
                     type: Object,
                     shape: {
-                        buttonsActiveState: Object,
-                        buttonsDisabledState: Object,
-                        buttonsAvailableState: Object,
                         namespace: {
                             type: String,
                             optional: true,
@@ -26,20 +24,24 @@ export class Toolbar extends Component {
             },
         },
     };
+    static defaultProps = {
+        useDefaultClasses: true,
+    };
 
     setup() {
         this.state = useState(this.props.toolbar.state);
+        this.buttonGroups = useState(this.props.toolbar.buttonGroups);
     }
 
     getFilteredButtonGroups() {
         if (this.state.namespace) {
-            const filteredGroups = this.props.toolbar.buttonGroups.filter(
+            const filteredGroups = this.buttonGroups.filter(
                 (group) => group.namespace === this.state.namespace
             );
             if (filteredGroups.length > 0) {
                 return filteredGroups;
             }
         }
-        return this.props.toolbar.buttonGroups.filter((group) => group.namespace === undefined);
+        return this.buttonGroups.filter((group) => group.namespace === undefined);
     }
 }

@@ -1,10 +1,66 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { ToolbarItemSelector } from "./font/toolbar_item_selector";
+
+const justifyItems = [
+    {
+        name: "Left",
+        icon: "fa-align-left",
+        commandId: "JUSTIFY_LEFT",
+        cssProperty: "left",
+    },
+    {
+        name: "Center",
+        icon: "fa-align-center",
+        commandId: "JUSTIFY_CENTER",
+        cssProperty: "center",
+    },
+    {
+        name: "Right",
+        icon: "fa-align-right",
+        commandId: "JUSTIFY_RIGHT",
+        cssProperty: "right",
+    },
+    {
+        name: "Justify",
+        icon: "fa-align-justify",
+        commandId: "JUSTIFY_FULL",
+        cssProperty: "justify",
+    },
+];
 
 export class JustifyPlugin extends Plugin {
     static name = "justify";
     static dependencies = ["selection"];
+    /** @type { (p: JustifyPlugin) => Record<string, any> } */
+    static resources = (p) => ({
+        toolbarGroup: [
+            {
+                id: "align",
+                sequence: 10,
+                buttons: [
+                    {
+                        id: "align",
+                        Component: ToolbarItemSelector,
+                        props: {
+                            getItems: () => justifyItems,
+                            getEditableSelection: p.shared.getEditableSelection.bind(p),
+                            onSelected: (item) => p.dispatch(item.commandId),
+                            getItemFromSelection: (selection) => {
+                                const block = closestBlock(selection.anchorNode);
+                                const textAlign = getComputedStyle(block).textAlign;
+                                return (
+                                    justifyItems.find((item) => item.cssProperty === textAlign) ||
+                                    justifyItems[0]
+                                );
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    });
 
     handleCommand(command) {
         switch (command) {

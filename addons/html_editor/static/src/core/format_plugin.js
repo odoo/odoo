@@ -45,7 +45,7 @@ export class FormatPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "bold",
-                category: "decoration",
+                category: "style",
                 action(dispatch) {
                     dispatch("FORMAT_BOLD");
                 },
@@ -55,7 +55,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "italic",
-                category: "decoration",
+                category: "style",
                 action(dispatch) {
                     dispatch("FORMAT_ITALIC");
                 },
@@ -65,7 +65,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "underline",
-                category: "decoration",
+                category: "style",
                 action(dispatch) {
                     dispatch("FORMAT_UNDERLINE");
                 },
@@ -75,7 +75,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "strikethrough",
-                category: "decoration",
+                category: "style",
                 action(dispatch) {
                     dispatch("FORMAT_STRIKETHROUGH");
                 },

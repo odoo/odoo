@@ -15,7 +15,7 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy, unique } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
-import { Toolbar } from "@web_editor/js/editor/toolbar";
+import { Toolbar as LegacyToolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
     EventBus,
@@ -23,6 +23,7 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
+    onWillUpdateProps,
     useEffect,
     useRef,
     useState,
@@ -888,7 +889,7 @@ var SnippetEditor = Widget.extend({
             elements: elementsSelector,
             handle: handle,
             scrollingElement: $scrollable[0],
-            enable: () => !!this.$el.find('.o_move_handle:visible').length || this.dragStarted,
+            enable: () => (!!this.$el.find('.o_move_handle:visible').length || this.dragStarted) && this.isDraggable,
             helper: () => {
                 const cloneEl = this.$el[0].cloneNode(true);
                 cloneEl.style.width = "24px";
@@ -1016,6 +1017,7 @@ var SnippetEditor = Widget.extend({
             // resizing the grid and the dropzone.
             self.dragState.dragHelperEl.remove();
             self.dragState.backgroundGridEl.remove();
+
             self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
             gridUtils._resizeGrid(rowEl);
             self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
@@ -1058,7 +1060,7 @@ var SnippetEditor = Widget.extend({
     _onDragAndDropStart({ helper, addStyle }) {
         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
-        this.options.wysiwyg.odooEditor.automaticStepUnactive();
+        // this.options.wysiwyg.odooEditor.automaticStepUnactive();
         var self = this;
         this.dragState = {};
         const rowEl = this.$target[0].parentNode;
@@ -1838,9 +1840,9 @@ class SnippetsMenu extends Component {
 
     static props = {
         bus: { type: EventBus },
-        mountedProm: { type: Promise },
         options: { type: Object },
         trigger_up: { type: Function },
+        mountedProm: { type: Promise, optional: true },
         folded: { type: Boolean, optional: true },
         onSnippetDropped: { type: Function, optional: true },
         readyToCleanForSave: { type: Function, optional: true },
@@ -1856,7 +1858,7 @@ class SnippetsMenu extends Component {
 
     static template = "web_editor.SnippetsMenu";
 
-    static components = { Toolbar, LinkTools };
+    static components = { LegacyToolbar, LinkTools };
 
     setup() {
         super.setup(...arguments);
@@ -1864,17 +1866,20 @@ class SnippetsMenu extends Component {
         this.$body = $((this.options.document || document).body);
         this.customEvents = SnippetsMenu.custom_events;
         this.tabs = SnippetsMenu.tabs;
+        this.isDraggable = true;
 
         this.state = useState({
             showCustomizePanel: false,
             invisibleElements: [],
             currentTab: SnippetsMenu.tabs.BLOCKS,
-            toolbarTitle: "",
+            toolbarTitle: _t("Inline Text"),
             showToolbar: false,
             search: "",
             canUndo: false,
             canRedo: false,
         });
+
+        this.historyState = useState(this.props.options.wysiwyg.historyState);
 
         this.snippets = useState(new Map());
 
@@ -1943,10 +1948,16 @@ class SnippetsMenu extends Component {
             // TODO: Remove this and instead, use a callback once the editor is
             // ready, or make the parent component independent of SnippetsMenu
             // being mounted.
-            this.props.mountedProm.resolve();
+            this.props.mountedProm?.resolve();
             this.el.classList.add("o_loaded");
             this.el.ownerDocument.body.classList.toggle('editor_has_snippets', !this.folded);
         });
+
+        onWillUpdateProps((nextProps) => {
+            this.options = Object.assign({}, nextProps.options);
+            this.$body = $((this.options.document || document).body);
+            this.options.getDragAndDropOptions = this._getDragAndDropOptions.bind(this);
+        })
 
         onWillUnmount(() => {
             this.onWillUnmount();
@@ -2005,6 +2016,15 @@ class SnippetsMenu extends Component {
     get hasSnippetGroups() {
         return Array.from(this.snippets.values()).some(snippet => snippet.snippetGroup);
     }
+
+    get canUndo() {
+        return this.state.canUndo || this.historyState.canUndo;
+    }
+
+    get canRedo() {
+        return this.state.canRedo || this.historyState.canRedo;
+    }
+
     _createTooltip($el, title, selector = false) {
         return new Tooltip($el, {
             title: title,
@@ -2049,15 +2069,19 @@ class SnippetsMenu extends Component {
         document.addEventListener("touchend", this.__onTouchEvent, true);
 
         this._toolbarWrapperEl = this.toolbarWrapperRef.el;
-        this._toolbarWrapperEl.style.display = 'contents';
+        if (this._toolbarWrapperEl) {
+            this._toolbarWrapperEl.style.display = 'contents';
 
-        const toolbarEl = this._toolbarWrapperEl.firstChild;
-        toolbarEl.classList.remove('oe-floating');
-        this.options.wysiwyg.toolbarEl.classList.add('d-none');
-        this.options.wysiwyg.setupToolbar(toolbarEl);
-        this._addToolbar();
-        this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
-        $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+            const toolbarEl = this._toolbarWrapperEl.querySelector('div');
+            toolbarEl.classList.remove('oe-floating');
+            if (this.options.wysiwyg.toolbarEl) {
+                this.options.wysiwyg.toolbarEl.classList.add('d-none');
+                this.options.wysiwyg.setupToolbar(toolbarEl);
+            }
+            this._addToolbar();
+            this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
+            $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+        }
 
         // Prepare snippets editor environment
         this.$snippetEditorArea = $('<div/>', {
@@ -3557,6 +3581,7 @@ class SnippetsMenu extends Component {
             scrollingElement: $scrollingElement[0],
             handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
             cancel: '.oe_snippet.o_disabled',
+            enable: () => this.isDraggable,
             dropzones: () => {
                 return $dropZones.toArray();
             },
@@ -4102,7 +4127,7 @@ class SnippetsMenu extends Component {
         if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
             this._closeWidgets();
         }
-        if (!$target.closest('body > *').length || $target.is('#iframe_target')) {
+        if (!$target.closest('body > *').length) {
             return;
         }
         if ($target.closest(this._notActivableElementsSelector).length) {
@@ -4634,6 +4659,10 @@ class SnippetsMenu extends Component {
         await this._updateInvisibleDOM();
     }
     _addToolbar(toolbarMode = "text") {
+        this._checkEditorToolbarVisibility();
+        if (!this._toolbarWrapperEl) {
+            return;
+        }
         // TODO: Now that the toolbar is not removed every time
         // `_updateRightPanelContent` is called, we should probably rename this
         // method ot "_updateToolbar" and remove some of the now useless code,
@@ -4669,7 +4698,6 @@ class SnippetsMenu extends Component {
             $dropdown.on('hide.bs.dropdown', (ev) => this.options.wysiwyg.onColorpaletteDropdownHide(ev));
         }
 
-        this._checkEditorToolbarVisibility();
     }
     /**
      * Update editor UI visibility based on the current range.
@@ -4686,15 +4714,14 @@ class SnippetsMenu extends Component {
         ) {
             return;
         }
-        this.state.showToolbar = !(!range ||
-            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper').length ||
-            closestElement(selection.anchorNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])') ||
-            closestElement(selection.focusNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])') ||
-            (e && $(e.target).closest('.fa, img').length ||
-            this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) ||
-            (this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)
-        );
-        const isInsideTD = !!(
+        this.state.showToolbar = Boolean(range &&
+            $currentSelectionTarget.parents('#wrapwrap, .o_mass_mailing_iframe').length &&
+            !closestElement(selection.anchorNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])') &&
+            !closestElement(selection.focusNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])') &&
+            !(e && $(e.target).closest('.fa, img').length) &&
+            !(this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) &&
+            !(this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable));
+        const isInsideTD = Boolean(
             range &&
             $(range.startContainer).closest('.o_editable td').length &&
             $(range.endContainer).closest('.o_editable td').length
