@@ -1473,6 +1473,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             'email_cc': cls.partner_1.email,
             'email_to': f'{cls.email_1}, {cls.email_2}',
             'partner_to': '{{ object.customer_id.id }},%s' % cls.partner_2.id,
+            'use_default_to': False,
         })
         cls.test_template.attachment_ids.write({'res_id': cls.test_template.id})
         # Force the attachments of the template to be in the natural order.
@@ -1797,6 +1798,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             'name': 'TestTemplate',
             'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
             'subject': 'EnglishSubject for {{ object.name }}',
+            'use_default_to': False,
         })
         cls.user_employee.write({  # add group to create contacts, necessary for templates
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],

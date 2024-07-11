@@ -36,8 +36,9 @@ class TestMailComposer(MailCommon):
             'body_html': cls.body_html,
             'lang': '{{ object.lang }}',
             'model_id': cls.env['ir.model']._get_id('res.partner'),
-            'subject': 'MSO FTW',
             'name': 'Test template with mso conditionals',
+            'use_default_to': True,
+            'subject': 'MSO FTW',
         })
 
 @tagged('mail_composer')
@@ -167,6 +168,7 @@ class TestMailComposerForm(TestMailComposer):
         self.mail_template.write({
             'email_to': f'{self.partner_private_2.email_formatted}, {email_to_new}',
             'partner_to': f'{self.partner_private.id},{self.partner_classic.id}',
+            'use_default_to': False,
         })
         template = self.mail_template.with_env(self.env)
         partner_private = self.partner_private.with_env(self.env)

@@ -52,6 +52,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
             'email_cc': '%s' % cls.email_3,
             'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
             'subject': 'EnglishSubject for {{ object.name }}',
+            'use_default_to': False,
         })
 
         # activate translations
