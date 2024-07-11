@@ -123,7 +123,8 @@ class TestMailRenderCommon(common.MailCommon):
             'subject': cls.base_inline_template_bits[0],
             'body_html': cls.base_qweb_bits[1],
             'model_id': cls.env['ir.model']._get('res.partner').id,
-            'lang': '{{ object.lang }}'
+            'lang': '{{ object.lang }}',
+            'use_default_to': True,
         })
 
         # some translations

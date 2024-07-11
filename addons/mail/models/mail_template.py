@@ -50,6 +50,7 @@ class MailTemplate(models.Model):
     # recipients
     use_default_to = fields.Boolean(
         'Default recipients',
+        default=True,
         help="Default recipients of the record:\n"
              "- partner (using id on a partner or the partner_id field) OR\n"
              "- email (using email_from or email field)")
