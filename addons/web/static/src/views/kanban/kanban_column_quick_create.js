@@ -13,6 +13,10 @@ export class KanbanColumnQuickCreate extends Component {
         onValidate: Function,
         folded: Boolean,
         groupByField: Object,
+        isFirst: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        isFirst: false,
     };
 
     setup() {
@@ -52,7 +56,11 @@ export class KanbanColumnQuickCreate extends Component {
     get canShowExamples() {
         const { allowedGroupBys = [], examples = [] } = this.props.exampleData || {};
         const hasExamples = Boolean(examples.length);
-        return hasExamples && allowedGroupBys.includes(this.props.groupByField.name);
+        return (
+            hasExamples &&
+            allowedGroupBys.includes(this.props.groupByField.name) &&
+            this.props.isFirst
+        );
     }
 
     get relatedFieldName() {

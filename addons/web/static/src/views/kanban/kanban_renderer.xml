@@ -91,6 +91,7 @@
                         onValidate="props.list.createGroup.bind(props.list)"
                         exampleData="exampleData"
                         groupByField="props.list.groupByField"
+                        isFirst="!props.list.groups.length"
                     />
                     <!-- Kanban Example Background -->
                     <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">

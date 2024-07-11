@@ -6185,7 +6185,9 @@ test.tags("desktop")("quick create column with enter", async () => {
     expect(".o_kanban_group").toHaveCount(3);
 });
 
-test.tags("desktop")("quick create column and examples", async () => {
+test.tags("desktop")("quick create column and examples and has no columns", async () => {
+    Partner._records = [];
+
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
         examples: [
@@ -6221,9 +6223,6 @@ test.tags("desktop")("quick create column and examples", async () => {
     expect(".o_column_quick_create").toHaveCount(1, {
         message: "should have quick create available",
     });
-
-    // open the quick create
-    await quickCreateKanbanColumn();
 
     expect(".o_column_quick_create .o_kanban_examples:visible").toHaveCount(1, {
         message: "should have a link to see examples",
@@ -6267,6 +6266,51 @@ test.tags("desktop")("quick create column and examples", async () => {
         "A fantastic description.",
         { message: "A formatted description should be displayed." }
     );
+});
+
+test.tags("desktop")("see examples is not available if rows are already present", async () => {
+    registry.category("kanban_examples").add("test", {
+        allowedGroupBys: ["product_id"],
+        examples: [
+            {
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "A weak description.",
+            },
+            {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+                description: `A fantastic description.`,
+            },
+        ],
+    });
+    after(() => registry.category("kanban_examples").remove("test"));
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban examples="test">
+                <field name="product_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_column_quick_create").toHaveCount(1, {
+        message: "should not have quick create available",
+    });
+
+    // open the quick create
+    await quickCreateKanbanColumn();
+
+    expect(".o_column_quick_create .o_kanban_examples:visible").toHaveCount(0, {
+        message: "should not have a link to see examples",
+    });
 });
 
 test("quick create column with x_name as _rec_name", async () => {
@@ -6366,6 +6410,8 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
 });
 
 test.tags("desktop")("quick create column's apply button's display text", async () => {
+    Partner._records = [];
+
     const applyExamplesText = "Use This For My Test";
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
@@ -6397,9 +6443,6 @@ test.tags("desktop")("quick create column's apply button's display text", async 
             </kanban>`,
         groupBy: ["product_id"],
     });
-
-    // open the quick create
-    await quickCreateKanbanColumn();
 
     // click to see the examples
     await contains(".o_column_quick_create .o_kanban_examples").click();
