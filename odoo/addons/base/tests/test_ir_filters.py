@@ -373,3 +373,26 @@ class TestEmbeddedFilters(FiltersCase):
         # If embedded_action_id and embedded_parent_res_id are not set, should return no filters
         filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters')
         self.assertItemsEqual(noid(filters), [])
+
+    def test_global_filters_with_no_embedded_action(self):
+        Filters = self.env['ir.filters'].with_user(self.USER_ID)
+        filter_a = Filters.create_or_replace({
+            'name': 'a',
+            'model_id': 'ir.filters',
+            'user_id': False,
+            'is_default': True,
+            'embedded_action_id': False,
+            'embedded_parent_res_id': 0,
+        })
+        filter_b = Filters.create_or_replace({
+            'name': 'b',
+            'model_id': 'ir.filters',
+            'user_id': self.USER_ID,
+            'is_default': True,
+            'embedded_action_id': False,
+            'embedded_parent_res_id': 1,
+        })
+        self.assertFalse(filter_a.embedded_action_id)
+        self.assertFalse(filter_a.embedded_parent_res_id)
+        self.assertFalse(filter_b.embedded_action_id)
+        self.assertFalse(filter_b.embedded_parent_res_id)
