@@ -8,35 +8,22 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="id"/>
-                    <field name="description"/>
                     <field name="is_member"/>
                     <field name="group_ids"/>
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-description">
-                            <div class="oe_group_description" t-if="record.description.raw_value">
-                                <field name="description"/>
-                            </div>
-                        </t>
-                        <t t-name="kanban-box">
-                            <div class="o_discuss_channel_kanban oe_module_vignette oe_kanban_global_click">
-                                <div class="ribbon ribbon-top-right o_small" invisible="active">
-                                    <span class="text-bg-danger">Archived</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <img t-att-src="kanban_image('discuss.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
-                                    <div class="oe_module_desc">
-                                        <h4 class="o_kanban_record_title">#<field name="name"/></h4>
-                                        <field name="channel_type" groups="base.group_no_one"/>
-                                        <p class="oe_module_name" t-att-class="!record.active.raw_value ? 'o_module_desc_short': ''">
-                                            <field name="description"/>
-                                        </p>
-                                        <button type="object" invisible="is_member or group_ids" class="btn btn-primary float-end" name="channel_join">Join</button>
-                                        <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary float-end" name="action_unfollow">Leave</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <t t-name="kanban-card" class="row g-0">
+                            <widget name="web_ribbon" class="d-flex" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                            <aside class="col-2 my-auto">
+                                <field name="avatar_128" widget="image" options="{'size': [50, 50]}" alt="Channel"/>
+                            </aside>
+                            <main class="col me-4 ms-2">
+                                <span class="fw-bold fs-5">#<field name="name"/></span>
+                                <field name="channel_type" groups="base.group_no_one"/>
+                                <field name="description" class="text-muted lh-1 small"/>
+                                <button type="object" invisible="is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join">Join</button>
+                                <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">Leave</button>
+                            </main>
                         </t>
                     </templates>
                 </kanban>

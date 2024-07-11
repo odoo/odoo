@@ -17,32 +17,23 @@
         <field name="model">mail.group</field>
         <field name="arch" type="xml">
             <kanban string="Mail Groups" sample="1">
-                <field name="id"/>
-                <field name="description"/>
                 <field name="is_member"/>
-                <field name="member_count"/>
                 <templates>
-                    <t t-name="kanban-description">
-                        <div class="oe_group_description" t-if="record.description.raw_value">
-                            <field name="description"/>
-                        </div>
-                    </t>
-                    <t t-name="kanban-box">
-                        <div class="oe_module_vignette oe_kanban_global_click">
-                            <img t-att-src="kanban_image('mail.group', 'image_128', record.id.raw_value)" class="oe_module_icon" alt="Group"/>
-                            <div class="oe_module_desc">
-                                <h4 class="o_kanban_record_title">#<field name="name"/></h4>
-                                <p class="o_mg_description text-truncate text-nowrap" t-esc="record.description.raw_value or ''"/>
-                                <span>
-                                    <t t-esc="record.member_count.raw_value"/>
-                                    <t t-if="record.member_count.raw_value > 1">Members</t>
-                                    <t t-else="">Member</t>
-                                </span>
-                                <field name="is_member" invisible="1"/>
-                                <button type="object" invisible="is_member" class="btn btn-primary float-end" name="action_join">Join</button>
-                                <button type="object" invisible="not is_member" class="btn btn-secondary float-end" name="action_leave">Leave</button>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card" class="flex-row">
+                        <aside>
+                            <field name="image_128" widget="image" alt="Group"/>
+                        </aside>
+                        <main>
+                            <span class="fw-bold fs-5">#<field name="name"/></span>
+                            <field class="text-truncate text-nowrap" name="description"/>
+                            <span>
+                                <field name="member_count"/>
+                                <t t-if="record.member_count.raw_value > 1">Members</t>
+                                <t t-else="">Member</t>
+                            </span>
+                            <button type="object" invisible="is_member" class="btn btn-primary ms-auto" name="action_join">Join</button>
+                            <button type="object" invisible="not is_member" class="btn btn-secondary ms-auto" name="action_leave">Leave</button>
+                        </main>
                     </t>
                 </templates>
             </kanban>
