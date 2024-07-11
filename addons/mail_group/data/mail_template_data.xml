@@ -19,9 +19,11 @@
     </record>
 
     <!-- Confirm subscription email -->
+    <!-- TDE note: this should not be a mail template -->
     <record id="mail_template_list_subscribe" model="mail.template">
         <field name="name">Mail Group: Mailing List Subscription</field>
         <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="use_default_to" eval="False"/>
         <field name="subject">Confirm subscription to {{ object.name }}</field>
         <field name="description">Subscription confirmation to a mailing group</field>
         <field name="body_html" type="html">
@@ -38,9 +40,11 @@
     </record>
 
     <!-- Confirm unsubscription email -->
+     <!-- TDE note: this should not be a mail template -->
     <record id="mail_template_list_unsubscribe" model="mail.template">
         <field name="name">Mail Group: Mailing List Unsubscription</field>
         <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="use_default_to" eval="False"/>
         <field name="subject">Confirm unsubscription to {{ object.name }}</field>
         <field name="description">Sent to people who unsubscribed from a mailing group</field>
         <field name="body_html" type="html">
