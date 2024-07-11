@@ -1460,7 +1460,7 @@ class MrpProduction(models.Model):
 
     def action_assign(self):
         for production in self:
-            production.move_raw_ids._action_assign()
+            production.move_raw_ids._action_assign(force_full_reservation=True)
         return True
 
     def button_plan(self):

@@ -438,19 +438,19 @@ class StockMove(models.Model):
         if procurements:
             self.env['procurement.group'].run(procurements)
 
-    def _action_assign(self):
-        res = super(StockMove, self)._action_assign()
+    def _action_assign(self, force_full_reservation=False):
+        res = super()._action_assign(force_full_reservation=force_full_reservation)
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
                                                'workorder_id': move.workorder_id.id,})
         return res
 
-    def _action_confirm(self, merge=True, merge_into=False):
+    def _action_confirm(self, merge=True, merge_into=False, force_full_reservation=False):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
+        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into, force_full_reservation=True)
 
     def action_explode(self):
         """ Explodes pickings """
