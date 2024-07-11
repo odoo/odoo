@@ -152,6 +152,9 @@ export class Base {
     setup(_vals) {
         // Allow custom fields
         for (const [key, val] of Object.entries(_vals)) {
+            if (key in this.model.modelFields) {
+                continue;
+            }
             if (key.startsWith("_") && !key.startsWith("__")) {
                 this[key] = val;
             }

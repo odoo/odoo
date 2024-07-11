@@ -87,7 +87,7 @@ class PosOrder(models.Model):
         for coupon_vals in gift_cards_to_update:
             gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
             gift_card.write({
-                'points': coupon_vals['points'],
+                'points': coupon_vals['points'] + gift_card.points,
                 'source_pos_order_id': self.id,
                 'partner_id': get_partner_id(coupon_vals.get('partner_id', False)),
             })

@@ -624,7 +624,6 @@ patch(PosOrder.prototype, {
                                             return {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
-                                                giftCardId: line._gift_card_id.id,
                                             };
                                         }
                                         return { points: pointsPerUnit };
@@ -847,6 +846,16 @@ patch(PosOrder.prototype, {
             });
         }
         return true;
+    },
+
+    duplicateCouponChanges(code) {
+        return Object.keys(this.uiState.couponPointChanges).some((key) => {
+            const change = this.uiState.couponPointChanges[key];
+            return (
+                (change.existing_code === code && change.manual) ||
+                (change.code === code && change.coupon_id < 0)
+            );
+        });
     },
 
     /**

@@ -8,7 +8,9 @@ patch(DataServiceOptions.prototype, {
             name: "loyalty.card",
             key: "id",
             condition: (record) => {
-                return record.models["pos.order.line"].find((l) => l.coupon_id?.id === record.id);
+                return record.models["pos.order.line"].find(
+                    (l) => l.coupon_id?.id === record.id || l._gift_card_id?.id === record.id
+                );
             },
         });
         return data;

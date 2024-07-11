@@ -120,6 +120,12 @@ patch(PaymentScreen.prototype, {
                 .map(([key, value]) => [key, omit(value, "appliedRules")])
         );
         if (Object.keys(couponData || {}).length > 0) {
+            for (const index in couponData) {
+                const data = couponData[index];
+                if (data.giftCardId && typeof data.giftCardId !== "number") {
+                    delete couponData[index].giftCardId;
+                }
+            }
             const payload = await this.pos.data.call("pos.order", "confirm_coupon_programs", [
                 order.id,
                 couponData,

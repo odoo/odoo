@@ -99,16 +99,29 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
         [
             Dialog.confirm("Open session"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
-            TextInputPopup.inputText("044123456"),
+            TextInputPopup.inputText("044123457"),
             Dialog.confirm(),
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("product_a", "1"),
-            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.enterCode("044123457"),
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.pointsAwardedAre("100"),
             PosLoyalty.finalizeOrder("Cash", "50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyPhysicalGiftcard", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.addOrderline("Gift Card", "3", "50", "150.00"),
+            PosLoyalty.createManualGiftCard("test-card-0000", 100),
+            PosLoyalty.clickPhysicalGiftCard("test-card-0000"),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "100"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
         ].flat(),
 });
