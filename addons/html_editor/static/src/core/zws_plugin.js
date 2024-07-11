@@ -11,7 +11,7 @@ export class ZwsPlugin extends Plugin {
     static dependencies = ["selection", "split"];
     static shared = ["insertAndSelectZws"];
     static resources = (p) => ({
-        arrows_should_skip: (ev, char, lastSkiped) => char === "\u200b",
+        arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
     });
 
     handleCommand(command, payload) {
