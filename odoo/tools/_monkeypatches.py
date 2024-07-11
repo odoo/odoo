@@ -6,12 +6,23 @@ from types import CodeType
 
 _logger = logging.getLogger(__name__)
 
-from stdnum import util
+try:
+    from stdnum import util
+except ImportError as e:
+    util = None
+    _logger.warning("Failed to import stdnum library: %s", e)
+
 from werkzeug.datastructures import FileStorage
 from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
-from zeep import CachingClient
-from zeep.transports import Transport
+
+try:
+    from zeep import CachingClient
+    from zeep.transports import Transport
+except ImportError as e:
+    CachingClient = None
+    Transport = None
+    _logger.warning("Failed to import zeep library: %s", e)
 
 from .json import scriptsafe
 
@@ -78,9 +89,13 @@ def new_get_soap_client(wsdlurl, timeout=30):
     # Can be removed when https://github.com/arthurdejong/python-stdnum/issues/444 is
     # resolved and the version of the dependency is updated
     if (wsdlurl, timeout) not in _soap_clients:
-        transport = Transport(operation_timeout=timeout, timeout=timeout)
-        client = CachingClient(wsdlurl, transport=transport).service
+        if Transport:
+            transport = Transport(operation_timeout=timeout, timeout=timeout)
+        if CachingClient:
+            client = CachingClient(wsdlurl, transport=transport).service
         _soap_clients[(wsdlurl, timeout)] = client
     return _soap_clients[(wsdlurl, timeout)]
 
-util.get_soap_client = new_get_soap_client
+
+if util:
+    util.get_soap_client = new_get_soap_client
