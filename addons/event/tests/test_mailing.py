@@ -96,12 +96,9 @@ class TestMailing(EventCase, MockEmail):
                 template.email_from,
                 "{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}"
             )
-            self.assertEqual(
-                template.email_to,
-                "{{ (object.email and format_addr((object.name, object.email)) or object.partner_id.email_formatted or '') }}",
-            )
+            self.assertFalse(template.email_to)
             self.assertEqual(
                 template.lang,
                 "{{ object.event_id.lang or object.partner_id.lang }}",
             )
-            self.assertFalse(template.use_default_to)
+            self.assertTrue(template.use_default_to)

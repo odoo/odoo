@@ -5,7 +5,7 @@ import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
-from odoo.tools import email_normalize, email_normalize_all
+from odoo.tools import email_normalize, email_normalize_all, formataddr
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
@@ -338,9 +338,8 @@ class EventRegistration(models.Model):
     def _mail_template_default_values(self):
         return {
             "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}",
-            "email_to": "{{ (object.email and format_addr((object.name, object.email)) or object.partner_id.email_formatted or '') }}",
             "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
-            "use_default_to": False,
+            "use_default_to": True,
         }
 
     def _message_compute_subject(self):
@@ -378,7 +377,10 @@ class EventRegistration(models.Model):
         return {r.id:
             {
                 'partner_ids': [],
-                'email_to': ','.join(email_normalize_all(r.email)) or r.email,
+                'email_to': ','.join(
+                    formataddr((r.name or "", email))
+                    for email in (email_normalize_all(r.email) or [r.email])
+                ),
                 'email_cc': False,
             } for r in self
         }
