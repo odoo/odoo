@@ -13,7 +13,7 @@
                             actionName="constructor.numpadActionName"
                             actionType="'payment'"
                             onClickMore.bind="displayAllControlPopup" />
-                        <Numpad buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                        <Numpad t-if="pos.get_order().uiState.selected_orderline_uuid" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
                     </div>
                 </div>
             </div>
