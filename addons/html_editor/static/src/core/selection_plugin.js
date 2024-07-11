@@ -274,7 +274,7 @@ export class SelectionPlugin extends Plugin {
                 commonAncestorContainer: range.commonAncestorContainer,
                 isCollapsed: range.collapsed,
                 direction,
-                textContent: () => range.collapsed ? "" : selection.toString(),
+                textContent: () => (range.collapsed ? "" : selection.toString()),
                 inEditable,
             };
         }
@@ -302,13 +302,7 @@ export class SelectionPlugin extends Plugin {
      */
     getEditableSelection({ deep = false } = {}) {
         const selection = this.document.getSelection();
-        if (
-            selection &&
-            selection.rangeCount &&
-            this.editable.contains(selection.anchorNode) &&
-            (selection.focusNode === selection.anchorNode ||
-                this.editable.contains(selection.focusNode))
-        ) {
+        if (selection && selection.rangeCount && this.isSelectionInEditable(selection)) {
             this.activeSelection = this.makeSelection(selection, true);
         } else if (!this.activeSelection.anchorNode.isConnected) {
             this.activeSelection = this.makeSelection();
@@ -366,10 +360,7 @@ export class SelectionPlugin extends Plugin {
         { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset },
         { normalize = true } = {}
     ) {
-        if (
-            !this.editable.contains(anchorNode) ||
-            !(anchorNode === focusNode || this.editable.contains(focusNode))
-        ) {
+        if (!this.isSelectionInEditable({ anchorNode, focusNode })) {
             throw new Error("Selection is not in editor");
         }
         [anchorNode, anchorOffset] = normalizeCursorPosition(anchorNode, anchorOffset, "left");
@@ -766,10 +757,7 @@ export class SelectionPlugin extends Plugin {
      * @returns { EditorSelection|null } selection, rectified selection or null
      */
     rectifySelection(selection) {
-        if (
-            !this.editable.contains(selection.anchorNode) ||
-            !this.editable.contains(selection.focusNode)
-        ) {
+        if (!this.isSelectionInEditable(selection)) {
             return null;
         }
         const anchorSize = nodeSize(selection.anchorNode);
@@ -802,14 +790,19 @@ export class SelectionPlugin extends Plugin {
             return editorSelection;
         }
         selection.modify(alter, direction, granularity);
-        const { anchorNode, focusNode } = selection;
-        if (
-            !this.editable.contains(anchorNode) ||
-            !(anchorNode === focusNode || this.editable.contains(focusNode))
-        ) {
-            throw new Error("Selection is not in editor");
+        if (!this.isSelectionInEditable(selection)) {
+            // If selection was moved to outside the editable, restore it.
+            return this.setSelection(editorSelection);
         }
         this.activeSelection = this.makeSelection(selection, true);
         return this.activeSelection;
+    }
+
+
+    isSelectionInEditable({ anchorNode, focusNode }) {
+        return (
+            this.editable.contains(anchorNode) &&
+            (focusNode === anchorNode || this.editable.contains(focusNode))
+        );
     }
 }
