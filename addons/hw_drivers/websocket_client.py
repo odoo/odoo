@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 
-def send_to_controller(print_id, device_identifier, iot_mac):
+def send_to_controller(print_id, device_identifier):
     """
     Send back to odoo's server the completion of the operation
     """
@@ -29,7 +29,7 @@ def send_to_controller(print_id, device_identifier, iot_mac):
                 {'params': {
                     'print_id': print_id,
                     'device_identifier': device_identifier,
-                    'iot_mac': iot_mac,
+                    'iot_mac': helpers.get_mac_address(),
                     }}).encode('utf8'),
             headers={
                 'Content-type': 'application/json',
@@ -49,13 +49,12 @@ def on_message(ws, messages):
     for document in messages:
         if (document['message']['type'] == 'print'):
             payload = document['message']['payload']
-            iot_mac = helpers.get_mac_address()
-            if iot_mac in payload['iotDevice']['iotIdentifiers']:
+            if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
                 #send box confirmation
                 for device in payload['iotDevice']['identifiers']:
                     if device['identifier'] in main.iot_devices:
                         main.iot_devices[device["identifier"]]._action_default(payload)
-                        send_to_controller(payload['print_id'], device['identifier'], iot_mac)
+                        send_to_controller(payload['print_id'], device['identifier'])
 
 
 def on_error(ws, error):
