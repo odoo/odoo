@@ -13,7 +13,15 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
+<<<<<<< HEAD
 def send_to_controller(device_type, params):
+||||||| parent of 2796af294c36 (temp)
+
+def send_to_controller(print_id, device_identifier, iot_mac):
+=======
+
+def send_to_controller(print_id, device_identifier):
+>>>>>>> 2796af294c36 (temp)
     """
     Confirm the operation's completion by sending a response back to the Odoo server
     """
@@ -27,8 +35,26 @@ def send_to_controller(device_type, params):
         http = urllib3.PoolManager(cert_reqs='CERT_NONE')
         http.request(
             'POST',
+<<<<<<< HEAD
             server_url,
             body=json.dumps({'params': params}).encode('utf8'),
+||||||| parent of 2796af294c36 (temp)
+            server + "/iot/printer/status",
+            body=json.dumps(
+                {'params': {
+                    'print_id': print_id,
+                    'device_identifier': device_identifier,
+                    'iot_mac': iot_mac,
+                    }}).encode('utf8'),
+=======
+            server + "/iot/printer/status",
+            body=json.dumps(
+                {'params': {
+                    'print_id': print_id,
+                    'device_identifier': device_identifier,
+                    'iot_mac': helpers.get_mac_address(),
+                    }}).encode('utf8'),
+>>>>>>> 2796af294c36 (temp)
             headers={
                 'Content-type': 'application/json',
                 'Accept': 'text/plain',
@@ -44,13 +70,36 @@ def on_message(ws, messages):
         The message is load and if its type is 'iot_action', is sent to the device
     """
     messages = json.loads(messages)
+<<<<<<< HEAD
     for message in messages:
         if message['message']['type'] == 'iot_action':
             payload = message['message']['payload']
             if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
+||||||| parent of 2796af294c36 (temp)
+    for document in messages:
+        if (document['message']['type'] in ['print', 'iot_action']):
+            payload = document['message']['payload']
+            iot_mac = helpers.get_mac_address()
+            if iot_mac in payload['iotDevice']['iotIdentifiers']:
+                #send box confirmation
+=======
+    for document in messages:
+        if (document['message']['type'] in ['print', 'iot_action']):
+            payload = document['message']['payload']
+            if helpers.get_mac_address() in payload['iotDevice']['iotIdentifiers']:
+                #send box confirmation
+>>>>>>> 2796af294c36 (temp)
                 for device in payload['iotDevice']['identifiers']:
                     if device['identifier'] in main.iot_devices:
+<<<<<<< HEAD
                         main.iot_devices[device["identifier"]].action(payload)
+||||||| parent of 2796af294c36 (temp)
+                        main.iot_devices[device["identifier"]]._action_default(payload)
+                        send_to_controller(payload['print_id'], device['identifier'], iot_mac)
+=======
+                        main.iot_devices[device["identifier"]]._action_default(payload)
+                        send_to_controller(payload['print_id'], device['identifier'])
+>>>>>>> 2796af294c36 (temp)
 
 
 def on_error(ws, error):
