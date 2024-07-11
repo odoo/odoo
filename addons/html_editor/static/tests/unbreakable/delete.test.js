@@ -263,29 +263,22 @@ describe("backward", () => {
             });
         });
 
-        describe("triple click", () => {
-            test("should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable (1)", async () => {
-                await testEditor({
-                    contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]def</p>`,
-                    // This type of selection (typically done with a triple
-                    // click) is "corrected" before remove so triple clicking
-                    // doesn't remove a paragraph break.
-                    stepFunction: deleteBackward,
-                    contentAfter: `<p>ab[]</p><p class="oe_unbreakable">def</p>`,
-                });
-            });
-
-            test("should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable (2)", async () => {
-                await testEditor({
-                    contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]<br></p><p>def</p>`,
-                    // This type of selection (typically done with a triple
-                    // click) is "corrected" before remove so triple clicking
-                    // doesn't remove a paragraph break.
-                    stepFunction: deleteBackward,
-                    contentAfter: `<p>ab[]</p><p class="oe_unbreakable"><br></p><p>def</p>`,
-                });
+        test("should delete last character of paragraph but not merge it with unbreakable", async () => {
+            await testEditor({
+                contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]def</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>ab[]</p><p class="oe_unbreakable">def</p>`,
             });
         });
+
+        test("should delete last character of paragraph and fully selected empty unbreakable", async () => {
+            await testEditor({
+                contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]<br></p><p>def</p>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<p>ab[]</p><p>def</p>`,
+            });
+        });
+
         test("should delete first character of unbreakable, ignoring selected paragraph break (backward)", async () => {
             await testEditor({
                 contentBefore: `<p>abc[</p><p class="oe_unbreakable">d]ef</p>`,
@@ -441,19 +434,6 @@ describe("forward", () => {
                 contentAfter: unformat(`
                         <p class="oe_unbreakable">a[]</p>
                         <p class="oe_unbreakable">d</p>`), // JW without oe_breakable classes of course
-            });
-        });
-
-        describe("triple click", () => {
-            test("should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable", async () => {
-                await testEditor({
-                    contentBefore: "<p>ab[c</p><p>]def</p>",
-                    // This type of selection (typically done with a triple
-                    // click) is "corrected" before remove so triple clicking
-                    // doesn't remove a paragraph break.
-                    stepFunction: deleteForward,
-                    contentAfter: "<p>ab[]</p><p>def</p>",
-                });
             });
         });
 
