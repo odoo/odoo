@@ -865,7 +865,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         values['website_sale.total'] = request.env['ir.ui.view']._render_template(
             "website_sale.total", {
-                'order': order,
+                'website_sale_order': order,
             }
         )
         return values
