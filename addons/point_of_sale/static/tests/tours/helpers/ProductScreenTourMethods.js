@@ -399,7 +399,7 @@ export function addInternalNote(note) {
                 mobile: true,
             },
             controlButton("Internal Note"),
-            TextInputPopup.inputText(note),
+            ...(note ? [TextInputPopup.inputText(note)] : []),
             Dialog.confirm(),
         ].flat()
     );
