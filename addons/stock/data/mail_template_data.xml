@@ -5,6 +5,7 @@
         <field name="model_id" ref="model_stock_picking"/>
         <field name="subject">{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})</field>
         <field name="partner_to">{{ object.partner_id.email and object.partner_id.id or object.partner_id.parent_id.id }}</field>
+        <field name="use_default_to" eval="False"/>
         <field name="description">Sent to the customers when orders are delivered, if the setting is enabled</field>
         <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
