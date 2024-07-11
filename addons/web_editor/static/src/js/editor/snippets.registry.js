@@ -8,4 +8,3 @@ export function registerOption(name, def, options) {
     }
     return registry.category("snippet_options").add(name, def, options);
 }
-

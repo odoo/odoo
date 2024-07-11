@@ -766,9 +766,15 @@ var SnippetEditor = Widget.extend({
      * Returns the OWL Options templates to mount their widgets.
      * The widgets will handle requesting the initial updateUI
      * @TODO owl-options Implement visibility.
+     * 
+     * @param {Object} [params]
+     * @param {boolean} [params.text] - if true, return only Toolbar options; if
+     * false, return all but Toolbar options.
      */
-    getOptions() {
-        return this.snippetOptions.filter((option) => !option.instance.isRestrictedGroup);
+    getOptions(params = {text: false}) {
+        return this.snippetOptions.filter((option) => {
+            return !option.instance.isRestrictedGroup && !!option.textSelector === params.text;
+        });
     },
     /**
      * @param {boolean} [show]
@@ -2235,10 +2241,13 @@ class SnippetsMenu extends Component {
             blockPreviewOverlays: this._onBlockPreviewOverlays.bind(this),
             cloneSnippet: this._cloneSnippet.bind(this),
             cleanUI: this._cleanUI.bind(this),
+            disableLoadingEffect: this._onDisableLoadingEffect.bind(this),
+            enableLoadingEffect: this._onEnableLoadingEffect.bind(this),
             requestSave: (data) => this._onSaveRequest.call(this, { data }),
             removeSnippet: this._onRemoveSnippet.bind(this),
             isElementSelected: (data) => this._onIsElementSelected.call(this, { data }),
             hideOverlay: this._onHideOverlay.bind(this),
+            ownerDocument: (function() { return this.el.ownerDocument }).bind(this),
             unblockPreviewOverlays: this._onUnblockPreviewOverlays.bind(this),
             updateInvisibleDOM: this._onUpdateInvisibleDom.bind(this),
             userValueWidgetOpening: this._onUserValueWidgetOpening.bind(this),

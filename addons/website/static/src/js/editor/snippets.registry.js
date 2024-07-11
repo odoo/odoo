@@ -10,3 +10,8 @@ export function registerWebsiteOption(name, def, options) {
     return registerOption(name, def, options);
 }
 
+registerWebsiteOption("WebsiteIconTools", {
+    template: "web_editor.IconTools",
+    selector: "span.fa, i.fa",
+    exclude: "[data-oe-xpath]",
+});

@@ -283,5 +283,17 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//Toolbar" position="inside">
+            <t t-if="state.isTextAnimated">
+                <t t-foreach="[...state.enabledEditorHierarchy].reverse()" t-as="editor" t-key="editor.key">
+                    <t t-set="snippetOptions" t-value="editor.getOptions({text: true})"/>
+                    <t t-foreach="snippetOptions" t-as="option" t-key="option_index">
+                        <t t-component="option.renderingComponent"
+                            snippetOption="option"
+                            onOptionMounted.bind="onOptionMounted"/>
+                     </t>
+                </t>
+            </t>
+        </xpath>
     </t>
 </templates>

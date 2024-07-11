@@ -32,8 +32,8 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
             }
         },
     },
-    wTourUtils.changeOption('ImageTools', 'we-select[data-name="shape_img_opt"] we-toggler'),
-    wTourUtils.changeOption('ImageTools', 'we-button[data-set-img-shape]'),
+    wTourUtils.changeOption('ImageToolsAnimate', 'we-select[data-name="shape_img_opt"] we-toggler'),
+    wTourUtils.changeOption('ImageToolsAnimate', 'we-button[data-set-img-shape]'),
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: ':iframe .s_404_snippet img[src^="data:"]',

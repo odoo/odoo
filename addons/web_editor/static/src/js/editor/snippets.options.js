@@ -694,14 +694,6 @@ export class UserValue {
                 this._methodsParams[key] = dataValue;
             }
         }
-
-        // TODO: @owl-options Sort the method names or fix this.
-        // Method names come from the widget's dataset whose keys' order cannot
-        // be relied on. We explicitely sort them by alphabetical order allowing
-        // consistent behavior, while relying on order for such methods should
-        // not be done when possible (the methods should be independent from
-        // each other when possible).
-        //this._methodsNames.sort();
     }
     /**
      * @param {boolean} [previewMode=false]
@@ -770,6 +762,11 @@ export class UserValue {
                 }
             }
         }
+        // Method names' order cannot be relied on. We explicitely sort them by
+        // alphabetical order allowing consistent behavior, while relying on
+        // order for such methods should not be done when possible (the methods
+        // should be independent from each other when possible).
+        this._methodsNames = new Set([...this._methodsNames].sort());
     }
     /**
      * Removes the given userValue from the list of sub values.
@@ -1345,6 +1342,8 @@ export class SelectUserValue extends BaseSelectionUserValue {
                 // Images Wall.
                 if (activeWidget.fakeImg) {
                    newToggler.textContent = activeWidget.fakeImg;
+                } else {
+                    newToggler.textContent = this.constructor.PLACEHOLDER_TEXT;
                 }
             }
         } else {
@@ -7061,63 +7060,55 @@ export class ImageHandlerOption extends SnippetOption {
             || params.optionsPossibleValues.setQuality
             || widgetName === 'format_select_opt';
     }
+    /**
+     *
+     */
+    _readableFilesize() {
+        return this._filesize && `${this._filesize.toFixed(1)} kb` || undefined;
+    }
 }
 
-/**
- * @param {Element} containerEl
- * @param {boolean} labelIsDimension - Optional display imgsize attribute instead of animated
- * @returns {Element}
- */
-const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl, labelIsDimension = false) {
-    const labelEl = document.createElement('span');
-    labelEl.classList.add('o_we_shape_animated_label');
-    let labelStr = _t("Animated");
-    const spanEl = document.createElement('span');
-    if (labelIsDimension) {
-        const dimensionIcon = document.createElement('i');
-        labelStr = containerEl.dataset.imgSize;
-        dimensionIcon.classList.add('fa', 'fa-expand');
-        labelEl.append(dimensionIcon);
-        spanEl.textContent = labelStr;
-    } else {
-        labelEl.textContent = labelStr[0];
-        spanEl.textContent = labelStr.substr(1);
+class WeImgShapeBtn extends Component {
+    static template = "web_editor.WeImgShapeBtn";
+    static components = { WeButton };
+    static props = {
+         setImgShape: String,
+         animated: { type: String, optional: true },
+         imgSize: { type: String, optional: true },
+         "*": {},
+    };
+
+    constructor() {
+        super(...arguments);
+        const [moduleName, directory, shapeName] = this.props.setImgShape.split('/');
+        this.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
     }
-    labelEl.appendChild(spanEl);
-    containerEl.classList.add('position-relative');
-    containerEl.appendChild(labelEl);
-    return labelEl;
-};
+    setup() {
+        this.renderContext = useState(this.env.renderContext);
+    }
+}
+registry.category("snippet_widgets").add("WeImgShapeBtn", WeImgShapeBtn);
 
 /**
  * Controls image width and quality.
  */
 
-legacyRegistry.ImageTools = {
-    MAX_SUGGESTED_WIDTH: 1920,
-
-    /**
-     * @constructor
-     */
-    init() {
+export class ImageTools extends ImageHandlerOption {
+    constructor() {
+        super(...arguments);
+        this.MAX_SUGGESTED_WIDTH = 1920;
         this.shapeCache = {};
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start() {
+
         this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
         this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
-        return this._super(...arguments);
-    },
+    }
     /**
      * @override
      */
     destroy() {
         this.$target.off('.ImageOptimization');
-        return this._super(...arguments);
-    },
+        return super.destroy(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -7131,11 +7122,11 @@ legacyRegistry.ImageTools = {
      */
     async removeStretch(previewMode, widgetValue, params) {
         this.options.wysiwyg.odooEditor.historyPauseSteps();
-        this.trigger_up("disable_loading_effect");
+        this.env.disableLoadingEffect();
         // Preserve the cursor to be able to replace the image afterwards.
         const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
         const img = this._getImg();
-        const document = this.el.ownerDocument;
+        const document = this.env.ownerDocument();
         const imageCropWrapperElement = document.createElement("div");
         imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
         document.body.append(imageCropWrapperElement);
@@ -7157,21 +7148,21 @@ legacyRegistry.ImageTools = {
         imageCropWrapper.destroy();
         imageCropWrapperElement.remove();
         restoreCursor();
-        this.trigger_up("enable_loading_effect");
+        this.env.enableLoadingEffect();
         if (!widgetValue) {
             this._onImageCropped();
         }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
-    },
+    }
     /**
      * Displays the image cropping tools
      *
      * @see this.selectClass for parameters
      */
     async crop() {
-        this.trigger_up('disable_loading_effect');
+        this.env.disableLoadingEffect();
         const img = this._getImg();
-        const document = this.$el[0].ownerDocument;
+        const document = this.env.ownerDocument();
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
@@ -7191,16 +7182,16 @@ legacyRegistry.ImageTools = {
         });
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
-        this.trigger_up('enable_loading_effect');
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Displays the image transformation tools
      *
      * @see this.selectClass for parameters
      */
     async transform() {
-        this.trigger_up('hide_overlay');
-        this.trigger_up('disable_loading_effect');
+        this.env.hideOverlay();
+        this.env.disableLoadingEffect();
 
         const document = this.$target[0].ownerDocument;
         const playState = this.$target[0].style.animationPlayState;
@@ -7232,8 +7223,8 @@ legacyRegistry.ImageTools = {
         await new Promise(resolve => {
             document.addEventListener('mouseup', resolve, {once: true});
         });
-        this.trigger_up('enable_loading_effect');
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Resets the image cropping
      *
@@ -7259,7 +7250,7 @@ legacyRegistry.ImageTools = {
         imageCropWrapperElement.remove();
 
         await this._reapplyCurrentShape();
-    },
+    }
     /**
      * Resets the image rotation and translation
      *
@@ -7269,12 +7260,12 @@ legacyRegistry.ImageTools = {
         this.$target
             .attr('style', (this.$target.attr('style') || '')
             .replace(/[^;]*transform[\w:]*;?/g, ''));
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
     async setImgShape(previewMode, widgetValue, params) {
-        this.trigger_up("disable_loading_effect");
+        this.env.disableLoadingEffect();
         const img = this._getImg();
         let clonedImgEl;
 
@@ -7290,7 +7281,7 @@ legacyRegistry.ImageTools = {
             img.insertAdjacentElement("afterend", clonedImgEl);
             img.classList.add("d-none");
 
-            const document = this.el.ownerDocument;
+            const document = this.env.ownerDocument();
             const imageCropWrapperElement = document.createElement("div");
             imageCropWrapperElement.classList.add("d-none"); // Hiding the cropper.
             document.body.append(imageCropWrapperElement);
@@ -7326,13 +7317,7 @@ legacyRegistry.ImageTools = {
         }
 
         const saveData = previewMode === false;
-        if (img.dataset.hoverEffect && !widgetValue) {
-            // When a shape is removed and there is a hover effect on the
-            // image, we then place the "Square" shape as the default because a
-            // shape is required for the hover effects to work.
-            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            widgetValue = shapeImgSquareWidget.getActiveValue("setImgShape");
-        }
+        widgetValue = this._removeImgShapeWithHoverEffectHook(img, widgetValue);
         if (widgetValue) {
             await this._loadShape(widgetValue);
             if (previewMode === 'reset' && img.dataset.shapeColors) {
@@ -7350,20 +7335,7 @@ legacyRegistry.ImageTools = {
                 // When the user selects a shape, we remove the data attributes
                 // that are not compatible with this shape.
                 if (saveData) {
-                    if (!this._isTransformableShape()) {
-                        delete img.dataset.shapeFlip;
-                        delete img.dataset.shapeRotate;
-                    }
-                    if (!this._canHaveHoverEffect()) {
-                        delete img.dataset.hoverEffect;
-                        delete img.dataset.hoverEffectColor;
-                        delete img.dataset.hoverEffectStrokeWidth;
-                        delete img.dataset.hoverEffectIntensity;
-                        img.classList.remove("o_animate_on_hover");
-                    }
-                    if (!this._isAnimatedShape()) {
-                        delete img.dataset.shapeAnimationSpeed;
-                    }
+                    this._resetImgShape(img);
                 }
             }
         } else {
@@ -7388,8 +7360,8 @@ legacyRegistry.ImageTools = {
             clonedImgEl.remove();
             img.classList.remove("d-none");
         }
-        this.trigger_up("enable_loading_effect");
-    },
+        this.env.enableLoadingEffect();
+    }
     /**
      * Handles color assignment on the shape. Widget is a color picker.
      * If no value, we reset to the current color palette.
@@ -7404,7 +7376,7 @@ legacyRegistry.ImageTools = {
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
-    },
+    }
     /**
      * Flips the image shape horizontally.
      *
@@ -7412,7 +7384,7 @@ legacyRegistry.ImageTools = {
      */
     async setImgShapeFlipX(previewMode, widgetValue, params) {
         await this._setImgShapeFlip("x");
-    },
+    }
     /**
      * Flips the image shape vertically.
      *
@@ -7420,7 +7392,7 @@ legacyRegistry.ImageTools = {
      */
     async setImgShapeFlipY(previewMode, widgetValue, params) {
         await this._setImgShapeFlip("y");
-    },
+    }
     /**
      * Rotates the image shape 90 degrees to the left.
      *
@@ -7428,7 +7400,7 @@ legacyRegistry.ImageTools = {
      */
     async setImgShapeRotateLeft(previewMode, widgetValue, params) {
         await this._setImgShapeRotate(-90);
-    },
+    }
     /**
      * Rotates the image shape 90 degrees to the right.
      *
@@ -7436,137 +7408,7 @@ legacyRegistry.ImageTools = {
      */
     async setImgShapeRotateRight(previewMode, widgetValue, params) {
         await this._setImgShapeRotate(90);
-    },
-    /**
-     * Sets the hover effects of the image shape.
-     *
-     * @see this.selectClass for parameters
-     */
-    async setImgShapeHoverEffect(previewMode, widgetValue, params) {
-        const imgEl = this._getImg();
-        if (previewMode !== "reset") {
-            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
-            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
-            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
-        }
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectIntensity;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
-        if (previewMode === true) {
-            if (params.name === "hover_effect_overlay_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
-            } else if (params.name === "hover_effect_outline_opt") {
-                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
-                imgEl.dataset.hoverEffectStrokeWidth = 10;
-            } else {
-                imgEl.dataset.hoverEffectIntensity = 20;
-                if (params.name !== "hover_effect_mirror_blur_opt") {
-                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
-                }
-            }
-        } else {
-            if (this.prevHoverEffectColor) {
-                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
-            }
-            if (this.prevHoverEffectIntensity) {
-                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
-            }
-            if (this.prevHoverEffectStrokeWidth) {
-                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
-            }
-        }
-        await this._reapplyCurrentShape();
-        // When the hover effects are first activated from the "animationMode"
-        // function of the "WebsiteAnimate" class, the history was paused to
-        // avoid recording intermediate steps. That's why we unpause it here.
-        if (this.firstHoverEffect) {
-            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
-            delete this.firstHoverEffect;
-        }
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
-            await this._reapplyCurrentShape();
-        }
-    },
-    /**
-     * Sets the color of hover effects.
-     *
-     * @see this.selectClass for parameters
-     */
-    async setHoverEffectColor(previewMode, widgetValue, params) {
-        const img = this._getImg();
-        let defaultColor = "rgba(0, 0, 0, 0)";
-        if (img.dataset.hoverEffect === "overlay") {
-            defaultColor = "black-25";
-        } else if (img.dataset.hoverEffect === "outline") {
-            defaultColor = "primary";
-        }
-        img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
-        await this._reapplyCurrentShape();
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    notify(name) {
-        if (name === "enable_hover_effect") {
-            this.trigger_up("snippet_edition_request", {exec: () => {
-                // Add the "square" shape to the image if it has no shape
-                // because the "hover effects" need a shape to work.
-                const imgEl = this._getImg();
-                const shapeName = imgEl.dataset.shape?.split("/")[2];
-                if (!shapeName) {
-                    const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-                    shapeImgSquareWidget.enable();
-                    shapeImgSquareWidget.getParent().close(); // FIXME remove this ugly hack asap
-                }
-                // Add the "Overlay" hover effect to the shape.
-                this.firstHoverEffect = true;
-                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
-                hoverEffectOverlayWidget.enable();
-                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
-            }});
-        } else if (name === "disable_hover_effect") {
-            this._disableHoverEffect();
-        } else {
-            this._super(...arguments);
-        }
-    },
-    /**
-     * @override
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        // Adapts the colorpicker label according to the selected "On Hover"
-        // animation.
-        const hoverEffectName = this.$target[0].dataset.hoverEffect;
-        if (hoverEffectName) {
-            const hoverEffectColorWidget = this.findWidget("hover_effect_color_opt");
-            const needToAdaptLabel = ["image_zoom_in", "image_zoom_out", "dolly_zoom"].includes(hoverEffectName);
-            const labelEl = hoverEffectColorWidget.el.querySelector("we-title");
-            if (!this._originalHoverEffectColorLabel) {
-                this._originalHoverEffectColorLabel = labelEl.textContent;
-            }
-            labelEl.textContent = needToAdaptLabel
-                ? _t("Overlay")
-                : this._originalHoverEffectColorLabel;
-        }
-        // Move the "hover effects" options to the 'websiteAnimate' options.
-        const hoverEffectsOptionsEl = this.$el[0].querySelector("#o_hover_effects_options");
-        const animationEffectWidget = this._requestUserValueWidgets("animation_effect_opt")[0];
-        if (hoverEffectsOptionsEl && animationEffectWidget) {
-            animationEffectWidget.getParent().$el[0].append(hoverEffectsOptionsEl);
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -7577,18 +7419,18 @@ legacyRegistry.ImageTools = {
 ￼    */
     _isTransformed() {
         return this.$target.is('[style*="transform"]');
-    },
+    }
     /**
 ￼    * @private
 ￼    */
     _isCropped() {
         return this.$target.hasClass('o_we_image_cropped');
-    },
+    }
     /**
      * @override
      */
     async _applyOptions() {
-        const img = await this._super(...arguments);
+        const img = await super._applyOptions(...arguments);
         if (img && img.dataset.shape) {
             await this._loadShape(img.dataset.shape);
             if (/^data:/.test(img.src)) {
@@ -7597,7 +7439,7 @@ legacyRegistry.ImageTools = {
             }
         }
         return img;
-    },
+    }
     /**
      * Loads the shape into cache if not already and sets it in the dataset of
      * the img
@@ -7613,7 +7455,7 @@ legacyRegistry.ImageTools = {
             this.shapeCache[fileName] = shape;
         }
         this._getImg().dataset.shape = shapeName;
-    },
+    }
 
     /**
      * Applies the shape in img.dataset.shape and replaces the previous hex
@@ -7645,7 +7487,7 @@ legacyRegistry.ImageTools = {
         }
         // Also apply to carousel thumbnail if applicable.
         weUtils.forwardToThumbnail(img);
-    },
+    }
     /**
      * Replace animation durations in SVG and CSS with modified values.
      *
@@ -7692,7 +7534,7 @@ legacyRegistry.ImageTools = {
             svg = svg.replace(regex, subst);
         }
         return svg;
-    },
+    }
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
@@ -7702,44 +7544,10 @@ legacyRegistry.ImageTools = {
      */
     async _writeShape(svgText) {
         const img = this._getImg();
-        let needToRefreshPublicWidgets = false;
-        let hasHoverEffect = false;
-
-        // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
-            // The "ImageShapeHoverEffet" public widget needs to restart
-            // (e.g. image replacement).
-            needToRefreshPublicWidgets = true;
-            hasHoverEffect = true;
-        }
-
         const dataURL = await this.computeShape(svgText, img);
-
-        let clonedImgEl = null;
-        if (hasHoverEffect) {
-            // This is useful during hover effects previews. Without this, in
-            // Chrome, the 'mouse out' animation is triggered very briefly when
-            // previewMode === 'reset' (when transitioning from one hover effect
-            // to another), causing a visual glitch. To avoid this, we hide the
-            // image with its clone when the source is set.
-            clonedImgEl = img.cloneNode(true);
-            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
-            img.classList.add("d-none");
-            img.insertAdjacentElement("afterend", clonedImgEl);
-            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
-        }
         const loadedImg = await loadImage(dataURL, img);
-        if (hasHoverEffect) {
-            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
-            clonedImgEl.remove();
-            img.classList.remove("d-none");
-            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
-        }
-        if (needToRefreshPublicWidgets) {
-            await this._refreshPublicWidgets();
-        }
         return loadedImg;
-    },
+    }
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
      *
@@ -7778,10 +7586,7 @@ legacyRegistry.ImageTools = {
             svg.querySelector("#filterPath").setAttribute("style", `transform: ${shapeTransformValues.join(" ")}; ${transformOrigin}`);
         }
 
-        // Add shape animations on hover.
-        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
-            this._addImageShapeHoverEffect(svg, img);
-        }
+        this._computeImgShapeHoverEffect(svg, img);
 
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
         // We will store the image in base64 inside the SVG.
@@ -7821,7 +7626,12 @@ legacyRegistry.ImageTools = {
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
         return dataURL;
-    },
+    }
+    /**
+     * @param {SVGElement} svgEl
+     * @param {HTMLImageElement} imgEl
+     */
+    async _computeImgShapeHoverEffect(svgEl, imgEl) {}
     /**
      * @override
      */
@@ -7856,21 +7666,26 @@ legacyRegistry.ImageTools = {
         // If it's not in a container, it's probably not going to change size
         // depending on breakpoints. We still keep a margin safety.
         return Math.round(Math.min(displayWidth * 1.5, this.MAX_SUGGESTED_WIDTH));
-    },
+    }
     /**
      * @override
      */
     _getImg() {
         return this.$target[0];
-    },
+    }
     /**
      * @override
      */
     _relocateWeightEl() {
-        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        const titleTextEl = leftPanelEl.querySelector('we-title > span');
-        this.$weight.appendTo(titleTextEl);
-    },
+        this.renderContext.filesize = this._readableFilesize();
+        this.callbacks.updateExtraTitle(
+            markup(
+                `<span class="o_we_image_weight o_we_tag" title="${_t('Size')}">
+                    ${this.renderContext.filesize}
+                </span>`
+            )
+        );
+    }
     /**
      * @override
      */
@@ -7902,15 +7717,6 @@ legacyRegistry.ImageTools = {
             "img_shape_transform_rotate_x_opt", "img_shape_transform_rotate_y_opt"].includes(params.name)) {
             return this._isTransformableShape();
         }
-        if (widgetName === "hover_effect_none_opt") {
-            // The hover effects are removed with the "WebsiteAnimate" animation
-            // selector so this option should not be visible.
-            return false;
-        }
-        if (params.optionsPossibleValues.setImgShapeHoverEffect) {
-            const imgEl = this._getImg();
-            return imgEl.classList.contains("o_animate_on_hover") && this._canHaveHoverEffect();
-        }
         // If "Description" or "Tooltip" options.
         if (["alt", "title"].includes(params.attributeName)) {
             return isImageSupportedForStyle(this._getImg());
@@ -7931,8 +7737,8 @@ legacyRegistry.ImageTools = {
         if (widgetName === "toggle_stretch_opt") {
             return this._isCropRequired();
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
@@ -7972,40 +7778,13 @@ legacyRegistry.ImageTools = {
                 const imgEl = this._getImg();
                 return imgEl.dataset.shapeFlip?.includes("y") || "";
             }
-            case 'setHoverEffectColor': {
-                const imgEl = this._getImg();
-                return imgEl.dataset.hoverEffectColor || "";
-            }
             case "removeStretch": {
                 const imgEl = this._getImg();
                 return imgEl.dataset.aspectRatio !== "1/1";
             }
         }
-        return this._super(...arguments);
-    },
-    /**
-     * Appends the SVG as an image.
-     * Due to the nature of image_shapes' SVGs, it is easier to render them as
-     * img compared to appending their content to the DOM
-     * (which is what the current data-img does)
-     *
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        await this._super(...arguments);
-        uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
-            const image = document.createElement('img');
-            const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
-            image.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
-            $(btn).prepend(image);
-
-            if (btn.dataset.animated) {
-                _addAnimatedShapeLabel(btn);
-            } else if (btn.dataset.imgSize) {
-                _addAnimatedShapeLabel(btn, true);
-            }
-        });
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -8013,8 +7792,8 @@ legacyRegistry.ImageTools = {
         if (img.dataset.shape && img.dataset.originalMimetype) {
             return img.dataset.originalMimetype;
         }
-        return this._super(...arguments);
-    },
+        return super._getImageMimetype(...arguments);
+    }
     /**
      * Gets the CSS value of a color variable name so it can be used on shapes.
      *
@@ -8026,7 +7805,7 @@ legacyRegistry.ImageTools = {
             return color;
         }
         return weUtils.getCSSVariableValue(color);
-    },
+    }
     /**
      * Overridden to set attachment data on theme images (with default shapes).
      *
@@ -8034,7 +7813,6 @@ legacyRegistry.ImageTools = {
      * @private
      */
     async _initializeImage() {
-        const _super = this._super.bind(this);
         let img = this._getImg();
 
         // Check first if the `src` and eventual `data-original-src` attributes
@@ -8077,14 +7855,14 @@ legacyRegistry.ImageTools = {
             }
             return this._loadImageInfo(`/web/image/${encodeURIComponent(match)}`);
         }
-        return _super(...arguments);
-    },
+        return super._initializeImage(...arguments);
+    }
     /**
      * @override
      * @private
      */
     async _loadImageInfo() {
-        await this._super(...arguments);
+        await super._loadImageInfo(...arguments);
         const img = this._getImg();
         if (img.dataset.shape) {
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -8097,12 +7875,8 @@ legacyRegistry.ImageTools = {
                 delete img.dataset.originalMimetype;
                 delete img.dataset.shapeFlip;
                 delete img.dataset.shapeRotate;
-                delete img.dataset.hoverEffect;
-                delete img.dataset.hoverEffectColor;
-                delete img.dataset.hoverEffectStrokeWidth;
-                delete img.dataset.hoverEffectIntensity;
-                img.classList.remove("o_animate_on_hover");
                 delete img.dataset.shapeAnimationSpeed;
+                this._deleteHoverAttributes(img);
                 return;
             }
             if (img.dataset.mimetype !== "image/svg+xml") {
@@ -8112,7 +7886,7 @@ legacyRegistry.ImageTools = {
                 img.dataset.mimetype = "image/svg+xml";
             }
         }
-    },
+    }
     /**
      * @private
      */
@@ -8123,7 +7897,7 @@ legacyRegistry.ImageTools = {
             await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
             img.classList.add("o_modified_image_to_save");
         }
-    },
+    }
     /**
      * @override
      */
@@ -8131,8 +7905,8 @@ legacyRegistry.ImageTools = {
         if (widgetName === 'shape_img_opt') {
             return !isGif(this._getImageMimetype(this._getImg()));
         }
-        return this._super(...arguments);
-    },
+        return super._isImageProcessingWidget(...arguments);
+    }
     /**
      * Flips the image shape (vertically or/and horizontally).
      *
@@ -8152,7 +7926,7 @@ legacyRegistry.ImageTools = {
         }
         await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
         imgEl.classList.add("o_modified_image_to_save");
-    },
+    }
     /**
      * Rotates the image shape 90 degrees.
      *
@@ -8170,7 +7944,7 @@ legacyRegistry.ImageTools = {
         }
         await this._applyShapeAndColors(true, imgEl.dataset.shapeColors?.split(";"));
         imgEl.classList.add("o_modified_image_to_save");
-    },
+    }
     /**
      * Checks if the shape is in the "devices" category.
      *
@@ -8185,7 +7959,7 @@ legacyRegistry.ImageTools = {
         }
         const shapeCategory = imgEl.dataset.shape.split("/")[1];
         return shapeCategory === "devices";
-    },
+    }
     /**
      * Checks if the shape is transformable.
      *
@@ -8195,7 +7969,7 @@ legacyRegistry.ImageTools = {
     _isTransformableShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return (shapeImgWidget && !shapeImgWidget.getMethodsParams().noTransform) && !this._isDeviceShape();
-    },
+    }
     /**
      * Checks if the shape is in animated.
      *
@@ -8205,7 +7979,7 @@ legacyRegistry.ImageTools = {
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().animated;
-    },
+    }
     /**
      * Checks if squaring of image is required before application of shape.
      *
@@ -8215,184 +7989,30 @@ legacyRegistry.ImageTools = {
     _isCropRequired() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
         return shapeImgWidget?.getMethodsParams().unstretch;
-    },
+    }
     /**
-     * Checks if the shape can have a hover effect.
-     *
      * @private
-     * @returns {boolean}
+     * @param {HTMLImageElement} imgEl
      */
-    _canHaveHoverEffect() {
-        return !this._isDeviceShape() && !this._isAnimatedShape() && this._isImageSupportedForShapes();
-    },
+    _resetImgShape(imgEl) {
+        if (!this._isTransformableShape()) {
+            delete imgEl.dataset.shapeFlip;
+            delete imgEl.dataset.shapeRotate;
+        }
+    }
     /**
-     * Adds hover effect to the SVG.
-     *
      * @private
-     * @param {HTMLElement} svgEl
-     * @param {HTMLImageElement} [img] img element
+     * @param {HTMLImageElement} imgEl
+     * @see this.selectClass for widgetValue
      */
-    async _addImageShapeHoverEffect(svgEl, img) {
-        let rgba = null;
-        let rbg = null;
-        let opacity = null;
-        // Add the required parts for the hover effects to the SVG.
-        const hoverEffectName = img.dataset.hoverEffect;
-        if (!this.hoverEffectsSvg) {
-            this.hoverEffectsSvg = await this._getHoverEffects();
-        }
-        const hoverEffectEls = this.hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
-        hoverEffectEls.forEach(hoverEffectEl => {
-            svgEl.appendChild(hoverEffectEl.cloneNode(true));
-        });
-        // Modifies the svg according to the chosen hover effect and the value
-        // of the options.
-        const animateEl = svgEl.querySelector("animate");
-        const animateTransformEls = svgEl.querySelectorAll("animateTransform");
-        const animateElValues = animateEl?.getAttribute("values");
-        let animateTransformElValues = animateTransformEls[0]?.getAttribute("values");
-        if (img.dataset.hoverEffectColor) {
-            rgba = convertCSSColorToRgba(img.dataset.hoverEffectColor);
-            rbg = `rgb(${rgba.red},${rgba.green},${rgba.blue})`;
-            opacity = rgba.opacity / 100;
-            if (!["outline", "image_mirror_blur"].includes(hoverEffectName)) {
-                svgEl.querySelector('[fill="hover_effect_color"]').setAttribute("fill", rbg);
-                animateEl.setAttribute("values", animateElValues.replace("hover_effect_opacity", opacity));
-            }
-        }
-        switch (hoverEffectName) {
-            case "outline": {
-                svgEl.querySelector('[stroke="hover_effect_color"]').setAttribute("stroke", rbg);
-                svgEl.querySelector('[stroke-opacity="hover_effect_opacity"]').setAttribute("stroke-opacity", opacity);
-                // The stroke width needs to be multiplied by two because half
-                // of the stroke is invisible since it is centered on the path.
-                const strokeWidth = parseInt(img.dataset.hoverEffectStrokeWidth) * 2;
-                animateEl.setAttribute("values", animateElValues.replace("hover_effect_stroke_width", strokeWidth));
-                break;
-            }
-            case "image_zoom_in":
-            case "image_zoom_out":
-            case "dolly_zoom": {
-                const imageEl = svgEl.querySelector("image");
-                const clipPathEl = svgEl.querySelector("#clip-path");
-                imageEl.setAttribute("id", "shapeImage");
-                // Modify the SVG so that the clip-path is not zoomed when the
-                // image is zoomed.
-                imageEl.setAttribute("style", "transform-origin: center; width: 100%; height: 100%");
-                imageEl.setAttribute("preserveAspectRatio", "none");
-                svgEl.setAttribute("viewBox", "0 0 1 1");
-                svgEl.setAttribute("preserveAspectRatio", "none");
-                clipPathEl.setAttribute("clipPathUnits", "userSpaceOnUse");
-                const clipPathValue = imageEl.getAttribute("clip-path");
-                imageEl.removeAttribute("clip-path");
-                const gEl = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                gEl.setAttribute("clip-path", clipPathValue);
-                imageEl.parentNode.replaceChild(gEl, imageEl);
-                gEl.appendChild(imageEl);
-                let zoomValue = 1.01 + parseInt(img.dataset.hoverEffectIntensity) / 200;
-                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                if (hoverEffectName === "image_zoom_out") {
-                    // Set zoom intensity for the image.
-                    const styleAttr = svgEl.querySelector("style");
-                    styleAttr.textContent = styleAttr.textContent.replace("hover_effect_zoom", zoomValue);
-                }
-                if (hoverEffectName === "dolly_zoom") {
-                    clipPathEl.setAttribute("style", "transform-origin: center;");
-                    // Set zoom intensity for clip-path and overlay.
-                    zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 2000;
-                    animateTransformEls.forEach((animateTransformEl, index) => {
-                        if (index > 0) {
-                            animateTransformElValues = animateTransformEl.getAttribute("values");
-                            animateTransformEl.setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                        }
-                    });
-                }
-                break;
-            }
-            case "image_mirror_blur": {
-                const imageEl = svgEl.querySelector("image");
-                imageEl.setAttribute('id', 'shapeImage');
-                imageEl.setAttribute('style', 'transform-origin: center;');
-                const imageMirrorEl = imageEl.cloneNode();
-                imageMirrorEl.setAttribute("id", 'shapeImageMirror');
-                imageMirrorEl.setAttribute("filter", "url(#blurFilter)");
-                imageEl.insertAdjacentElement("beforebegin", imageMirrorEl);
-                const zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 200;
-                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
-                break;
-            }
-        }
-    },
+    _removeImgShapeWithHoverEffectHook(imgEl, widgetValue) {
+        return widgetValue;
+    }
     /**
-     * Gets the hover effects list.
-     *
      * @private
-     * @returns {HTMLElement}
+     * @param {HTMLImageElement} imgEl
      */
-    _getHoverEffects() {
-        const hoverEffectsURL = "/website/static/src/svg/hover_effects.svg";
-        return fetch(hoverEffectsURL)
-            .then(response => response.text())
-            .then(text => {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(text, "text/xml");
-                return xmlDoc.getElementsByTagName("svg")[0];
-            });
-    },
-    /**
-     * Disables the hover effect on the image.
-     *
-     * @private
-     */
-    async _disableHoverEffect() {
-        const imgEl = this._getImg();
-        const shapeName = imgEl.dataset.shape?.split("/")[2];
-        delete imgEl.dataset.hoverEffect;
-        delete imgEl.dataset.hoverEffectColor;
-        delete imgEl.dataset.hoverEffectStrokeWidth;
-        delete imgEl.dataset.hoverEffectIntensity;
-        await this._applyOptions();
-        // If "Square" shape, remove it, it doesn't make sense to keep it
-        // without hover effect.
-        if (shapeName === "geo_square") {
-            this._requestUserValueWidgets("remove_img_shape_opt")[0].enable();
-        }
-    },
-    /**
-     * @override
-     */
-    async _select(previewMode, widget) {
-        await this._super(...arguments);
-        // This is a special case where we need to override the "_select"
-        // function in order to trigger mouse events for hover effects on the
-        // images when previewing the options. This is done here because if it
-        // was done in one of the widget methods, the animation would be
-        // canceled when "_refreshPublicWidgets" is executed in the "_super"
-        if (widget.$el[0].closest("#o_hover_effects_options")) {
-            const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
-            // We trigger the animation when preview mode is "false", except for
-            // the "setImgShapeHoverEffect" option, where we trigger it when
-            // preview mode is "true".
-            if (previewMode === hasSetImgShapeHoverEffectMethod) {
-                this.$target[0].dispatchEvent(new Event("mouseover"));
-                this.hoverTimeoutId = setTimeout(() => {
-                    this.$target[0].dispatchEvent(new Event("mouseout"));
-                }, 700);
-            } else if (previewMode === "reset") {
-                clearTimeout(this.hoverTimeoutId);
-            }
-        }
-    },
-    /**
-     * Checks if a shape can be applied on the target.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _isImageSupportedForShapes() {
-        const imgEl = this._getImg();
-        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
-    },
+    _deleteHoverAttributes(imgEl) {}
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -8405,11 +8025,11 @@ legacyRegistry.ImageTools = {
      * @param {Event} ev
      */
     async _onImageChanged(ev) {
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        this.env.snippetEditionRequest(async () => {
             await this._autoOptimizeImage();
-            this.trigger_up('cover_update');
-        }});
-    },
+            this.callbacks.coverUpdate();
+        });
+    }
     /**
      * Available widths will change, need to rerender the width select.
      *
@@ -8417,9 +8037,12 @@ legacyRegistry.ImageTools = {
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
-        await this._rerenderXML();
-    },
-};
+        this.env.snippetEditionRequest(async () => {
+            await this._autoOptimizeImage();
+            this.callbacks.coverUpdate();
+        });
+    }
+}
 
 /**
  * Controls background image width and quality.
@@ -8489,7 +8112,7 @@ export class BackgroundOptimize extends ImageHandlerOption {
         this.callbacks.notifyOptions({
            optionNames: ['BackgroundImage'],
            name: 'add_size_indicator',
-           data: this._filesize,
+           data: this._readableFilesize(),
        });
     }
     /**
@@ -8717,7 +8340,7 @@ export class BackgroundImage extends SnippetOption {
      */
     notify(name, data) {
         if (name === 'add_size_indicator') {
-            this.renderContext.filesize = data && `${data.toFixed(1)} kb` || undefined;
+            this.renderContext.filesize = data;
         } else {
             super.notify(...arguments);
         }

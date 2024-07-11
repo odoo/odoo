@@ -133,8 +133,8 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
         trigger: ":iframe .s_text_image img",
         run: "click",
     },
-    wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
-    wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    wTourUtils.changeOption("ImageToolsAnimate", 'we-select[data-name="shape_img_opt"] we-toggler'),
+    wTourUtils.changeOption("ImageToolsAnimate", "we-button[data-set-img-shape]"),
     {
         content: "Open MediaDialog from an image",
         trigger: ":iframe .s_text_image img[data-shape]",

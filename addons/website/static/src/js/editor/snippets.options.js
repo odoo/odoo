@@ -16,6 +16,7 @@ import {
     applyModifications,
     isImageCorsProtected,
     isImageSupportedForStyle,
+    loadImage,
     loadImageInfo,
 } from "@web_editor/js/editor/image_processing";
 import "@website/snippets/s_popup/options";
@@ -44,6 +45,7 @@ import {
     BackgroundToggler,
     Box,
     CarouselHandler,
+    ImageTools,
     LayoutColumn,
     Many2oneUserValue,
     registerBackgroundOptions,
@@ -3652,12 +3654,13 @@ registerWebsiteOption("ConditionalVisibility", {
     selector: "section, .s_hr",
 });
 
-options.registry.WebsiteAnimate = options.Class.extend({
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
+/**
+ * Mixin to be extended as is by WebsiteAnimate and with additional methods for
+ * ImageToolsAnimate.
+ */
+const WebsiteAnimateMixin = (T) => class extends T {
+    constructor() {
+        super(...arguments);
         // Animations for which the "On Scroll" and "Direction" options are not
         // available.
         this.limitedAnimations = ['o_anim_flash', 'o_anim_pulse', 'o_anim_shake', 'o_anim_tada', 'o_anim_flip_in_x', 'o_anim_flip_in_y'];
@@ -3665,34 +3668,13 @@ options.registry.WebsiteAnimate = options.Class.extend({
         this.$optionsSection = this.$overlay.data('$optionsSection');
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
         this.$overlay[0].querySelector(".o_handles").classList.toggle("pe-none", this.isAnimatedText);
-    },
+    }
     /**
      * @override
      */
     async onBuilt() {
         this.$target[0].classList.toggle('o_animate_preview', this.$target[0].classList.contains('o_animate'));
-    },
-    /**
-     * @override
-     */
-    onFocus() {
-        if (this.isAnimatedText) {
-            // For animated text, the animation options must be in the editor
-            // toolbar.
-            this.options.wysiwyg.toolbarEl.append(this.$el[0]);
-            this.$optionsSection.addClass('d-none');
-        }
-    },
-    /**
-     * @override
-     */
-    onBlur() {
-        if (this.isAnimatedText) {
-            // For animated text, the options must be returned to their
-            // original location as they were moved in the toolbar.
-            this.$optionsSection.append(this.$el);
-        }
-    },
+    }
     /**
      * @override
      */
@@ -3702,7 +3684,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
             // remove the lazy loading on them.
             this._toggleImagesLazyLoading(false);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3712,23 +3694,23 @@ options.registry.WebsiteAnimate = options.Class.extend({
      * @override
      */
     async selectClass(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectClass(...arguments);
         if (params.forceAnimation && params.name !== 'o_anim_no_effect_opt' && previewMode !== 'reset') {
             this._forceAnimation();
         }
         if (params.isAnimationTypeSelection) {
             this.$target[0].classList.toggle("o_animate_preview", this.$target[0].classList.contains("o_animate"));
         }
-    },
+    }
     /**
      * @override
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectDataAttribute(...arguments);
         if (params.forceAnimation) {
             this._forceAnimation();
         }
-    },
+    }
     /**
      * Sets the animation mode.
      *
@@ -3742,6 +3724,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
         this.$target[0].style.animationPlayState = '';
         this.$target[0].style.animationName = '';
         this.$target[0].style.visibility = '';
+
         if (widgetValue === 'onScroll') {
             this.$target[0].dataset.scrollZoneStart = 0;
             this.$target[0].dataset.scrollZoneEnd = 100;
@@ -3749,20 +3732,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
             delete this.$target[0].dataset.scrollZoneStart;
             delete this.$target[0].dataset.scrollZoneEnd;
         }
-        if (params.activeValue === "o_animate_on_hover") {
-            this.trigger_up("option_update", {
-                optionName: "ImageTools",
-                name: "disable_hover_effect",
-            });
-        }
-        if ((!params.activeValue || params.activeValue === "o_animate_on_hover")
-                && widgetValue && widgetValue !== "onHover") {
-            // If "Animation" was on "None" or "o_animate_on_hover" and it is no
-            // longer, it is set to "fade_in" by default.
+
+        const setToFadeIn = () => {
             targetClassList.add('o_anim_fade_in');
             this._toggleImagesLazyLoading(false);
         }
-        if (!widgetValue || widgetValue === "onHover") {
+        const resetProperties = () => {
             const possibleEffects = this._requestUserValueWidgets('animation_effect_opt')[0].getMethodsParams('selectClass').possibleValues;
             const possibleDirections = this._requestUserValueWidgets('animation_direction_opt')[0].getMethodsParams('selectClass').possibleValues;
             const possibleEffectsAndDirections = possibleEffects.concat(possibleDirections);
@@ -3777,17 +3752,20 @@ options.registry.WebsiteAnimate = options.Class.extend({
             this.$target[0].style.animationDuration = '';
             this._toggleImagesLazyLoading(true);
         }
-        if (widgetValue === "onHover") {
-            // Pause the history until the hover effect is applied in
-            // "setImgShapeHoverEffect". This prevents saving the intermediate
-            // steps done (in a tricky way) up to that point.
-            this.options.wysiwyg.odooEditor.historyPauseSteps();
-            this.trigger_up("option_update", {
-                optionName: "ImageTools",
-                name: "enable_hover_effect",
-            });
+
+        if (!params.ImageToolsAnimate) {
+            if (!params.activeValue && widgetValue) {
+                // If "Animation" was on "None" and it is no longer, it is set
+                // to "fade_in" by default.
+                setToFadeIn();
+            }
+            if (!widgetValue) {
+                resetProperties();
+            }
         }
-    },
+
+        return { setToFadeIn, resetProperties };
+    }
     /**
      * Sets the animation intensity.
      *
@@ -3796,7 +3774,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
     animationIntensity(previewMode, widgetValue, params) {
         this.$target[0].style.setProperty('--wanim-intensity', widgetValue);
         this._forceAnimation();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3818,9 +3796,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
             // being launched twice when previewing the "Intensity" option).
             await new Promise(resolve => setTimeout(resolve));
             this.$target.addClass('o_animating');
-            this.trigger_up('cover_update', {
-                overlayVisible: true,
-            });
+            this.callbacks.coverUpdate(true);
             this.$scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
             this.$target.css('animation-name', '');
             this.$target.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
@@ -3828,7 +3804,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
                 this.$target.removeClass('o_animating');
             });
         }
-    },
+    }
     /**
      * @override
      */
@@ -3870,20 +3846,11 @@ options.registry.WebsiteAnimate = options.Class.extend({
                 return true;
             }
             case 'animation_on_hover_opt': {
-                const [hoverEffectOverlayWidget] = this._requestUserValueWidgets("hover_effect_overlay_opt");
-                if (hoverEffectOverlayWidget) {
-                    const hoverEffectWidget = hoverEffectOverlayWidget.getParent();
-                    const imageToolsOpt = hoverEffectWidget.getParent();
-                    return (
-                        imageToolsOpt._canHaveHoverEffect()
-                        && !await isImageCorsProtected(this.$target[0])
-                    );
-                }
                 return false;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
@@ -3891,8 +3858,8 @@ options.registry.WebsiteAnimate = options.Class.extend({
         if (this.$target[0].matches('img')) {
             return isImageSupportedForStyle(this.$target[0]);
         }
-        return this._super(...arguments);
-    },
+        return super._computeVisibility(...arguments);
+    }
     /**
      * @override
      */
@@ -3900,8 +3867,8 @@ options.registry.WebsiteAnimate = options.Class.extend({
         if (methodName === 'animationIntensity') {
             return window.getComputedStyle(this.$target[0]).getPropertyValue('--wanim-intensity');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * Removes or adds the lazy loading on images because animated images can
      * appear before or after their parents and cause bugs in the animations.
@@ -3923,7 +3890,465 @@ options.registry.WebsiteAnimate = options.Class.extend({
                 imgEl.loading = 'eager';
             }
         }
-    },
+    }
+}
+const WebsiteAnimate = WebsiteAnimateMixin(SnippetOption);
+
+registerWebsiteOption("WebsiteAnimate", {
+    Class: WebsiteAnimate,
+    template: "website.WebsiteAnimate",
+    selector: ".o_animable, section .row > div, .fa, .btn",
+    exclude: "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
+});
+registerWebsiteOption("TextAnimate", {
+    Class: WebsiteAnimate,
+    template: "website.WebsiteAnimate",
+    selector: ".o_animated_text",
+    textSelector: ".o_animated_text",
+});
+
+export class ImageToolsAnimate extends WebsiteAnimateMixin(ImageTools) {
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    animationMode(previewMode, widgetValue, params) {
+        params.ImageToolsAnimate = true;
+        const { setToFadeIn, resetProperties } = super.animationMode(...arguments);
+        if (params.activeValue === "o_animate_on_hover") {
+            this._disableHoverEffect();
+        }
+        if ((!params.activeValue || params.activeValue === "o_animate_on_hover")
+               && widgetValue && widgetValue !== "onHover") {
+            // If "Animation" was on "None" or "o_animate_on_hover" and it is no
+            // longer, it is set to "fade_in" by default.
+            setToFadeIn();
+        }
+        if (!widgetValue || widgetValue === "onHover") {
+            resetProperties();
+        }
+        if (widgetValue === "onHover") {
+            // Pause the history until the hover effect is applied in
+            // "setImgShapeHoverEffect". This prevents saving the intermediate
+            // steps done (in a tricky way) up to that point.
+            this.options.wysiwyg.odooEditor.historyPauseSteps();
+            this._enableHoverEffect();
+        }
+    }
+    /**
+     * Sets the hover effects of the image shape.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeHoverEffect(previewMode, widgetValue, params) {
+        const imgEl = this._getImg();
+        if (previewMode !== "reset") {
+            this.prevHoverEffectColor = imgEl.dataset.hoverEffectColor;
+            this.prevHoverEffectIntensity = imgEl.dataset.hoverEffectIntensity;
+            this.prevHoverEffectStrokeWidth = imgEl.dataset.hoverEffectStrokeWidth;
+        }
+        delete imgEl.dataset.hoverEffectColor;
+        delete imgEl.dataset.hoverEffectIntensity;
+        delete imgEl.dataset.hoverEffectStrokeWidth;
+        if (previewMode === true) {
+            if (params.name === "hover_effect_overlay_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
+            } else if (params.name === "hover_effect_outline_opt") {
+                imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
+                imgEl.dataset.hoverEffectStrokeWidth = 10;
+            } else {
+                imgEl.dataset.hoverEffectIntensity = 20;
+                if (params.name !== "hover_effect_mirror_blur_opt") {
+                    imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+                }
+            }
+        } else {
+            if (this.prevHoverEffectColor) {
+                imgEl.dataset.hoverEffectColor = this.prevHoverEffectColor;
+            }
+            if (this.prevHoverEffectIntensity) {
+                imgEl.dataset.hoverEffectIntensity = this.prevHoverEffectIntensity;
+            }
+            if (this.prevHoverEffectStrokeWidth) {
+                imgEl.dataset.hoverEffectStrokeWidth = this.prevHoverEffectStrokeWidth;
+            }
+        }
+        await this._reapplyCurrentShape();
+        // When the hover effects are first activated from the "animationMode"
+        // function, the history was paused to avoid recording intermediate
+        // steps. That's why we unpause it here.
+        if (this.firstHoverEffect) {
+            this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+            delete this.firstHoverEffect;
+        }
+    }
+    /**
+     * @see this.selectClass for parameters
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await super.selectDataAttribute(...arguments);
+        if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
+            await this._reapplyCurrentShape();
+        }
+    }
+    /**
+     * Sets the color of hover effects.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setHoverEffectColor(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        let defaultColor = "rgba(0, 0, 0, 0)";
+        if (img.dataset.hoverEffect === "overlay") {
+            defaultColor = "black-25";
+        } else if (img.dataset.hoverEffect === "outline") {
+            defaultColor = "primary";
+        }
+        img.dataset.hoverEffectColor = this._getCSSColorValue(widgetValue || defaultColor);
+        await this._reapplyCurrentShape();
+    }
+    /**
+     * @see this.selectClass for parameters
+     */
+    showHoverEffect(previewMode, widgetValue, params) {}
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await super.updateUI(...arguments);
+        // Adapts the colorpicker label according to the selected "On Hover"
+        // animation.
+        const hoverEffectName = this.$target[0].dataset.hoverEffect;
+        if (hoverEffectName) {
+            const needToAdaptLabel = ["image_zoom_in", "image_zoom_out", "dolly_zoom"].includes(hoverEffectName);
+            const newContext = await this._getRenderContext();
+            newContext.hoverEffectColorLabel = needToAdaptLabel ? _t("Overlay") : _t("Color");
+            Object.assign(this.renderContext, newContext);
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        switch (widgetName) {
+            case "animation_on_hover_opt": {
+                return this._canHaveHoverEffect() && !await isImageCorsProtected(this.$target[0]);
+            }
+            case "hover_effect_none_opt": {
+                // The hover effects are removed with the "WebsiteAnimate" animation
+                // selector so this option should not be visible.
+                return false;
+            }
+        }
+        if (params.optionsPossibleValues.setImgShapeHoverEffect) {
+            const imgEl = this._getImg();
+            return imgEl.classList.contains("o_animate_on_hover") && this._canHaveHoverEffect();
+        }
+        return super._computeWidgetVisibility(...arguments);
+    }
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === "setHoverEffectColor") {
+            const imgEl = this._getImg();
+            return imgEl.dataset.hoverEffectColor || "";
+        }
+        return super._computeWidgetState(...arguments);
+    }
+    /**
+     * @override
+     */
+    async _writeShape(svgText) {
+        const img = this._getImg();
+        let needToRefreshPublicWidgets = false;
+        let hasHoverEffect = false;
+
+        // Add shape animations on hover.
+        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
+            // The "ImageShapeHoverEffet" public widget needs to restart
+            // (e.g. image replacement).
+            needToRefreshPublicWidgets = true;
+            hasHoverEffect = true;
+        }
+
+        const dataURL = await this.computeShape(svgText, img);
+        let clonedImgEl = null;
+        if (hasHoverEffect) {
+            // This is useful during hover effects previews. Without this, in
+            // Chrome, the 'mouse out' animation is triggered very briefly when
+            // previewMode === 'reset' (when transitioning from one hover effect
+            // to another), causing a visual glitch. To avoid this, we hide the
+            // image with its clone when the source is set.
+            clonedImgEl = img.cloneNode(true);
+            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
+            img.classList.add("d-none");
+            img.insertAdjacentElement("afterend", clonedImgEl);
+            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
+        }
+        const loadedImg = await loadImage(dataURL, img);
+        if (hasHoverEffect) {
+            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
+            clonedImgEl.remove();
+            img.classList.remove("d-none");
+            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
+        }
+        if (needToRefreshPublicWidgets) {
+            await this._refreshPublicWidgets();
+        }
+        return loadedImg;
+    }
+    /**
+     * @override
+     */
+    async _computeImgShapeHoverEffect(svgEl, imgEl) {
+        // Add shape animations on hover.
+        if (imgEl.dataset.hoverEffect && this._canHaveHoverEffect()) {
+            this._addImageShapeHoverEffect(svgEl, imgEl);
+        }        
+    }
+    /**
+     * Checks if the shape can have a hover effect.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _canHaveHoverEffect() {
+        return !this._isDeviceShape() && !this._isAnimatedShape() && this._isImageSupportedForShapes();
+    }
+    /**
+     * Adds hover effect to the SVG.
+     *
+     * @private
+     * @param {HTMLElement} svgEl
+     * @param {HTMLImageElement} [img] img element
+     */
+    async _addImageShapeHoverEffect(svgEl, img) {
+        let rgba = null;
+        let rbg = null;
+        let opacity = null;
+        // Add the required parts for the hover effects to the SVG.
+        const hoverEffectName = img.dataset.hoverEffect;
+        if (!this.hoverEffectsSvg) {
+            const parser = new DOMParser();
+            const response = await fetch("/website/static/src/svg/hover_effects.svg");
+            const xmlDoc = parser.parseFromString(await response.text(), "text/xml");
+            this.hoverEffectsSvg = xmlDoc.documentElement;
+        }
+        const hoverEffectEls = this.hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
+        hoverEffectEls.forEach(hoverEffectEl => {
+            svgEl.appendChild(hoverEffectEl.cloneNode(true));
+        });
+        // Modifies the svg according to the chosen hover effect and the value
+        // of the options.
+        const animateEl = svgEl.querySelector("animate");
+        const animateTransformEls = svgEl.querySelectorAll("animateTransform");
+        const animateElValues = animateEl?.getAttribute("values");
+        let animateTransformElValues = animateTransformEls[0]?.getAttribute("values");
+        if (img.dataset.hoverEffectColor) {
+            rgba = convertCSSColorToRgba(img.dataset.hoverEffectColor);
+            rbg = `rgb(${rgba.red},${rgba.green},${rgba.blue})`;
+            opacity = rgba.opacity / 100;
+            if (!["outline", "image_mirror_blur"].includes(hoverEffectName)) {
+                svgEl.querySelector('[fill="hover_effect_color"]').setAttribute("fill", rbg);
+                animateEl.setAttribute("values", animateElValues.replace("hover_effect_opacity", opacity));
+            }
+        }
+        switch (hoverEffectName) {
+            case "outline": {
+                svgEl.querySelector('[stroke="hover_effect_color"]').setAttribute("stroke", rbg);
+                svgEl.querySelector('[stroke-opacity="hover_effect_opacity"]').setAttribute("stroke-opacity", opacity);
+                // The stroke width needs to be multiplied by two because half
+                // of the stroke is invisible since it is centered on the path.
+                const strokeWidth = parseInt(img.dataset.hoverEffectStrokeWidth) * 2;
+                animateEl.setAttribute("values", animateElValues.replace("hover_effect_stroke_width", strokeWidth));
+                break;
+            }
+            case "image_zoom_in":
+            case "image_zoom_out":
+            case "dolly_zoom": {
+                const imageEl = svgEl.querySelector("image");
+                const clipPathEl = svgEl.querySelector("#clip-path");
+                imageEl.setAttribute("id", "shapeImage");
+                // Modify the SVG so that the clip-path is not zoomed when the
+                // image is zoomed.
+                imageEl.setAttribute("style", "transform-origin: center; width: 100%; height: 100%");
+                imageEl.setAttribute("preserveAspectRatio", "none");
+                svgEl.setAttribute("viewBox", "0 0 1 1");
+                svgEl.setAttribute("preserveAspectRatio", "none");
+                clipPathEl.setAttribute("clipPathUnits", "userSpaceOnUse");
+                const clipPathValue = imageEl.getAttribute("clip-path");
+                imageEl.removeAttribute("clip-path");
+                const gEl = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                gEl.setAttribute("clip-path", clipPathValue);
+                imageEl.parentNode.replaceChild(gEl, imageEl);
+                gEl.appendChild(imageEl);
+                let zoomValue = 1.01 + parseInt(img.dataset.hoverEffectIntensity) / 200;
+                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
+                if (hoverEffectName === "image_zoom_out") {
+                    // Set zoom intensity for the image.
+                    const styleAttr = svgEl.querySelector("style");
+                    styleAttr.textContent = styleAttr.textContent.replace("hover_effect_zoom", zoomValue);
+                }
+                if (hoverEffectName === "dolly_zoom") {
+                    clipPathEl.setAttribute("style", "transform-origin: center;");
+                    // Set zoom intensity for clip-path and overlay.
+                    zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 2000;
+                    animateTransformEls.forEach((animateTransformEl, index) => {
+                        if (index > 0) {
+                            animateTransformElValues = animateTransformEl.getAttribute("values");
+                            animateTransformEl.setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
+                        }
+                    });
+                }
+                break;
+            }
+            case "image_mirror_blur": {
+                const imageEl = svgEl.querySelector("image");
+                imageEl.setAttribute('id', 'shapeImage');
+                imageEl.setAttribute('style', 'transform-origin: center;');
+                const imageMirrorEl = imageEl.cloneNode();
+                imageMirrorEl.setAttribute("id", 'shapeImageMirror');
+                imageMirrorEl.setAttribute("filter", "url(#blurFilter)");
+                imageEl.insertAdjacentElement("beforebegin", imageMirrorEl);
+                const zoomValue = 0.99 - parseInt(img.dataset.hoverEffectIntensity) / 200;
+                animateTransformEls[0].setAttribute("values", animateTransformElValues.replace("hover_effect_zoom", zoomValue));
+                break;
+            }
+        }
+    }
+    /**
+     * Disables the hover effect on the image.
+     *
+     * @private
+     */
+    async _disableHoverEffect() {
+        const imgEl = this._getImg();
+        const shapeName = imgEl.dataset.shape?.split("/")[2];
+        delete imgEl.dataset.hoverEffect;
+        delete imgEl.dataset.hoverEffectColor;
+        delete imgEl.dataset.hoverEffectStrokeWidth;
+        delete imgEl.dataset.hoverEffectIntensity;
+        await this._applyOptions();
+        // If "Square" shape, remove it, it doesn't make sense to keep it
+        // without hover effect.
+        if (shapeName === "geo_square") {
+            this._requestUserValueWidgets("remove_img_shape_opt")[0].enable();
+        }
+    }
+    /**
+     * Enables the hover effect on the image.
+     * 
+     * @private
+     */
+    _enableHoverEffect() {
+        this.env.snippetEditionRequest(() => {
+            // Add the "square" shape to the image if it has no shape
+            // because the "hover effects" need a shape to work.
+            const imgEl = this._getImg();
+            const shapeName = imgEl.dataset.shape?.split("/")[2];
+            if (!shapeName) {
+                const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+                shapeImgSquareWidget.enable();
+            }
+            // Add the "Overlay" hover effect to the shape.
+            this.firstHoverEffect = true;
+            const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
+            hoverEffectOverlayWidget.enable();
+        });
+    }
+    /**
+     * @override
+     */
+    async _select(previewMode, widget) {
+        await super._select(...arguments);
+        // This is a special case where we need to override the "_select"
+        // function in order to trigger mouse events for hover effects on the
+        // images when previewing the options. This is done here because if it
+        // was done in one of the widget methods, the animation would be
+        // canceled when "_refreshPublicWidgets" is executed in the "super"
+        const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
+        const hasShowHoverEffectMethod = widget.getMethodsNames().includes("showHoverEffect");
+        // We trigger the animation when preview mode is "false", except for
+        // the "setImgShapeHoverEffect" option, where we trigger it when
+        // preview mode is "true".
+        if (previewMode === hasSetImgShapeHoverEffectMethod && hasShowHoverEffectMethod) {
+            this.$target[0].dispatchEvent(new Event("mouseover"));
+            this.hoverTimeoutId = setTimeout(() => {
+                this.$target[0].dispatchEvent(new Event("mouseout"));
+            }, 700);
+        } else if (previewMode === "reset") {
+            clearTimeout(this.hoverTimeoutId);
+        }
+    }
+    /**
+     * Checks if a shape can be applied on the target.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isImageSupportedForShapes() {
+        const imgEl = this._getImg();
+        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
+    }
+    /**
+     * @override
+     */
+    _resetImgShape(imgEl) {
+        super._resetImgShape(...arguments);
+        if (!this._canHaveHoverEffect()) {
+            delete imgEl.dataset.hoverEffect;
+            delete imgEl.dataset.hoverEffectColor;
+            delete imgEl.dataset.hoverEffectStrokeWidth;
+            delete imgEl.dataset.hoverEffectIntensity;
+            imgEl.classList.remove("o_animate_on_hover");
+        }
+        if (!this._isAnimatedShape()) {
+            delete imgEl.dataset.shapeAnimationSpeed;
+        }
+    }
+    /**
+     * @override
+     */
+    _removeImgShapeWithHoverEffectHook(imgEl, widgetValue) {
+        if (imgEl.dataset.hoverEffect && !widgetValue) {
+            // When a shape is removed and there is a hover effect on the
+            // image, we then place the "Square" shape as the default because a
+            // shape is required for the hover effects to work.
+            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+            widgetValue = shapeImgSquareWidget.getActiveValue("setImgShape");
+        }
+        return super._removeImgShapeWithHoverEffectHook(imgEl, widgetValue);
+    }
+    /**
+     * @override
+     */
+    _deleteHoverAttributes(imgEl) {
+        delete imgEl.dataset.hoverEffect;
+        delete imgEl.dataset.hoverEffectColor;
+        delete imgEl.dataset.hoverEffectStrokeWidth;
+        delete imgEl.dataset.hoverEffectIntensity;
+        imgEl.classList.remove("o_animate_on_hover");
+    }
+}
+registerWebsiteOption("ImageToolsAnimate", {
+    Class: ImageToolsAnimate,
+    template: "website.ImageToolsAnimate",
+    selector: "img",
+    exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
 });
 
 /**

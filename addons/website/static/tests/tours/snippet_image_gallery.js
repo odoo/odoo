@@ -82,11 +82,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: ":iframe .s_image_gallery .carousel-item.active img",
     run: "click",
 },
-    wTourUtils.changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
-    wTourUtils.changeOption('ImageTools', '[data-gl-filter="blur"]'),
+    wTourUtils.changeOption('ImageToolsAnimate', 'we-select:contains("Filter") we-toggler'),
+    wTourUtils.changeOption('ImageToolsAnimate', '[data-gl-filter="blur"]'),
 {
     content: "Check that the image has the correct filter",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    trigger: ".snippet-option-ImageToolsAnimate we-select:contains('Filter') we-toggler:contains('Blur')",
 }, {
     content: "Click on move to next",
     trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
@@ -107,21 +107,21 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     run: "click",
 }, {
     content: "Check that the image still has the correct filter",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    trigger: ".snippet-option-ImageToolsAnimate we-select:contains('Filter') we-toggler:contains('Blur')",
 }, {
     content: "Click to access next image",
     trigger: ":iframe .s_image_gallery .carousel-control-next",
     run: "click",
 }, {
     content: "Check that the option has changed",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
+    trigger: ".snippet-option-ImageToolsAnimate we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
 }, {
     content: "Click to access previous image",
     trigger: ":iframe .s_image_gallery .carousel-control-prev",
     run: "click",
 }, {
     content: "Check that the option is restored",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    trigger: ".snippet-option-ImageToolsAnimate we-select:contains('Filter') we-toggler:contains('Blur')",
 }]);
 
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
