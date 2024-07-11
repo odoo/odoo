@@ -6,6 +6,7 @@
             <field name="subject">New badge {{ object.badge_id.name }} granted</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent automatically to the user who received a badge</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -104,6 +105,7 @@
             <field name="name">Gamification: Reminder For Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent automatically to participant who haven't updated their goal</field>
             <field name="body_html" type="html">
 <div>
@@ -123,6 +125,7 @@
         <record id="simple_report_template" model="mail.template">
             <field name="name">Gamification: Challenge Report</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Send a challenge report to all participants</field>
             <field name="body_html" type="html">
 <table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
@@ -325,6 +328,7 @@
             <field name="subject">New rank: {{ object.rank_id.name }}</field>
             <field name="email_to"></field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Sent automatically when user reaches a new rank</field>
             <field name="body_html" type="html">
 <div style="color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">

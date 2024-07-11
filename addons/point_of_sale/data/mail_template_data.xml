@@ -8,6 +8,7 @@
             <field name="subject">PoS Marketing</field>
             <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ ( object.email or '') }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="description">Send Marketing Emails from Point of Sale</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">

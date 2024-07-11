@@ -4,6 +4,7 @@
         <record id="mail_template_donation" model="mail.template">
             <field name="name">Website: Donation</field>
             <field name="model_id" ref="payment.model_payment_transaction" />
+            <field name="use_default_to" eval="False"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
         </record>
     </data>

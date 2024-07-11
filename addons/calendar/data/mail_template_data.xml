@@ -370,6 +370,7 @@
             <field name="subject">{{object.name}}: Event update</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ object._get_attendee_emails() }}</field>
+            <field name="use_default_to" eval="False"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Used to manually notifiy attendees</field>
             <field name="body_html" type="html">
