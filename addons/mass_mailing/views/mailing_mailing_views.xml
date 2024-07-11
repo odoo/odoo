@@ -403,23 +403,13 @@
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" quick_create="false" sample="1">
-                    <field name='state' readonly="1"/>
-                    <field name='email_from'/>
-                    <field name='color'/>
-                    <field name='user_id'/>
-                    <field name='expected'/>
-                    <field name='failed'/>
-                    <field name='total'/>
-                    <field name='mailing_model_id'/>
+                <kanban highlight_color="color" default_group_by="state" quick_create="false" sample="1">
                     <field name='mailing_on_mailing_list'/>
-                    <field name='sent_date'/>
-                    <field name='schedule_date'/>
                     <field name='next_departure'/>
                     <field name='active'/>
                     <templates>
                         <t t-name="kanban-menu" t-if="!selection_mode">
-                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            <field name="color" widget="kanban_color_picker"/>
                             <t t-if="widget.deletable">
                                 <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                             </t>
@@ -428,60 +418,37 @@
                                 <t t-if="!record.active.raw_value">Restore</t>
                             </a>
                         </t>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
-                                 <div class="oe_kanban_content">
-                                    <div class="o_kanban_record_top">
-                                        <div class="o_kanban_record_headings">
-                                            <div class="row"  invisible="not sent_date">
-                                                <h3 class="my-1 col-8 o_text_overflow">
-                                                    <field name="subject"/>
-                                                </h3>
-                                            </div>
-                                            <h3 class="my-1"  invisible="sent_date">
-                                                <field name="subject"/>
-                                            </h3>
-                                            <field name="mailing_type" invisible="1"/>
-                                            <div class="o_kanban_record_subtitle" invisible="not sent_date">
-                                                <h5 style="display: inline;">
-                                                    <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <field name="subject" class="my-1 text-truncate fs-3 fw-bold"/>
+                            <field name="campaign_id" invisible="not sent_date" class="fw-bold fs-5" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <div>
                                 <i class="fa fa-bullseye me-2" role="img" aria-label="Lead/Opportunity"/>
                                 <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
                                 <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
-                                <div name="div_responsible_avatar" class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <span invisible="not sent_date"
-                                            t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-paper-plane me-2 small my-auto" aria-label="Sent date"/>
-                                            <span class="align-self-baseline"><field name="sent_date"/></span>
-                                        </span>
-                                        <span invisible="not schedule_date"
-                                            t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-half me-2 small my-auto" aria-label="Scheduled date"/>
-                                            <span class="align-self-baseline"><field name="schedule_date" readonly="state not in ['draft', 'in_queue']"/></span>
-                                        </span>
-                                        <span invisible="sent_date or schedule_date or state == 'in_queue'"
-                                            class="clearfix">
-                                            <b><field name='total' class="me-1"/></b>
-                                            <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
-                                            <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
-                                        </span>
-                                        <span invisible="schedule_date or state != 'in_queue' or not next_departure"
-                                            t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
-                                            <span class="fa fa-hourglass-o me-2 small my-auto" aria-label="Scheduled date"/>
-                                            <span class="align-self-baseline">Next Batch</span>
-                                        </span>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>
                             </div>
+                            <footer class="fs-6 pt-0">
+                                <div>
+                                    <span invisible="not sent_date" t-attf-title="Sent on #{record.sent_date.value}">
+                                        <span class="fa fa-paper-plane me-2 small my-auto" aria-label="Sent date"/>
+                                        <field name="sent_date"/>
+                                    </span>
+                                    <span invisible="not schedule_date" t-attf-title="Scheduled on #{record.schedule_date.value}">
+                                        <span class="fa fa-hourglass-half me-2 small my-auto" aria-label="Scheduled date"/>
+                                        <field name="schedule_date" readonly="state not in ['draft', 'in_queue']"/>
+                                    </span>
+                                    <span invisible="sent_date or schedule_date or state == 'in_queue'">
+                                        <field name='total' class="me-1 fw-bold"/>
+                                        <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
+                                        <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
+                                    </span>
+                                    <span invisible="schedule_date or state != 'in_queue' or not next_departure"
+                                        t-attf-title="Scheduled on #{record.next_departure.value}" >
+                                        <span class="fa fa-hourglass-o me-2 small my-auto" aria-label="Scheduled date"/>
+                                        <span>Next Batch</span>
+                                    </span>
+                                </div>
+                                <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                            </footer>
                         </t>
                     </templates>
                 </kanban>

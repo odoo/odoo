@@ -68,11 +68,7 @@
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
-                <field name="mobile" widget="phone"/>
-                <field name="phone_sanitized" invisible="1"/>
-            </xpath>
-            <xpath expr="//t[@t-esc='record.email.value']" position="after">
-                <t t-esc="record.mobile.value"/>
+                <field name="mobile" class="fw-bolder"/>
             </xpath>
         </field>
     </record>
