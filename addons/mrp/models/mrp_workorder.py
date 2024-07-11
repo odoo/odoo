@@ -553,37 +553,6 @@ class MrpWorkorder(models.Model):
             total += (duration / 60.0) * wo.workcenter_id.costs_hour
         return total
 
-    @api.model
-    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], progress_bar_fields=None, start_date=None, stop_date=None, scale=None):
-        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
-        if 'workcenter_id' not in gantt_data['unavailabilities']:
-            workcenter_ids = set()
-            if groupby and 'workcenter_id' in groupby:
-                for group in gantt_data['groups']:
-                    res_id = group['workcenter_id'][0] if group['workcenter_id'] else False
-                    workcenter_ids.add(res_id)
-            else:
-                for record in gantt_data['records']:
-                    res_id = record['workcenter_id']['id'] if record.get('workcenter_id') else False
-                    workcenter_ids.add(res_id)
-            start, stop = fields.Datetime.from_string(start_date), fields.Datetime.from_string(stop_date)
-            gantt_data['unavailabilities']['workcenter_id'] = self._gantt_unavailability('workcenter_id', workcenter_ids, start, stop, scale)
-        return gantt_data
-
-    @api.model
-    def _gantt_unavailability(self, field, res_ids, start, stop, scale):
-        """Get unavailabilities data to display in the Gantt view."""
-        if field != 'workcenter_id':
-            return super()._gantt_unavailability(field, res_ids, start, stop, scale)
-
-        workcenters = self.env['mrp.workcenter'].browse(res_ids)
-        unavailability_mapping = workcenters._get_unavailability_intervals(start, stop)
-
-        result = {}
-        for workcenter in workcenters:
-            result[workcenter.id] = [{'start': interval[0], 'stop': interval[1]} for interval in unavailability_mapping[workcenter.id]]
-        return result
-
     def button_start(self):
         if any(wo.working_state == 'blocked' for wo in self):
             raise UserError(_('Please unblock the work center to start the work order.'))

@@ -12,7 +12,7 @@
         <record id="action_work_orders" model="ir.actions.act_window">
             <field name="name">Work Orders</field>
             <field name="res_model">mrp.workorder</field>
-            <field name="view_mode">tree,form,gantt,pivot,graph,calendar</field>
+            <field name="view_mode">tree,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
             <field name="context">{'search_default_workcenter_id': active_id}</field>
@@ -118,7 +118,7 @@
             <field name="name">Work Orders Performance</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
-            <field name="view_mode">graph,pivot,tree,form,gantt</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new work orders performance
@@ -135,7 +135,7 @@
                                    'search_default_waiting': True,
                                    'search_default_pending': True,
                                    'search_default_progress': True,}</field>
-            <field name="view_mode">graph,pivot,tree,form,gantt</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
