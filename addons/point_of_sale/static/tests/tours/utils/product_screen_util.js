@@ -492,7 +492,7 @@ export function addInternalNote(note) {
                 run: "click",
             },
             clickControlButton("Internal Note"),
-            TextInputPopup.inputText(note),
+            ...(note ? [TextInputPopup.inputText(note)] : []),
             Dialog.confirm(),
         ].flat()
     );
