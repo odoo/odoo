@@ -399,10 +399,10 @@ export function addInternalNote(note) {
                 mobile: true,
             },
             {
-                content: "click customer note button",
+                content: "click internal note button",
                 trigger: '.control-buttons .control-button span:contains("Internal Note")',
             },
-            TextAreaPopup.inputText(note),
+            ...( note ?  TextAreaPopup.inputText(note) : []),
             TextAreaPopup.clickConfirm(),
         ].flat()
     );
