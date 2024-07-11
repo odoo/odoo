@@ -815,24 +815,32 @@ export class SelectionPlugin extends Plugin {
             return;
         }
 
+        // Whether moving a collapsed cursor or extending a selection.
         const mode = ev.shiftKey ? "extend" : "move";
-        const direction = ev.key === "ArrowLeft" ? "backward" : "forward";
+
+        // Direction of the movement (take rtl writing into account)
+        const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
+        const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
+        const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
+
+        // Whether the character next to the cursor should be skipped.
         const shouldSkipCallbacks = this.resources.arrows_should_skip || [];
-        const side = direction === "backward" ? "previous" : "next";
-        let adjacentCharacter = getAdjacentCharacter(selection, side, this.editable);
-        let lastSkipedChar = null;
-        while (shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkipedChar))) {
+        let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+        let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
+
+        while (shouldSkip) {
             const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
-            selection.modify(mode, direction, "character");
-            const { focusNode: nodeAfter, focusOffset: offsetAfter } = selection;
 
-            if (nodeBefore === nodeAfter && offsetBefore === offsetAfter) {
-                //  Selection has not changed.
-                return;
-            }
+            selection.modify(mode, screenDirection, "character");
 
-            lastSkipedChar = adjacentCharacter;
-            adjacentCharacter = getAdjacentCharacter(selection, side, this.editable);
+            const hasSelectionChanged =
+                nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
+            const lastSkippedChar = adjacentCharacter;
+            adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+
+            shouldSkip =
+                hasSelectionChanged &&
+                shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
         }
     }
 
