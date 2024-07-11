@@ -623,6 +623,11 @@ class MailTemplate(models.Model):
         # add a protection against void email_from
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
+
+        if not values.get('email_from') or not values.get('author_id'):
+            values['author_id'], values['email_from'] = self.env['mail.thread']._message_compute_author(
+                values.get('author_id'), values.get('email_from'), raise_on_email=False)
+
         # encapsulate body
         email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
         if email_layout_xmlid and values['body_html']:

@@ -200,6 +200,16 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mail.subject, f'EnglishSubject for {self.test_record.name}')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_send_default_author(self):
+        """Test that the author is computed based on the email from."""
+        self.env.invalidate_all()
+        self.test_template.email_from = self.user_employee.email
+        mail_id = self.test_template.with_env(self.env).send_mail(
+            self.test_record.id, email_values={'email_from': self.user_employee.email})
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(mail.author_id, self.user_employee.partner_id)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email_nolayout(self):
         """ Test without layout, just to check impact """
         self.test_template.email_layout_xmlid = False
