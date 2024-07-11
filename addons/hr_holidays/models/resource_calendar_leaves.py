@@ -23,12 +23,13 @@ class ResourceCalendarLeaves(models.Model):
         for record in self:
             if not record.resource_id:
                 existing_leaves = all_existing_leaves.filtered(lambda leave:
-                        record.id != leave.id
-                        and record['company_id'] == leave['company_id']
-                        and record['date_from'] <= leave['date_to']
-                        and record['date_to'] >= leave['date_from'])
+                    record.id != leave.id
+                    and record['company_id'] == leave['company_id']
+                    and record['date_from'] <= leave['date_to']
+                    and record['date_to'] >= leave['date_from'])
                 if record.calendar_id:
-                    existing_leaves = existing_leaves.filtered(lambda l: not l.calendar_id or l.calendar_id == record.calendar_id)
+                    existing_leaves = existing_leaves.filtered(
+                        lambda el: not el.calendar_id or el.calendar_id == record.calendar_id)
                 if existing_leaves:
                     raise ValidationError(_('Two public holidays cannot overlap each other for the same working hours.'))
 
@@ -45,9 +46,9 @@ class ResourceCalendarLeaves(models.Model):
 
     def _get_time_domain_dict(self):
         return [{
-            'company_id' : record.company_id.id,
-            'date_from' : record.date_from,
-            'date_to' : record.date_to
+            'company_id': record.company_id.id,
+            'date_from': record.date_from,
+            'date_to': record.date_to
         } for record in self if not record.resource_id]
 
     def _reevaluate_leaves(self, time_domain_dict):
@@ -76,7 +77,7 @@ class ResourceCalendarLeaves(models.Model):
                     and leave.holiday_status_id not in sick_time_status:
                 message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
-                leave.write({'state': state})
+                leave.sudo().write({'state': state})
                 leave._check_validity()
             except ValidationError:
                 leave.action_refuse()
@@ -118,8 +119,8 @@ class ResourceCalendarLeaves(models.Model):
             # Manage the case of create a Public Time Off in another timezone
             # The datetime created has to be in UTC for the calendar's timezone
             if not vals.get('calendar_id') or vals.get('resource_id') or \
-                not isinstance(vals.get('date_from'), (datetime, str)) or \
-                not isinstance(vals.get('date_to'), (datetime, str)):
+                    not isinstance(vals.get('date_from'), (datetime, str)) or \
+                    not isinstance(vals.get('date_to'), (datetime, str)):
                 continue
             user_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
             calendar_tz = pytz.timezone(self.env['resource.calendar'].browse(vals['calendar_id']).tz)
@@ -153,20 +154,3 @@ class ResourceCalendarLeaves(models.Model):
         self._reevaluate_leaves(time_domain_dict)
 
         return res
-
-
-class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
-
-    associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
-
-    def _compute_associated_leaves_count(self):
-        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('resource_id', '=', False), ('calendar_id', 'in', [False, *self.ids])],
-            ['calendar_id'],
-            ['__count'],
-        )
-        result = {calendar.id if calendar else 'global': count for calendar, count in leaves_read_group}
-        global_leave_count = result.get('global', 0)
-        for calendar in self:
-            calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count

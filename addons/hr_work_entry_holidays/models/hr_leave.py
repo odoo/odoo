@@ -1,14 +1,10 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-from odoo.osv.expression import AND
-from odoo.tools import format_date
+from odoo.exceptions import UserError
 
 
 class HrLeaveType(models.Model):
@@ -163,12 +159,13 @@ class HrLeave(models.Model):
             vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
 
-    def _compute_can_cancel(self):
-        super()._compute_can_cancel()
-
-        cancellable_leaves = self.filtered('can_cancel')
-        work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_id', 'in', cancellable_leaves.ids)])
-        leave_ids = work_entries.mapped('leave_id').ids
-
-        for leave in cancellable_leaves:
-            leave.can_cancel = leave.id not in leave_ids
+    def _check_approval_update(self, state):
+        super()._check_approval_update(state)
+        if state == 'cancel':
+            work_entries = self.env['hr.work.entry'].sudo().search([
+                ('state', '=', 'validated'),
+                ('leave_id', 'in', self.ids)])
+            we_leaves = work_entries.leave_id
+            for leave in self:
+                if leave in we_leaves:
+                    raise UserError(_("You cannot cancel leaves that are linked to validated work entries."))
