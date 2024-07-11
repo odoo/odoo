@@ -451,6 +451,14 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
             });
         });
+
+        test("should merge p elements inside conteneditbale=true inside contenteditable=false", async () => {
+            await testEditor({
+                contentBefore: `<div contenteditable="false"><div contenteditable="true"><p>abc</p><p>[]def</p></div></div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div contenteditable="false"><div contenteditable="true"><p>abc[]def</p></div></div>`,
+            });
+        });
     });
 
     describe("Line breaks", () => {

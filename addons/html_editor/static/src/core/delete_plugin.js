@@ -1011,17 +1011,18 @@ export class DeletePlugin extends Plugin {
         // If the non-editable is not a block and there was a block switch, reduce the
         // selection to keep it instead, since the position moved from another block next
         // to that inline root, there was a sufficient position change.
-        let closestUneditable = closestElement(leaf, isNotEditableNode);
-        if (closestUneditable) {
+        let leafClosestUneditable = closestElement(leaf, isNotEditableNode);
+        const nodeClosestUneditable = closestElement(node, isNotEditableNode);
+        if (leafClosestUneditable && leafClosestUneditable !== nodeClosestUneditable) {
             // handle nested contenteditable=false elements
-            while (!closestUneditable.parentNode.isContentEditable) {
-                closestUneditable = closestUneditable.parentNode;
+            while (!leafClosestUneditable.parentNode.isContentEditable) {
+                leafClosestUneditable = leafClosestUneditable.parentNode;
             }
             return blockSwitch &&
-                !isBlock(closestUneditable) &&
-                closestBlock(closestUneditable) !== endNodeClosestBlock
-                ? rightPos(closestUneditable)
-                : leftPos(closestUneditable);
+                !isBlock(leafClosestUneditable) &&
+                closestBlock(leafClosestUneditable) !== endNodeClosestBlock
+                ? rightPos(leafClosestUneditable)
+                : leftPos(leafClosestUneditable);
         }
 
         if (leaf.nodeType === Node.ELEMENT_NODE) {
@@ -1070,17 +1071,18 @@ export class DeletePlugin extends Plugin {
         // If the non-editable is not a block and there was a block switch, reduce the
         // selection to keep it instead, since the position moved from another block to
         // that inline root, there was a sufficient position change.
-        let closestUneditable = closestElement(leaf, isNotEditableNode);
-        if (closestUneditable) {
+        let leafClosestUneditable = closestElement(leaf, isNotEditableNode);
+        const nodeClosestUneditable = closestElement(node, isNotEditableNode);
+        if (leafClosestUneditable && leafClosestUneditable !== nodeClosestUneditable) {
             // handle nested contenteditable=false elements
-            while (!closestUneditable.parentNode.isContentEditable) {
-                closestUneditable = closestUneditable.parentNode;
+            while (!leafClosestUneditable.parentNode.isContentEditable) {
+                leafClosestUneditable = leafClosestUneditable.parentNode;
             }
             return blockSwitch &&
-                !isBlock(closestUneditable) &&
-                closestBlock(closestUneditable) !== startNodeClosestBlock
-                ? leftPos(closestUneditable)
-                : rightPos(closestUneditable);
+                !isBlock(leafClosestUneditable) &&
+                closestBlock(leafClosestUneditable) !== startNodeClosestBlock
+                ? leftPos(leafClosestUneditable)
+                : rightPos(leafClosestUneditable);
         }
 
         if (leaf.nodeType === Node.ELEMENT_NODE) {
