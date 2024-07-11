@@ -4,13 +4,14 @@
 from unittest.mock import patch
 
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
+from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
 @tagged('-at_install', 'post_install', 'functional')
-class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
+class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
     def test_flow_certification(self):
         # Step: survey user creates the certification
@@ -101,7 +102,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         r = self._access_begin(certification, answer_token)
         self.assertResponse(r, 200)
 
-        with patch.object(IrMail_Server, 'connect'):
+        with self.mock_mail_gateway():
             self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
             self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
             self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
@@ -142,13 +143,17 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_text_box'))
         self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_text_box'))
 
-        certification_email = self.env['mail.mail'].sudo().search([], limit=1, order="create_date desc")
         # Check certification email correctly sent and contains document
-        self.assertIn("User Certification for SO lines", certification_email.subject)
-        self.assertIn("employee@example.com", certification_email.email_to)
-        self.assertEqual(len(certification_email.attachment_ids), 1)
-        self.assertEqual(certification_email.attachment_ids[0].name, f'Certification - {certification.title}.html',
-                         'Default certification report print_report_name is "Certification - %s" % (object.survey_id.display_name)')
+        self.assertMailMail(
+            self.user_emp.partner_id,
+            'outgoing',
+            fields_values={
+                'attachments_info': [
+                    {'name': f'Certification - {certification.title}.html'},
+                ],
+                'subject': f'Certification: {certification.title}',
+            },
+        )
 
     def test_randomized_certification(self):
         # Step: survey user creates the randomized certification
