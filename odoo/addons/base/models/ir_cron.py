@@ -760,7 +760,7 @@ class ir_cron_progress(models.Model):
     _description = 'Progress of Scheduled Actions'
     _rec_name = 'cron_id'
 
-    cron_id = fields.Many2one("ir.cron", required=True, index=True)
+    cron_id = fields.Many2one("ir.cron", required=True, index=True, ondelete='cascade')
     remaining = fields.Integer(default=0)
     done = fields.Integer(default=0)
     timed_out_counter = fields.Integer(default=0)
