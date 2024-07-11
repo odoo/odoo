@@ -948,14 +948,14 @@ var SnippetEditor = publicWidget.Widget.extend({
                 const dropzoneEl = dropzone.el;
                 // Prevent a column to be trapped in an upper grid dropzone at
                 // the start of the drag.
-                if (this.dragState.isColumn && this.dragState.overFirstDropzone) {
+                if (this.dragState.overFirstDropzone) {
                     this.dragState.overFirstDropzone = false;
 
                     // The column is considered as glued to the dropzone if the
                     // dropzone is above and if the space between them is less
                     // than 25px (the move handle height is 22px so 25 is a
                     // safety margin).
-                    const columnTop = this.dragState.columnTop;
+                    const columnTop = this.dragState.draggedItemTop;
                     const dropzoneBottom = dropzoneEl.getBoundingClientRect().bottom;
                     const areDropzonesGlued = columnTop >= dropzoneBottom && columnTop - dropzoneBottom < 25;
 
@@ -1112,12 +1112,11 @@ var SnippetEditor = publicWidget.Widget.extend({
                 // Reload the images.
                 gridUtils._reloadLazyImages(this.$target[0]);
             }
-            // Storing the starting top position of the column.
-            this.dragState.columnTop = this.$target[0].getBoundingClientRect().top;
-            this.dragState.isColumn = true;
             // Deactivate the snippet so the overlay doesn't show.
             this.trigger_up('deactivate_snippet', {$snippet: self.$target});
         }
+        // Storing the starting top position of the dragged item.
+        this.dragState.draggedItemTop = this.$target[0].getBoundingClientRect().top;
         // Store the dragged element (or the image if the column only contains
         // an image) width and height to use them when the column goes over a
         // grid dropzone.
