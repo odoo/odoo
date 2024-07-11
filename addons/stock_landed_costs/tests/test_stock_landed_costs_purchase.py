@@ -3,7 +3,6 @@
 import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLCCommon
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 from odoo.fields import Date
 from odoo.tests import tagged, Form
@@ -444,7 +443,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
                     'product_qty': 1.0,
                     'product_uom': self.product_a.uom_po_id.id,
                     'price_unit': 100.0,
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': self.landed_cost.name,
@@ -462,7 +461,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         po.order_line[1].qty_received = 1
 
         po.action_create_invoice()
-        bill = po.invoice_ids
+        bill = po.account_move_ids
 
         # Create and validate LC
         lc = self.env['stock.landed.cost'].create(dict(

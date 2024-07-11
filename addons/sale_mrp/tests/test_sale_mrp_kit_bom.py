@@ -175,7 +175,7 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_uom_qty': 10.0,
                     'product_uom': self.kit.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -240,7 +240,7 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_uom_qty': 1.0,
                     'product_uom': self.kitA.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()
@@ -294,7 +294,7 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_uom_qty': 1.0,
                     'product_uom': kitA.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })]
         })
         so.action_confirm()
@@ -369,7 +369,7 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_uom_qty': 1.0,
                     'product_uom': kitAB.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': kitABC.name,
@@ -377,7 +377,7 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_uom_qty': 1.0,
                     'product_uom': kitABC.uom_id.id,
                     'price_unit': 1,
-                    'tax_id': False,
+                    'tax_ids': False,
                 })],
         })
         so.action_confirm()

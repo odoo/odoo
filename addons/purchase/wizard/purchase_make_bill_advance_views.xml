@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_advance_payment_wizard" model="ir.ui.view">
+        <field name="inherit_id" ref="account.view_account_advance_payment"/>
+        <field name="model">purchase.advance.payment.wizard</field>
+        <field name="mode">primary</field>
+        <field name="name">Create Bills</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="string">Bill Purchase Order</attribute>
+            </form>
+            <a name="view_draft_invoices" position="inside">There are existing Draft Bills for this Purchase Order.</a>
+            <p name="deduct_draft" position="inside">
+                The new bill will deduct draft bills linked to this purchase order.
+            </p>
+            <span name="amount_warning" position="attributes">
+                <attribute name="title">The Down Payment is greater than the amount remaining to be billed.</attribute>
+            </span>
+        </field>
+    </record>
+</odoo>
