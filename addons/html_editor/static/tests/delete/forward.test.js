@@ -1,7 +1,9 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { testEditor, setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { deleteForward, insertText } from "../_helpers/user_actions";
+import { tick } from "@odoo/hoot-mock";
+import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
 
 /**
  * content of the "deleteForward" sub suite in editor.test.js
@@ -1310,28 +1312,38 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete a heading (triple click delete)", async () => {
-        await testEditor({
-            contentBefore: "<h1>[abc</h1><p>]def</p>",
-            stepFunction: deleteForward,
-            // JW cAfter: '<p>[]def</p>',
-            contentAfter: "<h1>[]<br></h1><p>def</p>",
-        });
-        await testEditor({
-            contentBefore: "<h1>[abc</h1><p>]<br></p><p>def</p>",
-            stepFunction: deleteForward,
-            contentAfter: "<h1>[]<br></h1><p><br></p><p>def</p>",
-        });
+    test("should delete a heading (triple click delete) (1)", async () => {
+        const { editor, el } = await setupEditor("<h1>abc</h1><p>def</p>", {});
+        tripleClick(el.querySelector("h1"));
+        // Chrome puts the cursor at the start of next sibling
+        expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
+        await tick();
+        // The Editor corrects it on selection change
+        expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
+        deleteForward(editor);
+        expect(getContent(el)).toBe(
+            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p>def</p>'
+        );
+    });
+    test("should delete a heading (triple click delete) (2)", async () => {
+        const { editor, el } = await setupEditor("<h1>abc</h1><p><br></p><p>def</p>", {});
+        tripleClick(el.querySelector("h1"));
+        // Chrome puts the cursor at the start of next sibling
+        expect(getContent(el)).toBe("<h1>[abc</h1><p>]<br></p><p>def</p>");
+        await tick();
+        // The Editor corrects it on selection change
+        expect(getContent(el)).toBe("<h1>[abc]</h1><p><br></p><p>def</p>");
+        deleteForward(editor);
+        expect(getContent(el)).toBe(
+            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p><br></p><p>def</p>'
+        );
     });
 
-    test("should delete last character of paragraph, ignoring the selected paragraph break", async () => {
+    test("should delete last character of paragraph, as well as selected paragraph break", async () => {
         await testEditor({
             contentBefore: "<p>ab[c</p><p>]def</p>",
-            // This type of selection (typically done with a triple
-            // click) is "corrected" before remove so triple clicking
-            // doesn't remove a paragraph break.
             stepFunction: deleteForward,
-            contentAfter: "<p>ab[]</p><p>def</p>",
+            contentAfter: "<p>ab[]def</p>",
         });
     });
 
