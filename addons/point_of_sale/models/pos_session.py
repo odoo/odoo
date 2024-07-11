@@ -140,7 +140,6 @@ class PosSession(models.Model):
             'pos.payment.method': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
                 'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence'],
-                'context': {**self.env.context},
             },
             'pos.printer': {
                 'domain': [('id', 'in', config_id.printer_ids.ids)],
@@ -218,7 +217,6 @@ class PosSession(models.Model):
             'uom.uom': {
                 'domain': [],
                 'fields': ['id', 'name', 'category_id', 'factor_inv', 'factor', 'is_pos_groupable', 'uom_type', 'rounding'],
-                'context': {**self.env.context},
             },
             'uom.category': {
                 'domain': lambda data: [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']])],
@@ -231,7 +229,6 @@ class PosSession(models.Model):
             'res.country': {
                 'domain': [],
                 'fields': ['id', 'name', 'code', 'vat_label'],
-                'context': {**self.env.context},
             },
             'res.lang': {
                 'domain': [],
@@ -286,8 +283,16 @@ class PosSession(models.Model):
 
         return params
 
+    def _load_data_params_with_context(self, config_id):
+        params = self._load_data_params(config_id)
+        for param in params.values():
+            if 'context' not in param:
+                param.update({'context': {**self.env.context}})
+
+        return params
+
     def load_data(self, models_to_load, only_data=False):
-        load_params = self._load_data_params(self.config_id)
+        load_params = self._load_data_params_with_context(self.config_id)
         response = {}
         response['data'] = {}
         response['relations'] = {}
@@ -2017,14 +2022,14 @@ class PosSession(models.Model):
         """
         :param custom_search_params: a dictionary containing params of a search_read()
         """
-        params = self._load_data_params(self.config_id)['res.partner']
+        params = self._load_data_params_with_context(self.config_id)['res.partner']
         # custom_search_params will take priority
         params = {**params, **custom_search_params}
         partners = self.env['res.partner'].search_read(**params)
         return partners
 
     def find_product_by_barcode(self, barcode):
-        load_data_params = self._load_data_params(self.config_id)
+        load_data_params = self._load_data_params_with_context(self.config_id)
         product_context = load_data_params['product.product'].get('context', [])
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),
