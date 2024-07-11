@@ -21,7 +21,7 @@ class TimesheetsAnalysisReport(models.Model):
     department_id = fields.Many2one("hr.department", string="Department", readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
     date = fields.Date("Date", readonly=True)
-    amount = fields.Monetary("Amount", readonly=True)
+    amount = fields.Monetary("Amount", currency_field="currency_id", readonly=True)
     unit_amount = fields.Float("Time Spent", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Partner", readonly=True)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
