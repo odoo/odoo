@@ -79,6 +79,7 @@ export class Dialog extends Component {
 Dialog.template = "web.Dialog";
 Dialog.props = {
     contentClass: { type: String, optional: true },
+    headerClass: { type: String, optional: true },
     bodyClass: { type: String, optional: true },
     fullscreen: { type: Boolean, optional: true },
     footer: { type: Boolean, optional: true },
@@ -98,6 +99,7 @@ Dialog.props = {
     withBodyPadding: { type: Boolean, optional: true },
 };
 Dialog.defaultProps = {
+    headerClass: "",
     contentClass: "",
     bodyClass: "",
     fullscreen: false,

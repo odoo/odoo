@@ -7,6 +7,7 @@
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen }"
                 t-ref="modalRef"
+                t-attf-class="{{props.headerClass}}"
                 >
                 <div class="modal-dialog modal-dialog-centered" t-attf-class="modal-{{props.size}}">
                     <div class="modal-content" t-att-class="props.contentClass" t-att-style="contentStyle">
