@@ -326,6 +326,27 @@ export function scan_barcode(barcode) {
         },
     ];
 }
+export function scan_barcode_with_error_check(barcode) {
+    return [
+        {
+            content: `PoS model scan barcode '${barcode}'`,
+            trigger: ".pos",
+            run: async () => {
+                let errorOccurred = false; // Local flag to check if the error occurs
+                try {
+                    await window.posmodel.env.services.barcode_reader.scan(barcode);
+                } catch {
+                    errorOccurred = true; // Set the local flag if the expected error occurs
+                }
+
+                if (!errorOccurred) {
+                    throw new Error("Expected GS1BarcodeError did not occur");
+                }
+            },
+        },
+    ];
+}
+
 export function scan_ean13_barcode(barcode) {
     return [
         {

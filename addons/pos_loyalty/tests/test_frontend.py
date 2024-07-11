@@ -504,6 +504,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.company_id.write({
             'nomenclature_id': barcodes_gs1_nomenclature.id
         })
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id.id
+        })
 
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference

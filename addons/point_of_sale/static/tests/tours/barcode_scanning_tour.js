@@ -59,8 +59,6 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
-
             // Add the Product 1 with GS1 barcode
             ProductScreen.scan_barcode("0108431673020125100000001"),
             ProductScreen.selectedOrderlineHas("Product 1"),
@@ -78,6 +76,16 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Product 3"),
             ProductScreen.scan_barcode("3760171283370"),
             ProductScreen.selectedOrderlineHas("Product 3", 2),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("GS1BarcodeScanningTourFallback", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.scan_barcode_with_error_check("08431673020126"),
             Chrome.endTour(),
         ].flat(),
 });

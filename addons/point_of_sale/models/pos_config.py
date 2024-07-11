@@ -192,6 +192,7 @@ class PosConfig(models.Model):
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
     module_pos_sms = fields.Boolean(string="SMS Enabled", help="Activate SMS feature for point_of_sale")
+    fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
 
     @api.model
     def _load_pos_data_domain(self, data):
