@@ -108,28 +108,21 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <field name="icon"/>
-                <field name="res_model"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click d-flex justify-content-end">
-                            <div class="flex-grow-1">
-                                <div class="o_kanban_record_title fw-bold">
-                                    <i t-if="record.icon.value" t-attf-class="fa #{record.icon.value} fa-fw"
-                                       role="img" aria-label="Activity Type Name" title="Activity Type Name"/>
-                                    <field name="name"/>
-                                </div>
-                                <div t-if="record.res_model.value" title="Applies to">
-                                    <field name="res_model"/>
-                                </div>
-                                <div t-if="record.summary.raw_value">
-                                    Default Summary: <field name="summary"/>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-end">
-                                <field class="oe_kanban_bottom_right" name="default_user_id"
-                                       widget="many2one_avatar_user" readonly="1"/>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="fw-bold fs-5">
+                            <i t-if="record.icon.value" t-attf-class="fa #{record.icon.value} fa-fw"
+                               role="img" aria-label="Activity Type Name" title="Activity Type Name"/>
+                            <field name="name"/>
                         </div>
+                        <field t-if="record.res_model.value" name="res_model"/>
+                        <div t-if="record.summary.raw_value">
+                            Default Summary: <field name="summary"/>
+                        </div>
+                        <footer>
+                            <field class="ms-auto" name="default_user_id"
+                                   widget="many2one_avatar_user" readonly="1"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
@@ -359,34 +352,25 @@
             <kanban string="Activity" action="action_open_document" type="object">
                 <templates>
                     <field name="active" invisible="1"/>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click d-flex flex-column justify-content-between">
-                            <div class="d-flex justify-content-between">
-                                <span>
-                                    <field name="res_name"
-                                        class="fw-bold" /> (<field class="text-muted" name="res_model_id" />)</span>
-                                <field name="activity_type_id" widget="badge" />
-                            </div>
-                            <div class="d-flex flex-row gap-2">
-                                <div class="text-truncate">
-                                    <field name="summary" />
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2 align-items-center">
-                                    <field name="user_id" widget="many2one_avatar_user" />
-                                    <field name="date_deadline" widget="remaining_days" />
-                                </div>
-                                <div class="d-flex flex-row gap-2">
-                                    <button type="object" name="action_done" class="btn btn-link btn-sm" invisible="active == False">
-                                        <i class="fa fa-check" /> Done
-                                    </button>
-                                    <button type="object" name="unlink" class="btn btn-link text-danger btn-sm">
-                                        <i class="fa fa-times" /> Cancel
-                                    </button>
-                                </div>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <field name="res_name" class="fw-bold" />
+                                (<field class="text-muted" name="res_model_id" />)
+                            </span>
+                            <field name="activity_type_id" widget="badge" />
                         </div>
+                        <field class="text-truncate" name="summary" />
+                        <footer class="align-items-center">
+                            <field name="user_id" widget="many2one_avatar_user" />
+                            <field name="date_deadline" widget="remaining_days" class="ms-2"/>
+                            <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
+                                <i class="fa fa-check" /> Done
+                            </button>
+                            <button type="object" name="unlink" class="btn btn-link text-danger btn-sm">
+                                <i class="fa fa-times" /> Cancel
+                            </button>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

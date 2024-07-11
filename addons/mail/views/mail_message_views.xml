@@ -139,47 +139,34 @@
                     <field name="id"/>
                     <field name="mimetype"/>
                     <field name="type"/>
-                    <field name="create_uid"/>
-                    <field name="url"/>
-                    <field name="create_date"/>
-                    <field name="name"/>
                     <templates>
                         <t t-name="kanban-menu">
                             <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/datas?download=true" download="" class="dropdown-item">Download</a>
                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_area oe_kanban_global_click o_kanban_attachment">
-                                <div class="o_kanban_image">
-                                    <div class="o_kanban_image_wrapper">
-                                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
-                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
-                                        <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
-                                        <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                        <t t-name="kanban-card" class="o_kanban_attachment flex-row">
+                            <aside class="o_kanban_image m-1">
+                                <div class="o_kanban_image_wrapper d-flex align-items-center justify-content-center">
+                                    <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
+                                    <div t-if="record.type.raw_value == 'url'" class="fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                    <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                    <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                </div>
+                            </aside>
+                            <main class="o_kanban_details ms-1">
+                                <div class="o_kanban_details_wrapper d-flex flex-column">
+                                    <field name="name" class="text-truncate fw-bold fs-5"/>
+                                    <div class="d-flex flex-grow-1 align-items-center">
+                                        <t t-if="record.type.raw_value == 'url'">
+                                            <i class="fa fa-globe" aria-label="Document url"/> <field name="url" widget="url"/>
+                                        </t>
+                                    </div>
+                                    <div class="d-flex">
+                                        <field name="create_date"/>
+                                        <field name="create_uid" widget="many2one_avatar_user" class="ms-auto"/>
                                     </div>
                                 </div>
-                                <div class="o_kanban_details">
-                                    <div class="o_kanban_details_wrapper">
-                                        <div t-att-title="record.name.raw_value" class="o_kanban_record_title">
-                                            <field name="name" class="o_text_overflow"/>
-                                        </div>
-                                        <div class="o_kanban_record_body">
-                                            <t t-if="record.type.raw_value == 'url'">
-                                                <span class="o_document_url"><i class="fa fa-globe" aria-label="Document url"/> <field name="url" widget="url"/></span>
-                                            </t>
-                                            <samp t-else="" class="text-muted"> </samp>
-                                        </div>
-                                        <div class="o_kanban_record_bottom">
-                                            <time class="oe_kanban_bottom_left">
-                                                <field name="create_date"/>
-                                            </time>
-                                            <div class="oe_kanban_bottom_right">
-                                                <field name="create_uid" widget="many2one_avatar_user"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </main>
                         </t>
                     </templates>
                 </kanban>
