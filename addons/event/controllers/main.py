@@ -5,6 +5,7 @@ import json
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
+from odoo.addons.mail.controllers.mail import MailController
 from odoo.http import Controller, request, route, content_disposition
 from odoo.tools import consteq
 
@@ -26,6 +27,13 @@ class EventController(Controller):
             ('Content-Length', len(content)),
             ('Content-Disposition', content_disposition('%s.ics' % event.name))
         ])
+
+    @http.route('/event/<int:event_id>/notification_tickets', type='http', auth='user', methods=['GET'])
+    def event_notification_tickets(self, event_id, registration_ids, tickets_hash, token):
+        valid_token = MailController._check_token(token)
+        if not valid_token:
+            return NotFound()
+        return self.event_my_tickets(event_id, registration_ids, tickets_hash)
 
     @route(['/event/<int:event_id>/my_tickets'], type='http', auth='public')
     def event_my_tickets(self, event_id, registration_ids, tickets_hash, badge_mode=False, responsive_html=False):

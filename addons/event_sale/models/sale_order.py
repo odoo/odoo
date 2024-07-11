@@ -80,24 +80,32 @@ class SaleOrder(models.Model):
         )
         if not self:
             return groups
+        if not self.order_line.event_id:
+            return
 
+        print("cacaboum", groups)
         # portal customers (aka 'partner_id') gain access to the tickets
         try:
             customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
         except StopIteration:
             pass
         else:
+            print("customer_portal_group", customer_portal_group)
             if customer_portal_group[2]['has_button_access']:
                 local_msg_vals = dict(msg_vals or {})
-                actions = customer_portal_group[2].get("actions") or []
+                actions = customer_portal_group[2].setdefault("actions", [])
+                registrations = self.order_line.registration_ids
 
-                tickets_action = self._notify_get_action_link(
-                    "controller", controller="/lead/convert",
-                    **local_msg_vals
-                )
-                actions.append({
-                    "url": tickets_action,
-                    "title": _("My Tickets"),
-                })
+                for event in self.order_line.event_id:
+                    tickets_action = self._notify_get_action_link(
+                        "custom",
+                        custom_link=f"/event/{event.id}/notification_tickets",
+                        registration_ids=registrations.filtered(lambda r: r.event_id == event).ids,
+                        tickets_hash="caca",
+                    )
+                    actions.append({
+                        "url": tickets_action,
+                        "title": _("My Tickets"),
+                    })
 
         return groups

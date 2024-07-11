@@ -4024,16 +4024,20 @@ class MailThread(models.AbstractModel):
             'model': kwargs.get('model', self._name),
             'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
         }
+
+        if link_type == "custom":
+            params.update(**kwargs)
         # keep only accepted parameters:
         # - action (deprecated), token (assign), access_token (view)
         # - auth_signup: auth_signup_token and auth_login
         # - portal: pid, hash
-        params.update(dict(
-            (key, value)
-            for key, value in kwargs.items()
-            if key in ('action', 'token', 'access_token', 'auth_signup_token',
-                       'auth_login', 'pid', 'hash')
-        ))
+        else:
+            params.update(dict(
+                (key, value)
+                for key, value in kwargs.items()
+                if key in ('action', 'token', 'access_token', 'auth_signup_token',
+                        'auth_login', 'pid', 'hash')
+            ))
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             base_link = '/mail/%s' % link_type
@@ -4041,10 +4045,15 @@ class MailThread(models.AbstractModel):
             controller = kwargs.get('controller')
             params.pop('model')
             base_link = '%s' % controller
+        elif link_type == 'custom':
+            custom_link = kwargs.get('custom_link')
+            params.pop('model')
+            params.pop('res_id')
+            base_link = '%s' % custom_link
         else:
             return ''
 
-        if link_type not in ['view']:
+        if link_type != 'view':
             token = self._encode_link(base_link, params)
             params['token'] = token
 
