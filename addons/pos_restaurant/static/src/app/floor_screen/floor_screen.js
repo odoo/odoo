@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
+import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
@@ -19,10 +19,10 @@ import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-export function constrain(num, min, max) {
+
+function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
-
 /**
  * Gives the minimum and maximum x and y value for an element to prevent it from
  * overflowing outside of another element.
@@ -33,7 +33,7 @@ export function constrain(num, min, max) {
  *  shouldn't overflow
  * @returns {{ minX: number, maxX: number, minY: number, maxY: number }} limits
  */
-export function getLimits(el, limitEl) {
+function getLimits(el, limitEl) {
     const { width, height } = el.getBoundingClientRect();
     const limitRect = limitEl.getBoundingClientRect();
     const offsetParentRect = el.offsetParent.getBoundingClientRect();
@@ -44,6 +44,16 @@ export function getLimits(el, limitEl) {
         maxY: limitRect.top - offsetParentRect.top + limitRect.height - height,
     };
 }
+const areElementsIntersecting = (el1, el2) => {
+    const rect1 = el1.getBoundingClientRect();
+    const rect2 = el2.getBoundingClientRect();
+    return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+};
 const useDraggable = makeDraggableHook({
     name: "useDraggable",
     onComputeParams({ ctx }) {
@@ -81,17 +91,10 @@ export class FloorScreen extends Component {
                 [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
             );
         };
-        const areElementsIntersecting = (el1, el2) => {
-            const rect1 = el1.getBoundingClientRect();
-            const rect2 = el2.getBoundingClientRect();
-            return !(
-                rect1.right < rect2.left ||
-                rect1.left > rect2.right ||
-                rect1.bottom < rect2.top ||
-                rect1.top > rect2.bottom
-            );
+        const getTableElem = (table) => {
+            return this.map.el.querySelector(`.tableId-${table.id}`);
         };
-        const findIntersectingTable = (tableElem) => {
+        const findIntersectingTableElem = (tableElem) => {
             const table = getPosTable(tableElem);
             return [...tableElem.parentElement.getElementsByClassName("table")].find(
                 (t) =>
@@ -100,53 +103,87 @@ export class FloorScreen extends Component {
                     !table.isParent(getPosTable(t))
             );
         };
-        let lastX;
-        let lastY;
+        const TABLE_LINKING_DELAY = 400;
+        let offsetX, offsetY;
+        const suggestLinkingPositions = () =>
+            this.state.potentialLink?.parent &&
+            this.state.potentialLink.time + TABLE_LINKING_DELAY < Date.now();
+
         useDraggable({
             ref: this.map,
             elements: ".table",
             ignore: "span.table-handle",
+            enabled: !this.pos.isEditMode,
             onDragStart: (ctx) => {
                 ctx.addClass(ctx.element, "shadow");
+                if (this.pos.isEditMode) {
+                    return;
+                }
                 const table = getPosTable(ctx.element);
+                this.state.potentialLink = { child: table };
+                table.uiState.initialPosition = pick(table, "position_h", "position_v");
+                // This helps when unlinking tables ( to keep the position )
+                table.position_h = table.getX();
+                table.position_v = table.getY();
                 if (table.parent_id) {
                     this.pos.data.write("restaurant.table", [table.id], {
                         parent_id: null,
                     });
                 }
-                table.uiState.initialPosition = pick(table, "position_h", "position_v");
             },
-            onWillStartDrag: ({ x, y }) => {
-                lastX = x;
-                lastY = y;
+            onWillStartDrag: ({ element, x, y }) => {
+                offsetX = x - element.getBoundingClientRect().left;
+                offsetY = y - element.getBoundingClientRect().top;
             },
-            onDrag: useThrottleForAnimation(({ element, x, y }) => {
+            onDrag: ({ element, x, y }) => {
                 const table = getPosTable(element);
-                table.position_h += x - lastX;
-                table.position_v += y - lastY;
-                lastX = x;
-                lastY = y;
-                if (this.pos.isEditMode) {
-                    return;
-                }
-                const potentialParentTable = findIntersectingTable(element);
-                if (potentialParentTable) {
+                if (!suggestLinkingPositions()) {
+                    table.position_h =
+                        x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
+                    table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                    if (this.pos.isEditMode || this.state.potentialLink?.parent) {
+                        return;
+                    }
+                    const potentialParentElem = findIntersectingTableElem(element);
+                    if (!potentialParentElem) {
+                        this.alert.add("Link Table");
+                        return;
+                    }
                     this.state.potentialLink = {
                         child: table,
-                        parent: potentialParentTable,
+                        parent: getPosTable(potentialParentElem),
+                        time: Date.now(),
                     };
-                    this.overlayX = this.state.potentialLink.child.getCenter().x;
-                    this.overlayY = this.state.potentialLink.child.getCenter().y;
-                    this.alert.add("Link Tables");
-                } else {
-                    this.alert.dismiss();
-                    this.state.potentialLink = null;
+                    this.alert.add(
+                        `Link Table ${table.name} with ${this.state.potentialLink.parent.name}`
+                    );
+                    return;
                 }
-            }),
+                const { child, parent } = this.state.potentialLink;
+                const { left, top, width, height } = getTableElem(parent).getBoundingClientRect();
+                const dx = x - left - width / 2;
+                const dy = y - top - height / 2;
+                if (
+                    Math.abs(dx) > parent.width / 2 + child.width / 2 ||
+                    Math.abs(dy) > parent.height / 2 + child.height / 2
+                ) {
+                    this.state.potentialLink = { child: table };
+                    return;
+                }
+                table.setPositionAsIfLinked(
+                    this.state.potentialLink.parent,
+                    Math.abs(dx) > Math.abs(dy)
+                        ? dx > 0
+                            ? "left"
+                            : "right"
+                        : dy < 0
+                        ? "top"
+                        : "bottom"
+                );
+            },
             onDrop: ({ element }) => {
                 this.alert.dismiss();
                 const table = getPosTable(element);
-                this.state.potentialLink = null;
                 if (this.pos.isEditMode) {
                     this.pos.data.write("restaurant.table", [table.id], {
                         position_h: table.position_h,
@@ -156,25 +193,25 @@ export class FloorScreen extends Component {
                 }
                 table.position_h = table.uiState.initialPosition.position_h;
                 table.position_v = table.uiState.initialPosition.position_v;
-                const interesectingTableElem = findIntersectingTable(element);
-                if (!interesectingTableElem) {
+                if (!suggestLinkingPositions()) {
+                    this.state.potentialLink = null;
                     return;
                 }
-                const newParentTable = getPosTable(interesectingTableElem);
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
                     this.pos.orderToTransferUuid = oToTrans.uuid;
-                    this.pos.transferOrder(newParentTable);
+                    this.pos.transferOrder(this.state.potentialLink.parent);
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
-                    parent_id: newParentTable.id,
+                    parent_id: this.state.potentialLink.parent.id,
                 });
+                this.state.potentialLink = null;
             },
         });
         useDraggable({
             ref: this.map,
             elements: "span.table-handle",
-            onDrag: useThrottleForAnimation((ctx) => {
+            onDrag: (ctx) => {
                 const table = getPosTable(ctx.element.parentElement);
                 const newPosition = {
                     minX: table.position_h,
@@ -202,7 +239,7 @@ export class FloorScreen extends Component {
                 table.position_v = newPosition.minY;
                 table.width = newPosition.maxX - newPosition.minX;
                 table.height = newPosition.maxY - newPosition.minY;
-            }),
+            },
             onDrop: (ctx) => {
                 const table = getPosTable(ctx.element.parentElement);
                 this.pos.data.write(
