@@ -81,6 +81,14 @@ class Pricelist(models.Model):
 
         return res
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for pricelist, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", pricelist.name)
+        return vals_list
+
     def _get_products_price(self, products, *args, **kwargs):
         """Compute the pricelist prices for the specified products, quantity & uom.
 
