@@ -1675,7 +1675,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         rounding = self.product_id.uom_id.rounding
         return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
 
-    def _action_assign(self, force_qty=False):
+    def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
@@ -1694,18 +1694,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
         moves_to_assign = self
-        if not force_qty:
-            moves_to_assign = moves_to_assign.filtered(
-                lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
-            )
+        moves_to_assign = moves_to_assign.filtered(
+            lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
+        )
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:
             rounding = roundings[move]
-            if not force_qty:
-                missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
-            else:
-                missing_reserved_uom_quantity = force_qty
+            missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             if float_compare(missing_reserved_uom_quantity, 0, precision_rounding=rounding) <= 0:
                 assigned_moves_ids.add(move.id)
                 continue
@@ -1750,7 +1746,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 assigned_moves_ids.add(move.id)
                 moves_to_redirect.add(move.id)
             else:
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) and not force_qty:
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':

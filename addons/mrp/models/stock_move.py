@@ -438,8 +438,8 @@ class StockMove(models.Model):
         if procurements:
             self.env['procurement.group'].run(procurements)
 
-    def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
+    def _action_assign(self):
+        res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
