@@ -460,14 +460,6 @@ export class PosOrder extends Base {
     }
 
     get_selected_orderline() {
-        const selected = this.lines.find(
-            (line) => line.uuid === this.uiState.selected_orderline_uuid
-        );
-
-        if (!selected && this.lines.length > 0) {
-            this.select_orderline(this.get_last_orderline());
-        }
-
         return this.lines.find((line) => line.uuid === this.uiState.selected_orderline_uuid);
     }
 
