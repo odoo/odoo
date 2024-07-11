@@ -111,8 +111,19 @@ class HolidaysType(models.Model):
             or that don't need an allocation
             return [('id', domain_operator, [x['id'] for x in res])]
         """
-        date_from = self._context.get('default_date_from') or fields.Date.today().strftime('%Y-1-1')
-        date_to = self._context.get('default_date_to') or fields.Date.today().strftime('%Y-12-31')
+
+        if {'default_date_from', 'default_date_to', 'tz'} <= set(self._context):
+            default_date_from_dt = fields.Datetime.to_datetime(self._context.get('default_date_from'))
+            default_date_to_dt = fields.Datetime.to_datetime(self._context.get('default_date_to'))
+
+            # Cast: Datetime -> Date using user's tz
+            date_from = fields.Date.context_today(self, default_date_from_dt)
+            date_to = fields.Date.context_today(self, default_date_to_dt)
+
+        else:
+            date_from = fields.Date.today().strftime('%Y-1-1')
+            date_to = fields.Date.today().strftime('%Y-12-31')
+
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
 
         if not isinstance(value, bool):
