@@ -166,7 +166,7 @@
             <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
         </xpath>
 
-        <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+        <th name="th_priceunit" t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
             <th name="th_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                 <span>Disc.</span>
             </th>
@@ -261,8 +261,8 @@
                     <td class="text-end" t-out="wh['tax_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
             </t>
         </t>
-        <tr class="border-black o_total" position="replace">
-            <tr class="border-black o_total">
+        <tr class="o_total" position="replace">
+            <tr class="o_total">
                 <td><strong>Total</strong></td>
                 <td class="text-end">
                     <span t-out="subtotal_amounts['total_amount']" t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/>
