@@ -117,7 +117,7 @@ class IrFilters(models.Model):
     def create_or_replace(self, vals):
         action_id = vals.get('action_id')
         embedded_action_id = vals.get('embedded_action_id')
-        if not embedded_action_id and vals.get('embedded_parent_res_id'):
+        if not embedded_action_id and 'embedded_parent_res_id' in vals:
             del vals['embedded_parent_res_id']
         embedded_parent_res_id = vals.get('embedded_parent_res_id')
         current_filters = self.get_filters(vals['model_id'], action_id, embedded_action_id, embedded_parent_res_id)
