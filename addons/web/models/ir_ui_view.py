@@ -27,6 +27,5 @@ class View(models.Model):
             'pivot': {'icon': 'oi oi-view-pivot'},
             'kanban': {'icon': 'oi oi-view-kanban'},
             'calendar': {'icon': 'fa fa-calendar'},
-            'gantt': {'icon': 'fa fa-tasks'},
             'search': {'icon': 'oi oi-search'},
         }
