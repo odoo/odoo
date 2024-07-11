@@ -20,4 +20,6 @@ class ProductProduct(models.Model):
 
         super()._compute_display_name()
         for product in self:
-            product.display_name = re.sub(r'(\d)(\s)([\u0600-\u06FF])', repl, product.display_name)
+            if not product.display_name:
+                continue
+            product.display_name = re.sub(r'(\d)(\s)([\u0600-\u06FF])', repl, (product.display_name))
