@@ -73,6 +73,13 @@ class TestDomain(common.TransactionCase):
         self.assertListEqual(self._search(EmptyInt, [('number', '=', False)]).mapped('number'), [0, 0, 0])
         self.assertListEqual(self._search(EmptyInt, [('number', '!=', False)]).mapped('number'), [42])
 
+        self.assertListEqual(self._search(EmptyInt, [('number', '<', 1)]).mapped('number'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '>', -1)]).mapped('number'), [42, 0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '<=', 0)]).mapped('number'), [0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '>=', 0)]).mapped('number'), [42, 0, 0, 0])
+        self.assertListEqual(self._search(EmptyInt, [('number', '>', 1)]).mapped('number'), [42])
+        self.assertListEqual(self._search(EmptyInt, [('number', '<', -1)]).mapped('number'), [])
+
         # check ('number', 'in', subset) for every subset of {42, 0, False}
         values = [42, 0, False]
         for length in range(len(values) + 1):
