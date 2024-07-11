@@ -1125,3 +1125,24 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
+
+    def test_timesheet_with_negative_time_spent(self):
+        """ Check the billable type of a timesheet with negative time spent """
+        sale_order = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            })],
+        }])
+        sale_order.action_confirm()
+        task1 = sale_order.tasks_ids
+        timesheet = self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet',
+                'task_id': task1.id,
+                'project_id': task1.project_id.id,
+                'unit_amount': -1,
+                'employee_id': self.employee_user.id,
+            },
+        ])
+        self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')

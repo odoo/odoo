@@ -52,7 +52,7 @@ class AccountAnalyticLine(models.Model):
                 elif timesheet.so_line.product_id.type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
-                            invoice_type = 'timesheet_revenues' if timesheet.amount > 0 else 'billable_time'
+                            invoice_type = 'timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else 'billable_time'
                         else:
                             service_type = timesheet.so_line.product_id.service_type
                             invoice_type = f'billable_{service_type}' if service_type in ['milestones', 'manual'] else 'billable_fixed'
@@ -60,7 +60,7 @@ class AccountAnalyticLine(models.Model):
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
             else:
-                if timesheet.amount >= 0:
+                if timesheet.amount >= 0 and timesheet.unit_amount >= 0:
                     if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
                         timesheet.timesheet_invoice_type = 'service_revenues'
                     else:
