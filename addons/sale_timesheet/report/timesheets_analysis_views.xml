@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="timesheets_analysis_report_list_inherited" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.list.inherited</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="so_line"
+                       optional="show"
+                       options="{'no_open': True}"
+                       placeholder="Non-billable"
+                />
+                <field name="timesheet_invoice_type" optional="hide"/>
+                <field name="timesheet_invoice_id" optional="hide"/>
+                <field name="timesheet_revenues" optional="hide" sum="Total"/>
+                <field name="margin" optional="hide" sum="Total"/>
+            </xpath>
+        </field>
+    </record>
 
     <record id="timesheets_analysis_report_pivot_inherit" model="ir.ui.view">
         <field name="name">timesheets.analysis.report.pivot</field>
@@ -91,7 +109,7 @@
         <field name="name">timesheets.analysis.report.pivot</field>
         <field name="model">timesheets.analysis.report</field>
         <field name="arch" type="xml">
-            <pivot string="Timesheets Analysis" sample="1" disable_linking="True">
+            <pivot string="Timesheets Analysis" sample="1">
                 <field name="date" interval="month" type="row"/>
                 <field name="timesheet_invoice_type" type="col"/>
                 <field name="amount" string="Timesheet Costs"/>
@@ -106,7 +124,7 @@
         <field name="name">timesheets.analysis.report.graph</field>
         <field name="model">timesheets.analysis.report</field>
         <field name="arch" type="xml">
-            <graph string="Timesheets" sample="1" js_class="hr_timesheet_graphview" disable_linking="True">
+            <graph string="Timesheets" sample="1" js_class="hr_timesheet_graphview">
                 <field name="amount" string="Timesheet Costs"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="billable_time" widget="timesheet_uom"/>
@@ -161,6 +179,13 @@
         <field name="sequence" eval="6"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="timesheets_analysis_report_graph_invoice_type"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.timesheets_analysis_report_list"/>
         <field name="act_window_id" ref="timesheet_action_billing_report"/>
     </record>
 
