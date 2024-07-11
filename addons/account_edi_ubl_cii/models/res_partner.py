@@ -214,6 +214,10 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
         if eas == '0009' and not siret.is_valid(endpoint):
             return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
+        if eas == '0007' and not re.match(r"^\d{10}$", endpoint):
+            return _("The Peppol endpoint is not valid. "
+                     "It should contain exactly 10 digits (Company Registry number)."
+                     "The expected format is: 1234567890")
 
     def _get_edi_builder(self):
         self.ensure_one()
