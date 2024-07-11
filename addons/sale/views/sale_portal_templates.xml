@@ -460,7 +460,7 @@
                         <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
                     </span>
                 </div>
-                <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
+                <t t-set="invoices" t-value="sale_order.account_move_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
                 <div id="sale_invoices" t-if="invoices and sale_order.state in ['sale', 'cancel']" class="col-12 col-lg-6 mb-4">
                     <h5 class="mb-1">Last Invoices</h5>
                     <hr class="mt-1 mb-2"/>
@@ -574,7 +574,7 @@
                                             </strong>
                                         </td>
                                         <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
-                                            <span t-out="', '.join(map(lambda x: (x.name), line.tax_id))"/>
+                                            <span t-out="', '.join(map(lambda x: (x.name), line.tax_ids))"/>
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>

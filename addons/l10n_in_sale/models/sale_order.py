@@ -33,8 +33,8 @@ class SaleOrder(models.Model):
                     l10n_in_gst_treatment = order.partner_id.vat and 'regular' or 'consumer'
                 order.l10n_in_gst_treatment = l10n_in_gst_treatment
 
-    def _prepare_invoice(self):
-        invoice_vals = super(SaleOrder, self)._prepare_invoice()
+    def _prepare_account_move_values(self):
+        invoice_vals = super()._prepare_account_move_values()
         if self.country_code == 'IN':
             invoice_vals['l10n_in_reseller_partner_id'] = self.l10n_in_reseller_partner_id.id
             invoice_vals['l10n_in_gst_treatment'] = self.l10n_in_gst_treatment

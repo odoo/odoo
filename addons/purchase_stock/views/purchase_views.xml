@@ -49,7 +49,7 @@
             <xpath expr="//div[@name='reminder']" position="after">
                 <field name="effective_date" invisible="not effective_date"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
+            <xpath expr="//field[@name='order_line']/form//field[@name='account_move_line_ids']" position="after">
                 <field name="move_ids"/>
             </xpath>
             <field name="invoice_status" position="before">
@@ -82,7 +82,7 @@
         <field name="model">purchase.order.line</field>
         <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_lines']" position="after">
+            <xpath expr="//field[@name='account_move_line_ids']" position="after">
                 <separator string="Stock Moves"/>
                 <field name="move_ids"/>
             </xpath>

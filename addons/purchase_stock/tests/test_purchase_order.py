@@ -229,10 +229,10 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # Modify after invoicing
         po1.action_create_invoice()
         self.assertEqual(po1.order_line.qty_invoiced, 15)
-        self.assertFalse(po1.invoice_ids.activity_ids)
+        self.assertFalse(po1.account_move_ids.activity_ids)
         po1.order_line.product_qty = 14.99
         self.assertTrue(
-            po1.invoice_ids.activity_ids,
+            po1.account_move_ids.activity_ids,
             "Lowering product qty below invoiced qty should schedule an activity",
         )
 
@@ -419,7 +419,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'product_qty': 7,
                 'product_uom': super_product.uom_id.id,
                 'price_unit': super_product.standard_price,
-                'taxes_id': [(4, tax.id)],
+                'tax_ids': [(4, tax.id)],
             })],
         })
 

@@ -202,7 +202,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         )
         # Create a vendor bill linked to the PO
         purchase_order.action_create_invoice()
-        self.assertEqual(purchase_order.invoice_ids.state, 'draft')
+        self.assertEqual(purchase_order.account_move_ids.state, 'draft')
         # now the bill has been created and set to draft so the section "purchase_order" should appear, its costs should be accounted in the "to bill" part
         # of the purchase_order section, but should touch in the other_purchase_costs
         self.assertDictEqual(
@@ -232,10 +232,10 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             },
         )
         # Post the vendor bill linked to the PO
-        purchase_bill = purchase_order.invoice_ids
+        purchase_bill = purchase_order.account_move_ids
         purchase_bill.invoice_date = datetime.today()
         purchase_bill.action_post()
-        self.assertEqual(purchase_order.invoice_ids.state, 'posted')
+        self.assertEqual(purchase_order.account_move_ids.state, 'posted')
         # now the bill has been posted so the costs of the section "purchase_order" should be accounted in the "billed" part
         # and the total should be updated accordingly
         self.assertDictEqual(
@@ -538,7 +538,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
 
     def _create_invoice_for_po(self, purchase_order):
         purchase_order.action_create_invoice()
-        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
+        purchase_bill = purchase_order.account_move_ids  # get the bill from the purchase
         purchase_bill.invoice_date = datetime.today()
         purchase_bill.action_post()
 
@@ -584,7 +584,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 'analytic_distribution': {self.analytic_account.id: 100},
                 'product_id': self.product_order.id,
                 'product_qty': 2,  # plural value to check if the price is multiplied more than once
-                'taxes_id': [included_tax.id],  # set the included tax
+                'tax_ids': [included_tax.id],  # set the included tax
                 'price_unit': self.product_order.standard_price,
                 'currency_id': self.env.company.currency_id.id,
             })],
@@ -608,7 +608,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             },
         )
 
-        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
+        purchase_bill = purchase_order.account_move_ids  # get the bill from the purchase
         purchase_bill.invoice_date = datetime.today()
         purchase_bill.action_post()
         # same here, taxes should not be calculated in the profitability

@@ -205,8 +205,8 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         gift_card_line = order.order_line - sol
         self.assertAlmostEqual(gift_card_line.price_total, -100.0)
         self.assertAlmostEqual(order.amount_total, before_gift_card_payment - 100.0)
-        self.assertTrue(all(line.tax_id for line in order.order_line))
-        self.assertEqual(order.order_line.tax_id, self.tax_15pc_excl)
+        self.assertTrue(all(line.tax_ids for line in order.order_line))
+        self.assertEqual(order.order_line.tax_ids, self.tax_15pc_excl)
 
         # TAX INCL
         gift_card_line.unlink()  # Remove gift card
@@ -217,8 +217,8 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         gift_card_line = order.order_line - sol
         self.assertAlmostEqual(gift_card_line.price_total, -100.0)
         self.assertAlmostEqual(order.amount_total, before_gift_card_payment - 100.0)
-        self.assertTrue(all(line.tax_id for line in order.order_line))
-        self.assertEqual(gift_card_line.tax_id, self.tax_10pc_incl)
+        self.assertTrue(all(line.tax_ids for line in order.order_line))
+        self.assertEqual(gift_card_line.tax_ids, self.tax_10pc_incl)
 
         # TAX INCL + TAX EXCL
         gift_card_line.unlink()  # Remove gift card
@@ -229,5 +229,5 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         gift_card_line = order.order_line - sol
         self.assertAlmostEqual(gift_card_line.price_total, -100.0)
         self.assertAlmostEqual(order.amount_total, before_gift_card_payment - 100.0)
-        self.assertTrue(all(line.tax_id for line in order.order_line))
-        self.assertEqual(gift_card_line.tax_id, self.tax_10pc_incl + self.tax_15pc_excl)
+        self.assertTrue(all(line.tax_ids for line in order.order_line))
+        self.assertEqual(gift_card_line.tax_ids, self.tax_10pc_incl + self.tax_15pc_excl)

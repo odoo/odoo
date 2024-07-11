@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -24,13 +23,6 @@ class AccountMove(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
     sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
-
-    def unlink(self):
-        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
-        res = super(AccountMove, self).unlink()
-        if downpayment_lines:
-            downpayment_lines.unlink()
-        return res
 
     @api.depends('invoice_user_id')
     def _compute_team_id(self):
@@ -57,42 +49,6 @@ class AccountMove(models.Model):
                 'source_id': move.source_id.id,
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
-
-    def action_post(self):
-        # inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
-        res = super(AccountMove, self).action_post()
-
-        # We cannot change lines content on locked SO, changes on invoices are not forwarded to the SO if the SO is locked
-        dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
-        dp_lines._compute_name()  # Update the description of DP lines (Draft -> Posted)
-        downpayment_lines = dp_lines.filtered(lambda sol: not sol.order_id.locked)
-        other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
-        real_invoices = set(other_so_lines.invoice_lines.move_id)
-        for so_dpl in downpayment_lines:
-            so_dpl.price_unit = sum(
-                l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
-                for l in so_dpl.invoice_lines
-                if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
-            )
-            so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
-
-        return res
-
-    def button_draft(self):
-        res = super().button_draft()
-
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
-            lambda sol: not sol.display_type)._compute_name()
-
-        return res
-
-    def button_cancel(self):
-        res = super().button_cancel()
-
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
-            lambda sol: not sol.display_type)._compute_name()
-
-        return res
 
     def _post(self, soft=True):
         # OVERRIDE

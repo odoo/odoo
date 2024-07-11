@@ -39,7 +39,7 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
         if not task:
             return NotFound()
 
-        domain = [('id', 'in', task.sale_order_id.invoice_ids.ids)]
+        domain = [('id', 'in', task.sale_order_id.account_move_ids.ids)]
         values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby, domain=domain)
 
         # pager
@@ -100,7 +100,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             pass
 
         moves = request.env['account.move']
-        invoice_ids = task.sale_order_id.invoice_ids
+        invoice_ids = task.sale_order_id.account_move_ids
         if invoice_ids and request.env['account.move'].check_access_rights('read', raise_exception=False):
             moves = request.env['account.move'].search([('id', 'in', invoice_ids.ids)])
             values['invoices_accessible'] = moves.ids

@@ -93,7 +93,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'product_id': self.product_1.id,
                 'price_unit': 1000.0,  # == declaration.threshold
                 'product_uom_qty': 2,
-                'tax_id': [Command.set(declaration_tax.ids)],
+                'tax_ids': [Command.set(declaration_tax.ids)],
             }),
         ])
 
@@ -217,13 +217,13 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 1000.0,  # == declaration.threshold
-                'tax_id': [Command.set(declaration_tax.ids)],
+                'tax_ids': [Command.set(declaration_tax.ids)],
             }),
             Command.create({
                 'name': 'not a declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_id': False,
+                'tax_ids': False,
             }),
         ])
 
@@ -313,13 +313,13 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold
-                'tax_id': [Command.set(declaration_tax.ids)],
+                'tax_ids': [Command.set(declaration_tax.ids)],
             }),
             Command.create({
                 'name': 'not a declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_id': False,
+                'tax_ids': False,
             }),
         ])
         independent_order.action_confirm()
@@ -334,13 +334,13 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 1000.0,  # == declaration.threshold
-                'tax_id': [Command.set(declaration_tax.ids)],
+                'tax_ids': [Command.set(declaration_tax.ids)],
             }),
             Command.create({
                 'name': 'not a declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_id': False,
+                'tax_ids': False,
             }),
         ])
         order.action_confirm()
@@ -361,7 +361,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                    'amount': 50,
                }).create_invoices()
 
-        invoice = order.invoice_ids[0]
+        invoice = order.account_move_ids[0]
 
         # The invoice just moves amount from `not_invoiced_yet` to `invoiced`.
         # It does not lower the remaining ammount.
@@ -385,7 +385,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -3000.0,
         }])
 
-        invoice2 = order.invoice_ids[1]
+        invoice2 = order.account_move_ids[1]
         invoice2.action_post()
         self.assertEqual(
             invoice2.l10n_it_edi_doi_warning,
@@ -448,7 +448,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                     'product_id': self.product_1.id,
                     'product_uom_qty': 2,
                     'price_unit': 2000.0,  # > declaration.threshold
-                    'tax_id': [Command.set(declaration_tax.ids)],
+                    'tax_ids': [Command.set(declaration_tax.ids)],
                 }),
             ]) for dummy in range(3)
         ])

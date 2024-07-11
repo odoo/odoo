@@ -185,7 +185,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
                         'product_qty': 1.0,
                         'product_uom': self.product_a.uom_po_id.id,
                         'price_unit': 100.0,
-                        'taxes_id': False,
+                        'tax_ids': False,
                     }),
                     (0, 0, {
                         'name': self.landed_cost.name,
@@ -203,7 +203,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             po.order_line[1].qty_received = 1
 
             po.action_create_invoice()
-            bill = po.invoice_ids
+            bill = po.account_move_ids
             bill.invoice_date = fields.Date.today()
 
             self.env['account.move.line'].create({

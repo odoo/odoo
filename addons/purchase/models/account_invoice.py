@@ -51,7 +51,7 @@ class AccountMove(models.Model):
             return
 
         # Copy data from PO
-        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_account_move_values()
         has_invoice_lines = bool(self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')))
         new_currency_id = self.currency_id if has_invoice_lines else invoice_vals.get('currency_id')
         del invoice_vals['ref'], invoice_vals['payment_reference']
@@ -65,7 +65,7 @@ class AccountMove(models.Model):
         po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
         for line in po_lines.filtered(lambda l: not l.display_type):
             self.invoice_line_ids += self.env['account.move.line'].new(
-                line._prepare_account_move_line(self)
+                line._prepare_invoice_line(self)
             )
 
         # Compute invoice_origin.
@@ -480,3 +480,6 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['purchase_line_id'] = self.purchase_line_id.id
+
+    def _get_order_lines(self):
+        return self.purchase_line_id or super()._get_order_lines()
