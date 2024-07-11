@@ -121,10 +121,10 @@
             .o_mailing_list_kanban_stats > a {
                 flex-wrap: wrap;
                 &:hover {
-                    font-weight: normal;
+                    font-weight: normal !important;
                 }
                 @include media-breakpoint-down(sm) {
-                    font-size: 1.4rem;
+                    font-size: 1.4rem !important;
                     height: 40px;
                     margin-bottom: 30px;
                     min-width: 90px;
@@ -147,11 +147,6 @@
                         text-align: right;
                     }
                 }
-            }
-            .text-large {
-                line-height: 1.1em;
-                font-size: 120%;
-                font-weight: 300;
             }
         }
     }
