@@ -154,7 +154,6 @@ class View(models.Model):
                              ('graph', 'Graph'),
                              ('pivot', 'Pivot'),
                              ('calendar', 'Calendar'),
-                             ('gantt', 'Gantt'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
@@ -1754,7 +1753,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type in ("kanban", "gantt")
+        return view_type == 'kanban'
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
@@ -1953,7 +1952,7 @@ actual arch.
     def _validate_qweb_directive(self, node, directive, view_type):
         """Some views (e.g. kanban, form) generate owl templates from the archs.
         However, we don't want to see owl directives directly written in archs.
-        There are exceptions though, since the kanban and gantt archs define qweb templates.
+        There are exceptions though, e.g. the kanban arch defines qweb templates.
         We thus here validate that the given directive is allowed, according to the view_type.
         """
         allowed_directives = ["t-translation"]

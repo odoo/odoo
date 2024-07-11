@@ -28,7 +28,7 @@
     <record id="action_mrp_routing_time" model="ir.actions.act_window">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">graph,pivot,tree,form,gantt,calendar</field>
+        <field name="view_mode">graph,pivot,tree,form,calendar</field>
         <field name="context">{'search_default_done': True}</field>
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
@@ -44,7 +44,7 @@
     <record model="ir.actions.act_window" id="action_mrp_workorder_production_specific">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -339,88 +339,6 @@
         </field>
     </record>
 
-    <record id="workcenter_line_gantt_production" model="ir.ui.view">
-        <field name="name">mrp.production.work.order.gantt.production</field>
-        <field name="model">mrp.workorder</field>
-        <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="production_id" create="0" delete="0"
-                progress="progress" plan="0"
-                decoration-danger="json_popover and 'text-danger' in json_popover"
-                decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
-                color="workcenter_id"
-                display_unavailability="0"
-                progress_bar="workcenter_id"
-                total_row="True"
-                js_class="mrp_workorder_gantt"
-                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
-                sample="1"
-                form_view_id="%(mrp_production_workorder_form_view_inherit)d">
-
-                <field name="date_start"/>
-                <field name="state"/>
-                <field name="workcenter_id"/>
-                <field name="json_popover"/>
-
-                <templates>
-                    <div t-name="gantt-popover" class="container-fluid">
-                        <div class="row g-0">
-                            <div class="col">
-                                <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="date_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="date_finished.toFormat('F')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </templates>
-            </gantt>
-        </field>
-    </record>
-
-    <record id="mrp_workorder_view_gantt" model="ir.ui.view">
-        <field name="name">mrp.workorder.view.gantt</field>
-        <field name="model">mrp.workorder</field>
-        <field name="priority">10</field>
-        <field name="arch" type="xml">
-            <gantt class="o_mrp_workorder_gantt" date_stop="date_finished" date_start="date_start" string="Operations" default_group_by="workcenter_id" create="0"
-                delete="0" sample="1"
-                progress="progress" plan="0"
-                decoration-danger="json_popover and 'text-danger' in json_popover"
-                decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
-                color="production_id"
-                display_unavailability="1"
-                progress_bar="workcenter_id"
-                total_row="True"
-                js_class="mrp_workorder_gantt"
-                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
-                form_view_id="mrp_production_workorder_form_view_inherit">
-
-                <field name="date_start"/>
-                <field name="state"/>
-                <field name="workcenter_id"/>
-                <field name="json_popover"/>
-
-                <templates>
-                    <div t-name="gantt-popover" class="container-fluid">
-                        <div class="row g-0">
-                            <div class="col">
-                                <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong><t t-esc="date_start.toFormat('F')"/></li>
-                                    <li><strong>Stop Date: </strong><t t-esc="date_finished.toFormat('F')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </templates>
-            </gantt>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="workcenter_line_kanban">
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
@@ -490,9 +408,8 @@
         <field name="name">Work Orders Planning</field>
         <field name="res_model">mrp.workorder</field>
         <field name="path">workcenter-planning</field>
-        <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="view_id" ref="mrp_workorder_view_gantt"/>
         <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -509,9 +426,8 @@
         <field name="res_model">mrp.workorder</field>
         <field name="path">production-planning</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
-        <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="view_id" ref="workcenter_line_gantt_production"/>
         <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -534,7 +450,7 @@
     <record model="ir.actions.act_window" id="mrp_workorder_todo">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field name="view_id" ref="mrp.mrp_production_workorder_tree_view"/>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True, 'search_default_waiting': True}</field>
