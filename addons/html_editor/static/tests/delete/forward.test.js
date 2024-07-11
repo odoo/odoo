@@ -321,6 +321,13 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>[]&nbsp;def</p>`,
             });
         });
+        test("should merge p elements inside conteneditbale=true inside contenteditable=false", async () => {
+            await testEditor({
+                contentBefore: `<div contenteditable="false"><div contenteditable="true"><p>abc[]</p><p>def</p></div></div>`,
+                stepFunction: deleteForward,
+                contentAfter: `<div contenteditable="false"><div contenteditable="true"><p>abc[]def</p></div></div>`,
+            });
+        });
     });
 
     describe("white spaces", () => {
