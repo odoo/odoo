@@ -41,7 +41,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Contacts" sample="1" multi_edit="1" js_class="mailing_contact_list">
+            <tree string="Mailing List Contacts" sample="1" multi_edit="1">
                 <header>
                     <button name="action_import" string="Import" type="object" display="always"
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
