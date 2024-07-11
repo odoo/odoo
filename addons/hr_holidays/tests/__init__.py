@@ -18,3 +18,4 @@ from . import test_stress_days
 from . import test_global_leaves
 from . import test_uninstall
 from . import test_holidays_calendar
+from . import test_dashboard
