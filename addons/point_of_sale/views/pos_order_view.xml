@@ -101,6 +101,7 @@
                                     </t>
                             </kanban>
                             <tree string="Order lines" editable="bottom">
+                                <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="product_label_section_and_note_field" />
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
