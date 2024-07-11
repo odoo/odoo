@@ -105,7 +105,7 @@ export class HootStatusPanel extends Component {
                     <i t-if="state.debug" class="text-skip fa fa-bug" title="Debugging" />
                     <div
                         t-else=""
-                        class="animate-spin w-4 h-4 border-2 border-pass border-t-transparent rounded-full"
+                        class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-pass border-t-transparent rounded-full"
                         role="status"
                         title="Running"
                     />
