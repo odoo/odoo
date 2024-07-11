@@ -15,6 +15,7 @@ from base64 import b64decode, b64encode
 from datetime import datetime
 from math import floor
 from os.path import join as opj
+from urllib.parse import urlparse, urljoin
 
 from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID, release
@@ -330,36 +331,67 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
+    def get_image_info(self, src='', href_base=''):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
+        Params:
+            src (str): the src of the image.
+            href_base (str): the url of the page containing the image.
         """
-        attachment = None
-        if src.startswith('/web/image'):
+        def _get_attachment_by_url(src):
+            """Find attachment by url. There can be multiple matches because of
+            default snippet images referencing the same image in /static/, so we
+            limit to 1.
+            """
+            return request.env['ir.attachment'].search([
+                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
+                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+            ], limit=1)
+
+        def _extract_attachment_info(attachment):
+            original = (attachment.original_id or attachment)
+            return {
+                'attachment': attachment.read(['id'])[0],
+                'original': original.read(['id', 'image_src', 'mimetype'])[0],
+            }
+
+        # Try to retrieve the original attachment based on this url.
+        attachment = _get_attachment_by_url(src)
+        if attachment:
+            return _extract_attachment_info(attachment)
+
+        # If no match, then search by url *path*. To do so, the src is first
+        # transformed into an absolute url in order to correctly handle relative
+        # url that does not begin with a '/' and protocol relative url.
+        absolute_url = urljoin(href_base, src)
+        path = urlparse(absolute_url).path
+
+        # Probably most common case: the src uses the standard '/web/image'
+        # route.
+        if path.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
-                _, args = request.env['ir.http']._match(src)
+                _, args = request.env['ir.http']._match(path)
                 record = request.env['ir.binary']._find_record(
                     xmlid=args.get('xmlid'),
                     res_model=args.get('model', 'ir.attachment'),
                     res_id=args.get('id'),
                 )
                 if record._name == 'ir.attachment':
-                    attachment = record
-        if not attachment:
-            # Find attachment by url. There can be multiple matches because of default
-            # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
-        if not attachment:
-            return {
-                'attachment': False,
-                'original': False,
-            }
+                    return _extract_attachment_info(record)
+
+        # Probably not a standard case, for example:
+        # - A relative src, wrongfully converted as absolute, whose path
+        # actually matches an attachment's url field.
+        # - A protocol relative url or a relative url that does not begin with a
+        # `/`, whose path actually matches an attachment's url field.
+        # Still possible and valid. And at least useful by compatibility.
+        attachment = _get_attachment_by_url(path)
+        if attachment:
+            return _extract_attachment_info(attachment)
+
         return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+            'attachment': False,
+            'original': False,
         }
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
