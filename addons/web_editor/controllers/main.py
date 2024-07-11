@@ -567,6 +567,16 @@ class Web_Editor(http.Controller):
 
         return files_data_by_bundle
 
+    @http.route('/web_editor/fetch_image', type="json", auth="user", website=True)
+    def fetch_image(self, url):
+        try:
+            req = requests.get(url, timeout=2.5)
+            req.raise_for_status()
+        except requests.exceptions.RequestException as error:
+            logger.warning("Could not get the image data at url %s: %s", url, error)
+            return {'mimetype': '', 'base64Data': ''}
+        return {'mimetype': req.headers['Content-Type'], 'base64Data': b64encode(req.content)}
+
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
         """
