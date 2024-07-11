@@ -122,7 +122,9 @@ class TestConfigManager(TransactionCase):
                 {
                     'workers': 0,
                     'limit_memory_soft': 2048 * 1024 * 1024,
+                    'limit_memory_soft_gevent': None,
                     'limit_memory_hard': 2560 * 1024 * 1024,
+                    'limit_memory_hard_gevent': None,
                     'limit_time_cpu': 60,
                     'limit_time_real': 120,
                     'limit_time_real_cron': -1,
@@ -240,7 +242,9 @@ class TestConfigManager(TransactionCase):
                 {
                     'workers': 92,
                     'limit_memory_soft': 1234,
+                    'limit_memory_soft_gevent': 1234,
                     'limit_memory_hard': 5678,
+                    'limit_memory_hard_gevent': 5678,
                     'limit_time_cpu': 3,
                     'limit_time_real': 4,
                     'limit_time_real_cron': -3,

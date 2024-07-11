@@ -76,10 +76,15 @@ def memory_info(process):
 
 
 def set_limit_memory_hard():
-    if platform.system() == 'Linux' and config['limit_memory_hard']:
+    if platform.system() != 'Linux':
+        return
+    limit_memory_hard = config['limit_memory_hard']
+    if odoo.evented and config['limit_memory_hard_gevent']:
+        limit_memory_hard = config['limit_memory_hard_gevent']
+    if limit_memory_hard:
         rlimit = resource.RLIMIT_AS
         soft, hard = resource.getrlimit(rlimit)
-        resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
+        resource.setrlimit(rlimit, (limit_memory_hard, hard))
 
 def empty_pipe(fd):
     try:
@@ -635,7 +640,8 @@ class GeventServer(CommonServer):
             _logger.warning("Gevent Parent changed: %s", self.pid)
             restart = True
         memory = memory_info(psutil.Process(self.pid))
-        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+        limit_memory_soft = config['limit_memory_soft_gevent'] or config['limit_memory_soft']
+        if limit_memory_soft and memory > limit_memory_soft:
             _logger.warning('Gevent virtual memory limit reached: %s', memory)
             restart = True
         if restart:
