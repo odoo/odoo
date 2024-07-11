@@ -60,17 +60,9 @@ test("many2many_avatar_user in kanban view", async () => {
         "m2x.avatar.user,false,kanban": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="user_id"/>
-                            <div class="oe_kanban_footer">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_ids" widget="many2many_avatar_user"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="user_id"/>
+                        <field name="user_ids" widget="many2many_avatar_user"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -339,10 +331,8 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
         "m2x.avatar.user,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="user_id" widget="many2one_avatar_user"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="user_id" widget="many2one_avatar_user"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -384,10 +374,8 @@ test("avatar card preview", async (assert) => {
         "m2x.avatar.user,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="user_id" widget="many2one_avatar_user"/>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="user_id" widget="many2one_avatar_user"/>
                         </t>
                     </templates>
                 </kanban>`,
