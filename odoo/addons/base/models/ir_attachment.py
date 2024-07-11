@@ -524,7 +524,7 @@ class IrAttachment(models.Model):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
         disable_binary_fields_attachments = False
-        if not any(arg[0] in ('id', 'res_field') for arg in domain):
+        if not self.env.context.get('skip_res_field_check') and not any(arg[0] in ('id', 'res_field') for arg in domain):
             disable_binary_fields_attachments = True
             domain = [('res_field', '=', False)] + domain
 
