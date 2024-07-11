@@ -43,6 +43,12 @@ class TestMailing(EventCase, MockEmail):
                     "event_id": cls.test_event.id,
                     "name": "Robodoo",
                 },
+                {
+                    "email": "another.email@example.com",
+                    "event_id": cls.test_event.id,
+                    "name": "Another Email",
+                    "partner_id": cls.event_customer2.id,
+                },
             ])
 
     @users("user_eventuser")
@@ -81,15 +87,23 @@ class TestMailing(EventCase, MockEmail):
                 with self.mock_mail_gateway(), self.mock_datetime_and_now(self.event_date_begin):
                     event.event_mail_ids._send_mail(self.registrations)
 
+                # where email == partner.email -> partner is recipient
+                for customer in self.event_customer + self.event_customer2:
+                    self.assertMailMail(
+                        customer,
+                        "outgoing",
+                        fields_values=exp_mail_values,
+                    )
+                # other registrations: emails
                 self.assertMailMailWEmails(
                     [
-                        self.event_customer.email_formatted,
-                        self.event_customer2.email_formatted,
                         formataddr(("Robodoo", "robodoo@example.com")),
+                        formataddr(("Another Email", "another.email@example.com")),
                     ],
                     "outgoing",
                     fields_values=exp_mail_values,
                 )
+                self.assertEqual(len(self._new_mails), 4)
 
     @users("user_eventuser")
     def test_mail_template_creation(self):
@@ -106,12 +120,9 @@ class TestMailing(EventCase, MockEmail):
                 template.email_from,
                 "{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}"
             )
-            self.assertEqual(
-                template.email_to,
-                "{{ (object.email and format_addr((object.name, object.email)) or object.partner_id.email_formatted or '') }}",
-            )
+            self.assertFalse(template.email_to)
             self.assertEqual(
                 template.lang,
                 "{{ object.event_id.lang or object.partner_id.lang }}",
             )
-            self.assertFalse(template.use_default_to)
+            self.assertTrue(template.use_default_to)

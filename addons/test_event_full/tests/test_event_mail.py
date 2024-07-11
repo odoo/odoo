@@ -98,7 +98,7 @@ class TestEventMailSchedule(TestEventMailCommon):
         for registration in open_reg, done_reg:
             with self.subTest(registration_state=registration.state, medium='mail'):
                 self.assertMailMailWEmails(
-                    [formataddr((registration.name, registration.email))],
+                    [formataddr((registration.name, registration.email.lower()))],
                     'outgoing',
                 )
             with self.subTest(registration_state=registration.state, medium='sms'):
