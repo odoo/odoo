@@ -35,6 +35,11 @@ class HolidaysAllocation(models.Model):
             return [('requires_allocation', '=', 'yes')]
         return [('employee_requests', '=', 'yes')]
 
+    def _domain_employee_id(self):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return []
+        return [('leave_manager_id', '=', self.env.user.id)]
+
     name = fields.Char(
         string='Description',
         compute='_compute_description',
@@ -61,7 +66,7 @@ class HolidaysAllocation(models.Model):
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
-        index=True, ondelete="restrict", required=True, tracking=True)
+        index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
