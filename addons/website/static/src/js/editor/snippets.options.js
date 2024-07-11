@@ -4503,3 +4503,10 @@ websiteRegisterBackgroundOptions("OnlyBgImage", {
     withVideos: true,
     withShapes: true,
 });
+
+registerWebsiteOption("ColumnsOnly", {
+    Class: WebsiteLayoutColumn,
+    template: "website.columns_only",
+    selector: "section.s_features_grid, section.s_process_steps",
+    target: "> *:has(> .row), > .s_allow_columns",
+}, { sequence: 15 });
