@@ -335,6 +335,15 @@ class EventRegistration(models.Model):
     # MAILING / GATEWAY
     # ------------------------------------------------------------
 
+    @api.model
+    def _mail_template_default_values(self):
+        return {
+            "email_from": "{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}",
+            "email_to": "{{ (object.email and format_addr((object.name, object.email)) or object.partner_id.email_formatted or '') }}",
+            "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
+            "use_default_to": False,
+        }
+
     def _message_compute_subject(self):
         if self.name:
             return _(
