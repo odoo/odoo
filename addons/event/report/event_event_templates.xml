@@ -117,10 +117,10 @@
             <t t-set="event" t-value="attendees_per_event[0]._set_tz_context()"/>
             <t t-set="attendees" t-value="attendees_per_event[1]"/>
             <t t-if="event.badge_format != 'four_per_sheet'" t-foreach="attendees" t-as="attendee">
-                <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
-                <t t-else="" t-call="event.event_report_template_a6_badge"/>
+                <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge" t-lang="event.lang or attendee.env.lang"/>
+                <t t-else="" t-call="event.event_report_template_a6_badge" t-lang="event.lang or attendee.env.lang"/>
             </t>
-            <t t-if="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
+            <t t-if="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge" t-lang="event.lang or event.env.lang"/>
         </t>
     </t>
 </template>
@@ -132,9 +132,9 @@
         <t t-foreach="docs" t-as="event">
             <t t-set="event" t-value="event._set_tz_context()"/>
             <t t-set="example_badge" t-value="True"/>
-            <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
-            <t t-elif="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
-            <t t-else="" t-call="event.event_report_template_a6_badge"/>
+            <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge" t-lang="event.lang or event.env.lang"/>
+            <t t-elif="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge" t-lang="event.lang or event.env.lang"/>
+            <t t-else="" t-call="event.event_report_template_a6_badge" t-lang="event.lang or event.env.lang"/>
         </t>
     </t>
 </template>
@@ -253,7 +253,7 @@
             <t t-set="main_object" t-value="attendee"/>
             <t t-set="responsive_html" t-value="False"/>
             <t t-call="event.event_report_full_page_ticket_layout">
-                <t t-call="event.event_report_template_full_page_ticket"/>
+                <t t-call="event.event_report_template_full_page_ticket" t-lang="event.lang or attendee.env.lang"/>
             </t>
         </t>
     </t>
@@ -266,7 +266,7 @@
             <t t-set="main_object" t-value="event"/>
             <t t-set="responsive_html" t-value="False"/>
             <t t-call="event.event_report_full_page_ticket_layout">
-                <t t-call="event.event_report_template_full_page_ticket"/>
+                <t t-call="event.event_report_template_full_page_ticket" t-lang="event.lang or event.env.lang"/>
             </t>
         </t>
     </t>
@@ -281,7 +281,7 @@
             <t t-set="main_object" t-value="attendee"/>
             <t t-set="responsive_html" t-value="True"/>
             <t t-call="event.event_report_full_page_ticket_layout">
-                <t t-call="event.event_report_template_full_page_ticket"/>
+                <t t-call="event.event_report_template_full_page_ticket" t-lang="event.lang or attendee.env.lang"/>
             </t>
         </t>
     </t>
