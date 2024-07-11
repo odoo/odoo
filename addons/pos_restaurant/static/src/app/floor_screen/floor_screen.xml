@@ -75,25 +75,11 @@
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
                         <div t-else="" t-ref="map" class="h-100 w-100" t-att-class="{'d-flex align-items-center justify-content-center flex-wrap': pos.floorPlanStyle == 'kanban'}">
-                            <div t-attf-style="
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                right: 0;
-                                bottom: 0;
-                                opacity: {{state.potentialLink?.child ? 1 : 0}};
-                                transition: opacity 0.3s ease-in-out;
-                                background:  radial-gradient(
-                                                    circle at {{overlayX}}px {{overlayY}}px,
-                                                    rgba(0, 0, 0, 0.1) 0%,
-                                                    rgba(0, 0, 0, 0.8) 30%
-                                            );
-                                pointer-events: none; /* Ensure the overlay doesn't block interactions with child elements */
-                            "/>
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
                                 <t t-set="isOccupied" t-value="pos.getCustomerCount(table.id) > 0 || table.uiState.orderCount > 0"/>
-                                <t t-set="isIntersecting" t-value="state.potentialLink?.child.id === table.id"/>
-                                <t t-set="hasBg" t-value="!isIntersecting and isOccupied or table.parent_id" />
+                                <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
+                                <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
+                                <t t-set="hasBg" t-value="isOccupied or table.parent_id" />
                                 <div
                                     t-on-click.stop="(ev) => this.onClickTable(table, ev)"
                                     class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
@@ -104,10 +90,12 @@
                                     }"
                                     t-attf-class="tableId-{{table.id}}"
                                     t-attf-style="
-                                                border: 3px {{isIntersecting ? 'dashed' : 'solid'}} {{table.color}};
+                                                border: 3px solid {{table.color}};
                                                 border-radius: {{table.shape === 'round' ? 1000 : 3}}px;
                                                 background: {{hasBg ? table.color || 'rgb(53, 211, 116)' : '#00000020'}};
                                                 color: {{!hasBg ? 'black' : 'white'}};
+                                                transition: 60ms;
+                                                opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
                                                 {{pos.floorPlanStyle == 'kanban' ?
                                                     `
                                                         width: 120px;
