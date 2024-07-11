@@ -1914,15 +1914,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         # Create gift card program
-        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         # Change the gift card program settings
         self.main_pos_config.write({'gift_card_settings': 'scan_use'})
-        # Generate 50$ gift card.
-        self.env["loyalty.generate.wizard"].with_context(
-            {"active_id": gift_card_program.id}
-        ).create({"coupon_qty": 1, 'points_granted': 50}).generate_coupons()
-        # Change the code of the gift card.
-        gift_card_program.coupon_ids.code = '044123456'
 
         self.product_a.write({
             'list_price': 100,
@@ -1946,6 +1940,15 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(loyalty_card.points, 100)
+        self.main_pos_config.write({'gift_card_settings': 'create_set'})
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPhysicalGiftcard",
+            login="pos_user",
+            debug=True
+        )
+        physical_gift_card_count = self.env['loyalty.card'].search_count([('code', '=', 'test-card-0000'), ('points', '=', '100')])
+        self.assertEqual(physical_gift_card_count, 1)
 
     def test_change_reward_value_with_language(self):
         """

@@ -1,5 +1,6 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline, {
@@ -51,7 +52,7 @@ patch(PosOrderline.prototype, {
             this.update({ _gift_barcode: options.giftBarcode });
         }
         if (options.giftCardId) {
-            this.update({ _gift_card_id: this.models["loyalty.card"].get(options.giftCardId) });
+            this.update({ _gift_card_id: options.giftCardId });
         }
         return super.setOptions(...arguments);
     },
@@ -80,5 +81,23 @@ patch(PosOrderline.prototype, {
             ...super.getDisplayClasses(),
             "fst-italic": this.is_reward_line,
         };
+    },
+    set_quantity(quantity, keep_price) {
+        if (this._gift_card_id && this._gift_card_id.code && quantity) {
+            return {
+                title: _t("Error"),
+                body: _t("You cannot edit the quantity of a custom gift card."),
+            };
+        }
+        return super.set_quantity(...arguments);
+    },
+    set_unit_price() {
+        if (this._gift_card_id && this._gift_card_id.code) {
+            return {
+                title: _t("Error"),
+                body: _t("You cannot edit the price of a custom gift card."),
+            };
+        }
+        return super.set_unit_price(...arguments);
     },
 });

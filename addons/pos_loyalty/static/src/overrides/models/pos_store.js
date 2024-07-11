@@ -402,6 +402,11 @@ patch(PosStore.prototype, {
         options.merge = false;
         options.eWalletGiftCardProgram = program;
 
+        if (options.giftCardManual === true) {
+            options.giftBarcode = options.giftCardCode;
+            return true;
+        }
+
         // If gift card program setting is 'scan_use', ask for the code.
         if (this.config.gift_card_settings == "scan_use") {
             const code = await makeAwaitable(this.dialog, TextInputPopup, {
