@@ -1567,7 +1567,7 @@
                                            class="js_quantity quantity form-control border-start-0 border-end-0"
                                            t-att-data-line-id="line.id"
                                            t-att-data-product-id="line.product_id.id"
-                                           t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
+                                           t-att-value="line._get_displayed_quantity()"/>
                                     <t t-if="line._get_shop_warning(clear=False)">
                                         <a href="#" class="btn btn-link">
                                         <i class='fa fa-warning text-warning'
@@ -1589,7 +1589,7 @@
                                            class="js_quantity form-control quantity"
                                            t-att-data-line-id="line.id"
                                            t-att-data-product-id="line.product_id.id"
-                                           t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
+                                           t-att-value="line._get_displayed_quantity()"/>
                                 </t>
                             </t>
                             <t t-else="">
@@ -1598,7 +1598,7 @@
                                        class="js_quantity quantity form-control"
                                        t-att-data-line-id="line.id"
                                        t-att-data-product-id="line.product_id.id"
-                                       t-att-value="line.product_uom_qty"/>
+                                       t-att-value="line._get_displayed_quantity()"/>
                             </t>
                         </div>
                         <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
