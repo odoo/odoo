@@ -151,7 +151,7 @@ export async function simulateArrowKeyPress(editor, keys) {
     const keysArray = Array.isArray(keys) ? keys : [keys];
     const alter = keysArray.includes("Shift") ? "extend" : "move";
     const direction =
-        keysArray.includes("ArrowLeft") || keysArray.includes("ArrowUp") ? "backward" : "forward";
+        keysArray.includes("ArrowLeft") || keysArray.includes("ArrowUp") ? "left" : "right";
     const granularity =
         keysArray.includes("ArrowUp") || keysArray.includes("ArrowDown") ? "line" : "character";
     const selection = editor.document.getSelection();
