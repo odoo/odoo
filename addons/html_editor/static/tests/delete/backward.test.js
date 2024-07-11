@@ -1,9 +1,10 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { press } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { deleteBackward, insertText, undo } from "../_helpers/user_actions";
+import { animationFrame, tick } from "@odoo/hoot-mock";
+import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
 
 /**
  * content of the "deleteBackward" sub suite in editor.test.js
@@ -1536,36 +1537,44 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete a heading (triple click backspace)", async () => {
-        await testEditor({
-            contentBefore: "<h1>[abc</h1><p>]def</p>",
-            stepFunction: deleteBackward,
-            // JW cAfter: '<p>[]def</p>',
-            contentAfter: "<h1>[]<br></h1><p>def</p>",
-        });
-        await testEditor({
-            contentBefore: "<h1>[abc</h1><p>]<br></p><p>def</p>",
-            stepFunction: deleteBackward,
-            contentAfter: "<h1>[]<br></h1><p><br></p><p>def</p>",
-        });
+    test("should delete a heading (triple click backspace) (1)", async () => {
+        const { editor, el } = await setupEditor("<h1>abc</h1><p>def</p>", {});
+        tripleClick(el.querySelector("h1"));
+        // Chrome puts the cursor at the start of next sibling
+        expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
+        await tick();
+        // The Editor corrects it on selection change
+        expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p>def</p>'
+        );
     });
 
-    test("should delete last character of paragraph, ignoring the selected paragraph break", async () => {
+    test("should delete a heading (triple click backspace) (2)", async () => {
+        const { editor, el } = await setupEditor("<h1>abc</h1><p><br></p><p>def</p>", {});
+        tripleClick(el.querySelector("h1"));
+        // Chrome puts the cursor at the start of next sibling
+        expect(getContent(el)).toBe("<h1>[abc</h1><p>]<br></p><p>def</p>");
+        await tick();
+        // The Editor corrects it on selection change
+        expect(getContent(el)).toBe("<h1>[abc]</h1><p><br></p><p>def</p>");
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            '<h1 placeholder="Heading 1" class="o-we-hint">[]<br></h1><p><br></p><p>def</p>'
+        );
+    });
+
+    test("should delete last character of paragraph and merge the two p elements", async () => {
         await testEditor({
             contentBefore: "<p>ab[c</p><p>]def</p>",
-            // This type of selection (typically done with a triple
-            // click) is "corrected" before remove so triple clicking
-            // doesn't remove a paragraph break.
             stepFunction: deleteBackward,
-            contentAfter: "<p>ab[]</p><p>def</p>",
+            contentAfter: "<p>ab[]def</p>",
         });
         await testEditor({
             contentBefore: "<p>ab[c</p><p>]<br></p><p>def</p>",
-            // This type of selection (typically done with a triple
-            // click) is "corrected" before remove so triple clicking
-            // doesn't remove a paragraph break.
             stepFunction: deleteBackward,
-            contentAfter: "<p>ab[]</p><p><br></p><p>def</p>",
+            contentAfter: "<p>ab[]</p><p>def</p>",
         });
     });
 
@@ -1786,6 +1795,24 @@ describe("Selection not collapsed", () => {
             ),
             stepFunction: deleteBackward,
             contentAfter: `<p>[]<br></p>`,
+        });
+    });
+
+    test("should do nothing with selection before table and start of middle cell", async () => {
+        await testEditor({
+            contentBefore: unformat(
+                `[<table><tbody>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td>]<br></td></tr>
+                </tbody></table>`
+            ),
+            stepFunction: deleteBackward,
+            contentAfter: unformat(
+                `<table><tbody>
+                    <tr><td>[]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                </tbody></table>`
+            ),
         });
     });
 

@@ -9,7 +9,6 @@ import {
     isShrunkBlock,
     isTangible,
     isUnbreakable,
-    isVisibleTextNode,
     isWhitespace,
     isZWS,
     nextLeaf,
@@ -129,7 +128,6 @@ export class DeletePlugin extends Plugin {
         }
 
         let range = this.adjustRange(selection, [
-            this.correctTripleClick,
             this.expandRangeToIncludeNonEditables,
             this.includeEndOrStartBlock,
             this.fullyIncludeLinks,
@@ -906,33 +904,6 @@ export class DeletePlugin extends Plugin {
             startContainer.textContent[startOffset - 1] === "\u200B"
         ) {
             range.setStart(startContainer, startOffset - 1);
-        }
-        return range;
-    }
-
-    // @phoenix @todo: triple click correction is now done by the selection
-    // plugin, and this is no longer necessary. Adapt tests that rely on it and
-    // remove this method.
-    /**
-     * @param {Range} range
-     * @returns {Range}
-     */
-    correctTripleClick(range) {
-        const { startContainer, startOffset, endContainer, endOffset } = range;
-        const endLeaf = firstLeaf(endContainer);
-        const beforeEnd = endLeaf.previousSibling;
-        if (
-            !endOffset &&
-            (startContainer !== endContainer || startOffset !== endOffset) &&
-            (!beforeEnd ||
-                (beforeEnd.nodeType === Node.TEXT_NODE &&
-                    !isVisibleTextNode(beforeEnd) &&
-                    !isZWS(beforeEnd)))
-        ) {
-            const previous = previousLeaf(endLeaf, this.editable, true);
-            if (previous && closestElement(previous).isContentEditable) {
-                range.setEnd(previous, nodeSize(previous));
-            }
         }
         return range;
     }
