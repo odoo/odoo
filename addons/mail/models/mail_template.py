@@ -143,6 +143,14 @@ class MailTemplate(models.Model):
 
         raise NotImplementedError(_('Operation not supported'))
 
+    @api.onchange("model")
+    def _onchange_model(self):
+        for template in self.filtered("model"):
+            target = self.env[template.model]
+            if hasattr(target, "_mail_template_default_values"):
+                upd_values = target._mail_template_default_values()
+                template.update(upd_values)
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
