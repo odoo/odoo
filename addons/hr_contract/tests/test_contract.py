@@ -3,6 +3,7 @@
 from datetime import datetime, date
 from odoo.exceptions import ValidationError
 from odoo.addons.hr_contract.tests.common import TestContractCommon
+from odoo.tests import Form
 
 
 class TestHrContracts(TestContractCommon):
@@ -150,3 +151,34 @@ class TestHrContracts(TestContractCommon):
             calendar2,
             "Leave under active contract should update",
         )
+
+    def test_running_contract_updates_employee_job_info(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe'
+        })
+        job = self.env['hr.job'].create({
+            'name': 'Software dev'
+        })
+        department = self.env['hr.department'].create({
+            'name': 'R&D'
+        })
+
+        contract_form = Form(self.env['hr.contract'].create({
+            'name': 'Contract',
+            'employee_id': employee.id,
+            'hr_responsible_id': self.env.uid,
+            'job_id': job.id,
+            'department_id': department.id,
+            'wage': 1,
+        }))
+
+        contract_form.save()
+        self.assertFalse(employee.job_id)
+        self.assertFalse(employee.job_title)
+        self.assertFalse(employee.department_id)
+
+        contract_form.state = 'open'
+        contract_form.save()
+        self.assertEqual(contract_form.job_id, employee.job_id)
+        self.assertEqual(contract_form.job_id.name, employee.job_title)
+        self.assertEqual(contract_form.department_id, employee.department_id)
