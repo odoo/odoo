@@ -3097,6 +3097,16 @@ class BaseModel(metaclass=MetaModel):
         ):
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
+        if not need_wildcard and is_number_field:
+            cmp_value = field.convert_to_record(field.convert_to_cache(value, self), self)
+            if (
+                operator == '>=' and cmp_value <= 0
+                or operator == '<=' and cmp_value >= 0
+                or operator == '<' and cmp_value > 0
+                or operator == '>' and cmp_value < 0
+            ):
+                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+
         return sql
 
     @api.model
