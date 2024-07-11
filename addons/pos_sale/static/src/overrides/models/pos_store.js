@@ -63,8 +63,9 @@ patch(PosStore.prototype, {
             this.get_order().set_partner(sale_order.partner_id);
         }
         selectedOption == "settle"
-            ? this.settleSO(sale_order, orderFiscalPos)
-            : this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
+            ? await this.settleSO(sale_order, orderFiscalPos)
+            : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
+        this.selectOrderLine(this.get_order(), this.get_order().lines.at(-1));
     },
     async _getSaleOrder(id) {
         const sale_order = (await this.data.read("sale.order", [id]))[0];

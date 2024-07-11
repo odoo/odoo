@@ -38,7 +38,7 @@ export function downPaymentFirstOrder() {
             run: "click",
         },
         Numpad.click("+10"),
-        Dialog.confirm(),
+        Dialog.confirm("Ok"),
     ];
 }
 
