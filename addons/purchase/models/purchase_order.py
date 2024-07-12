@@ -563,6 +563,7 @@ class PurchaseOrder(models.Model):
         """Create the invoice associated to the PO.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        consolidated_billing = self.env.context.get('consolidated_billing', False)
 
         # 1) Prepare invoice vals and clean-up the section lines
         invoice_vals_list = []
@@ -597,27 +598,28 @@ class PurchaseOrder(models.Model):
             raise UserError(_('There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation
-        new_invoice_vals_list = []
-        for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('company_id'), x.get('partner_id'), x.get('currency_id'))):
-            origins = set()
-            payment_refs = set()
-            refs = set()
-            ref_invoice_vals = None
-            for invoice_vals in invoices:
-                if not ref_invoice_vals:
-                    ref_invoice_vals = invoice_vals
-                else:
-                    ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
-                origins.add(invoice_vals['invoice_origin'])
-                payment_refs.add(invoice_vals['payment_reference'])
-                refs.add(invoice_vals['ref'])
-            ref_invoice_vals.update({
-                'ref': ', '.join(refs)[:2000],
-                'invoice_origin': ', '.join(origins),
-                'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
-            })
-            new_invoice_vals_list.append(ref_invoice_vals)
-        invoice_vals_list = new_invoice_vals_list
+        if consolidated_billing:
+            new_invoice_vals_list = []
+            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('company_id'), x.get('partner_id'), x.get('currency_id'))):
+                origins = set()
+                payment_refs = set()
+                refs = set()
+                ref_invoice_vals = None
+                for invoice_vals in invoices:
+                    if not ref_invoice_vals:
+                        ref_invoice_vals = invoice_vals
+                    else:
+                        ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
+                    origins.add(invoice_vals['invoice_origin'])
+                    payment_refs.add(invoice_vals['payment_reference'])
+                    refs.add(invoice_vals['ref'])
+                ref_invoice_vals.update({
+                    'ref': ', '.join(refs)[:2000],
+                    'invoice_origin': ', '.join(origins),
+                    'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
+                })
+                new_invoice_vals_list.append(ref_invoice_vals)
+            invoice_vals_list = new_invoice_vals_list
 
         # 3) Create invoices.
         moves = self.env['account.move']
@@ -631,6 +633,16 @@ class PurchaseOrder(models.Model):
         moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
 
         return self.action_view_invoice(moves)
+
+    def action_create_invoice_wizard(self):
+        if len(self) == 1:
+            # If only one purchase order is selected, create the invoice directly
+            self.action_create_invoice()
+            return self.action_view_invoice()
+        else:
+            # If multiple purchase orders are selected, open the wizard
+            action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_view_purchase_advance_payment_inv")
+            return action
 
     def _prepare_invoice(self):
         """Prepare the dict of values to create the new invoice for a purchase order.
