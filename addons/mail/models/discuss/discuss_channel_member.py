@@ -196,20 +196,49 @@ class ChannelMember(models.Model):
             notifications.append([member.channel_id, "mail.record/insert", store.get_result()])
         self.env['bus.bus']._sendmany(notifications)
 
+    def _notify_mute(self):
+        notifications = []
+        for member in self:
+            notifications.append(
+                (
+                    member.partner_id,
+                    "mail.record/insert",
+                    {
+                        "Thread": {
+                            "id": member.channel_id.id,
+                            "model": "discuss.channel",
+                            "mute_until_dt": member.mute_until_dt,
+                        }
+                    },
+                )
+            )
+            if member.mute_until_dt and member.mute_until_dt != -1:
+                self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
+        self.env["bus.bus"]._sendmany(notifications)
+
+    def set_custom_notifications(self, custom_notifications):
+        self.ensure_one()
+        self.custom_notifications = custom_notifications
+        self.env["bus.bus"]._sendone(
+            self.partner_id,
+            "mail.record/insert",
+            {
+                "Thread": {
+                    "id": self.channel_id.id,
+                    "model": "discuss.channel",
+                    "custom_notifications": custom_notifications,
+                }
+            },
+        )
+
     @api.model
-    def _unmute(self):
-        # Unmute notifications for the all the channel members whose mute date is passed.
+    def _cleanup_expired_mutes(self):
+        """
+        Cron job for cleanup expired unmute by resetting mute_until_dt and sending bus notifications.
+        """
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
-        notifications = []
-        for member in members:
-            channel_data = {
-                "id": member.channel_id.id,
-                "model": "discuss.channel",
-                "mute_until_dt": False,
-            }
-            notifications.append((member.partner_id, "mail.record/insert", {"Thread": channel_data}))
-        self.env["bus.bus"]._sendmany(notifications)
+        members._notify_mute()
 
     def _to_store(self, store: Store, fields=None, extra_fields=None):
         if not fields:

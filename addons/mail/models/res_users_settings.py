@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 
 
@@ -33,10 +31,7 @@ class ResUsersSettings(models.Model):
         """
         settings = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         settings.write({"mute_until_dt": False})
-        notifications = []
-        for setting in settings:
-            notifications.append((setting.user_id.partner_id, "res.users.settings", {"mute_until_dt": False}))
-        self.env["bus.bus"]._sendmany(notifications)
+        settings._notify_mute()
 
     @api.model
     def _format_settings(self, fields_to_format):
@@ -49,22 +44,22 @@ class ResUsersSettings(models.Model):
             res["mute_until_dt"] = fields.Datetime.to_string(self.mute_until_dt)
         return res
 
-    def mute(self, minutes):
-        """
-        Mute notifications for the given number of minutes.
-        :param minutes: (integer) number of minutes to mute notifications,
-            0 means unmute,
-            -1 means forever mute.
-        """
-        self.ensure_one()
-        if minutes == -1:
-            self.mute_until_dt = datetime.max
-        elif minutes:
-            self.mute_until_dt = fields.Datetime.now() + relativedelta(minutes=minutes)
-            self.env.ref("mail.ir_cron_discuss_users_settings_unmute")._trigger(self.mute_until_dt)
-        else:
-            self.mute_until_dt = False
-        self.env["bus.bus"]._sendone(self.user_id.partner_id, "res.users.settings", {"mute_until_dt": self.mute_until_dt})
+    def _notify_mute(self):
+        notifications = []
+        for setting in self:
+            notifications.append(
+                (
+                    setting.user_id.partner_id,
+                    "res.users.settings",
+                    {"mute_until_dt": setting.mute_until_dt},
+                )
+            )
+            if setting.mute_until_dt and setting.mute_until_dt != -1:
+                self.env.ref("mail.ir_cron_discuss_users_settings_unmute")._trigger(setting.mute_until_dt)
+        self.env["bus.bus"]._sendmany(notifications)
+
+    def set_custom_notifications(self, custom_notifications):
+        self.set_res_users_settings({"channel_notifications": custom_notifications})
 
     def set_res_users_settings(self, new_settings):
         formated = super().set_res_users_settings(new_settings)

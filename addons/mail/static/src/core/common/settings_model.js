@@ -3,6 +3,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
 import { Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
+import { rpc } from "@web/core/network/rpc";
 
 export class Settings extends Record {
     id;
@@ -68,15 +69,15 @@ export class Settings extends Record {
     get NOTIFICATIONS() {
         return [
             {
-                id: "all",
+                label: "all",
                 name: _t("All Messages"),
             },
             {
-                id: "mentions",
+                label: "mentions",
                 name: _t("Mentions Only"),
             },
             {
-                id: "no_notif",
+                label: "no_notif",
                 name: _t("Nothing"),
             },
         ];
@@ -85,32 +86,32 @@ export class Settings extends Record {
     get MUTES() {
         return [
             {
-                id: "15_mins",
+                label: "15_mins",
                 value: 15,
                 name: _t("For 15 minutes"),
             },
             {
-                id: "1_hour",
+                label: "1_hour",
                 value: 60,
                 name: _t("For 1 hour"),
             },
             {
-                id: "3_hours",
+                label: "3_hours",
                 value: 180,
                 name: _t("For 3 hours"),
             },
             {
-                id: "8_hours",
+                label: "8_hours",
                 value: 480,
                 name: _t("For 8 hours"),
             },
             {
-                id: "24_hours",
+                label: "24_hours",
                 value: 1440,
                 name: _t("For 24 hours"),
             },
             {
-                id: "forever",
+                label: "forever",
                 value: -1,
                 name: _t("Until I turn it back on"),
             },
@@ -127,27 +128,25 @@ export class Settings extends Record {
     }
 
     /**
-     * @param {string} notif
+     * @param {string} custom_notifications
+     * @param {import("models").Thread} thread
      */
-    setChannelNotifications(notif) {
-        this.store.env.services.orm.call(
-            "res.users.settings",
-            "set_res_users_settings",
-            [[this.id]],
-            {
-                new_settings: {
-                    channel_notifications: notif === "mentions" ? false : notif,
-                },
-            }
-        );
+    async setCustomNotifications(custom_notifications, thread = undefined) {
+        return rpc("/discuss/settings/custom_notifications", {
+            custom_notifications:
+                !thread && custom_notifications === "mentions" ? false : custom_notifications,
+            channel_id: thread?.id,
+        });
     }
 
     /**
      * @param {integer|false} minutes
+     * @param {import("models").Thread} thread
      */
-    setMuteDuration(minutes) {
-        this.store.env.services.orm.call("res.users.settings", "mute", [[this.id]], {
-            minutes: minutes,
+    async setMuteDuration(minutes, thread = undefined) {
+        return rpc("/discuss/settings/mute", {
+            minutes,
+            channel_id: thread?.id,
         });
     }
 

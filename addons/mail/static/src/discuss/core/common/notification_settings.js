@@ -12,13 +12,8 @@ export class NotificationSettings extends Component {
         this.store = useState(useService("mail.store"));
     }
 
-    selectUnmute() {
-        this.props.thread.mute();
-        this.props.close();
-    }
-
     setMute(minutes) {
-        this.props.thread.mute({ minutes });
+        this.store.settings.setMuteDuration(minutes, this.props.thread);
         this.props.close();
     }
 }
