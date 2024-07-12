@@ -2662,7 +2662,7 @@ class MailThread(models.AbstractModel):
         # add default-like values afterwards, to avoid useless queries
         if self:
             if 'record_alias_domain_id' not in msg_values:
-                msg_values['record_alias_domain_id'] = self._mail_get_alias_domains(default_company=self.env.company)[self.id].id
+                msg_values['record_alias_domain_id'] = self.sudo()._mail_get_alias_domains(default_company=self.env.company)[self.id].id
             if 'record_company_id' not in msg_values:
                 msg_values['record_company_id'] = self._mail_get_companies(default=self.env.company)[self.id].id
         if 'reply_to' not in msg_values:
