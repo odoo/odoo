@@ -3,29 +3,23 @@
 import logging
 import pytz
 import textwrap
-
 from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape
 from urllib.parse import urlparse
+import vobject
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.tools import format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import vobject
-except ImportError:
-    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
-    vobject = None
 
 
 class EventEvent(models.Model):
