@@ -24,7 +24,7 @@ class AccountOrderLineMixin(models.AbstractModel):
     order_id = fields.Many2one('account.order.mixin')
     qty_to_invoice = fields.Float('Quantity to Invoice', compute='_compute_qty_to_invoice', digits='Product Unit of Measure', store=True)
     price_unit = fields.Float("Unit Price", digits='Product Price', compute='_compute_price_unit', required=True, readonly=False, store=True)
-    tax_ids = fields.Many2many('account.tax', string="Taxes", check_company=True, context={'active_test': False})
+    tax_id = fields.Many2many('account.tax', string="Taxes", check_company=True, context={'active_test': False})
     product_uom = fields.Many2one('uom.uom', "Unit of Measure", domain="[('category_id', '=', product_uom_category_id)]")
     discount = fields.Float("Discount (%)", digits='Discount', compute='_compute_discount', store=True, readonly=False, precompute=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True, precompute=True)

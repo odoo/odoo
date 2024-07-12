@@ -34,7 +34,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'product_uom': cls.product_order.uom_id.id,
             'price_unit': 100,
             'order_id': cls.purchase_order.id,
-            'tax_ids': False,
+            'taxes_id': False,
         })
         cls.pol_serv_deliver = cls.env['purchase.order.line'].create({
             'name': cls.service_deliver.name,
@@ -43,7 +43,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'product_uom': cls.service_deliver.uom_id.id,
             'price_unit': 100,
             'order_id': cls.purchase_order.id,
-            'tax_ids': False,
+            'taxes_id': False,
         })
         cls.pol_serv_order = cls.env['purchase.order.line'].create({
             'name': cls.service_order.name,
@@ -52,7 +52,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'product_uom': cls.service_order.uom_id.id,
             'price_unit': 100,
             'order_id': cls.purchase_order.id,
-            'tax_ids': False,
+            'taxes_id': False,
         })
         cls.pol_product_deliver = cls.env['purchase.order.line'].create({
             'name': cls.product_deliver.name,
@@ -61,7 +61,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'product_uom': cls.product_deliver.uom_id.id,
             'price_unit': 100,
             'order_id': cls.purchase_order.id,
-            'tax_ids': False,
+            'taxes_id': False,
         })
 
         cls.expense_account = cls.company_data['default_account_expense']
@@ -359,9 +359,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         expense_acc_2 = self.expense_account.copy()
         self.purchase_order.order_line[1].product_id.product_tmpl_id.property_account_expense_id = expense_acc_2
 
-        self.purchase_order.order_line[0].tax_ids = self.tax_15 + self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_15 + self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -384,9 +384,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
     def test_tax_breakdown_other_currency(self):
         self.purchase_order.currency_id = self.other_currency  # rate = 2.0
-        self.purchase_order.order_line[0].tax_ids = self.tax_15 + self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_15 + self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -407,9 +407,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_breakdown_fixed_payment_method(self):
-        self.purchase_order.order_line[0].tax_ids = self.tax_15 + self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_15 + self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order, method='fixed', amount=222.5)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -222.5
@@ -430,10 +430,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_breakdown_fixed_payment_method_with_taxes_on_all_lines(self):
-        self.purchase_order.order_line[0].tax_ids = self.tax_15
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
-        self.purchase_order.order_line[3].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_15
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
+        self.purchase_order.order_line[3].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order, method='fixed', amount=222.5)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -222.5
@@ -454,9 +454,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
     def test_tax_price_include_breakdown(self):
         tax_10_incl = self.create_tax(10, {'price_include': True})
-        self.purchase_order.order_line[0].tax_ids = tax_10_incl + self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = tax_10_incl + self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -479,9 +479,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
     def test_tax_price_include_include_base_amount_breakdown(self):
         tax_10_pi_ba = self.create_tax(10, {'price_include': True, 'include_base_amount': True})
         self.tax_10.sequence = 2
-        self.purchase_order.order_line[0].tax_ids = tax_10_pi_ba + self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = tax_10_pi_ba + self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -502,10 +502,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_breakdown_with_discount(self):
-        self.purchase_order.order_line[0].tax_ids = self.tax_10
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
         self.purchase_order.order_line[1].discount = 25.0
-        self.purchase_order.order_line[2].tax_ids = self.tax_15
+        self.purchase_order.order_line[2].taxes_id = self.tax_15
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -528,10 +528,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
     def test_tax_price_include_include_base_amount_breakdown_with_discount(self):
         tax_10_pi_ba = self.create_tax(10, {'price_include': True, 'include_base_amount': True})
         self.tax_10.sequence = 2
-        self.purchase_order.order_line[0].tax_ids = tax_10_pi_ba + self.tax_10
+        self.purchase_order.order_line[0].taxes_id = tax_10_pi_ba + self.tax_10
         self.purchase_order.order_line[0].discount = 25.0
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
         down_pay_amt = -self.purchase_order.amount_total / 2
@@ -569,9 +569,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'children_tax_ids': [Command.set((tax_10_fix_c + tax_10_a).ids)],
             'type_tax_use': 'purchase',
         })
-        self.purchase_order.order_line[0].tax_ids = tax_group_1
-        self.purchase_order.order_line[1].tax_ids = tax_group_2
-        self.purchase_order.order_line[2].tax_ids = tax_10_a
+        self.purchase_order.order_line[0].taxes_id = tax_group_1
+        self.purchase_order.order_line[1].taxes_id = tax_group_2
+        self.purchase_order.order_line[2].taxes_id = tax_10_a
         self.make_downpayment(self.purchase_order)
 
         # Line 1: 200 + 80 = 284
@@ -602,11 +602,11 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
         an_acc_02 = str(self.env['account.analytic.account'].create({'name': 'Account 02', 'plan_id': analytic_plan.id}).id)
-        self.purchase_order.order_line[0].tax_ids = self.tax_15 + self.tax_10
+        self.purchase_order.order_line[0].taxes_id = self.tax_15 + self.tax_10
         self.purchase_order.order_line[0].analytic_distribution = {an_acc_01: 100}
-        self.purchase_order.order_line[1].tax_ids = self.tax_10
+        self.purchase_order.order_line[1].taxes_id = self.tax_10
         self.purchase_order.order_line[1].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
-        self.purchase_order.order_line[2].tax_ids = self.tax_10
+        self.purchase_order.order_line[2].taxes_id = self.tax_10
         self.purchase_order.order_line[2].analytic_distribution = {an_acc_01: 100}
         self.make_downpayment(self.purchase_order)
         invoice = self.purchase_order.invoice_ids
@@ -650,10 +650,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             'children_tax_ids': [Command.set((tax_10_fix_c + tax_10_a).ids)],
             'type_tax_use': 'purchase',
         })
-        self.purchase_order.order_line[0].tax_ids = tax_group_1
+        self.purchase_order.order_line[0].taxes_id = tax_group_1
         self.purchase_order.order_line[0].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
-        self.purchase_order.order_line[1].tax_ids = tax_group_2
-        self.purchase_order.order_line[2].tax_ids = tax_10_a
+        self.purchase_order.order_line[1].taxes_id = tax_group_2
+        self.purchase_order.order_line[2].taxes_id = tax_10_a
         self.make_downpayment(self.purchase_order)
 
         # Line 1: 200 + 80 = 284

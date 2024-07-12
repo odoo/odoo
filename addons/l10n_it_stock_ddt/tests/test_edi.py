@@ -109,7 +109,7 @@ class TestItEdiDDT(TestItEdi):
                         'product_uom_qty': 5,
                         'product_uom': product.uom_id.id,
                         'price_unit': product.list_price,
-                        'tax_ids': self.tax_22
+                        'tax_id': self.tax_22
                     }) for product in self.products
                 ],
                 'pricelist_id': self.default_pricelist.id,
