@@ -47,6 +47,15 @@ export function clickEditButton(button) {
         },
     ];
 }
+export function clickSaveEditButton() {
+    return [
+        {
+            content: "add table",
+            trigger: '.edit-buttons button:contains("Save")',
+            run: "click",
+        },
+    ];
+}
 export function selectedFloorIs(name) {
     return [
         {
