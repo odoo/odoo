@@ -149,7 +149,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         purchase_order.button_confirm()
         purchase_order.action_create_invoice()
-        bill = purchase_order.account_move_ids[0]
+        bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.invoice_line_ids[0].quantity = 1.0
@@ -186,14 +186,14 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         purchase_order.button_confirm()
         purchase_order.action_create_invoice()
-        bill = purchase_order.account_move_ids[0]
+        bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.invoice_line_ids[0].price_unit = 100.0
         bill.button_cancel()
 
         purchase_order.action_create_invoice()
-        bill = purchase_order.account_move_ids[1]
+        bill = purchase_order.invoice_ids[1]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.invoice_line_ids[0].price_unit = 300.0
@@ -232,7 +232,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         purchase_order.button_confirm()
         purchase_order.action_create_invoice()
-        bill = purchase_order.account_move_ids[0]
+        bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.action_post()

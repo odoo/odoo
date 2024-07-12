@@ -32,4 +32,4 @@ class TestWebsiteSaleInvoice(AccountPaymentCommon, SaleCommon):
             tx._post_process()
 
         self.assertEqual(self.sale_order.website_id.id, self.website.id)
-        self.assertEqual(self.sale_order.account_move_ids.website_id.id, self.website.id)
+        self.assertEqual(self.sale_order.invoice_ids.website_id.id, self.website.id)
