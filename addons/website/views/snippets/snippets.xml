@@ -478,10 +478,6 @@
     </t>
 
     <!-- Accordion -->
-    <div data-js="collapse"
-         data-selector='.accordion > .accordion-item'
-         data-drop-in='.accordion:has(> .accordion-item)'/>
-
     <div data-js="MultipleItems" data-selector=".s_accordion">
         <we-row string="Items">
             <we-button data-add-item="" data-item=".accordion > .accordion-item:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
@@ -493,11 +489,6 @@
     <t t-set="so_submit_button_selector" t-translation="off">
         .s_donation_donate_btn, .s_website_form_send
     </t>
-
-    <!-- Button -->
-    <div data-js="Button"
-        data-selector="a.btn"
-        t-att-data-exclude="so_submit_button_selector"/>
 
     <!-- Columns only -->
     <div data-js="layout_column"
@@ -531,15 +522,6 @@
         <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
     -->
-    </div>
-
-    <!-- Grid mode columns -->
-    <div data-js="GridColumns"
-         data-selector=".row:not(.s_col_no_resize) > div">
-        <we-row string="Padding (Y, X)">
-            <we-input data-select-style="" data-css-property="--grid-item-padding-y" data-unit="px" data-name="grid_padding_y_opt"/>
-            <we-input data-select-style="" data-css-property="--grid-item-padding-x" data-unit="px" data-name="grid_padding_x_opt"/>
-        </we-row>
     </div>
 
     <!-- Border | Columns -->
@@ -582,142 +564,10 @@
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}"
         data-drop-in="nav"/>
 
-    <div data-js="SnippetSave"
-        data-selector="[data-snippet], a.btn"
-        t-attf-data-exclude=".o_no_save, #{so_submit_button_selector}">
-        <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
-                   title="Save the block to use it elsewhere"
-                   data-save-snippet=""
-                   data-no-preview="true"/>
-    </div>
-
     <div data-js="menu_data"
          data-selector=".top_menu li > a, [data-content_menu_id] li > a"
          data-exclude=".dropdown-toggle, li.o_header_menu_button a, [data-toggle], .o_offcanvas_logo"
          data-no-check="true"/>
-
-    <div data-js="WebsiteLevelColor"
-         data-selector="#wrapwrap > header"
-         data-no-check="true"
-         groups="website.group_website_designer">
-        <we-select string="Template" data-variable="header-template"
-                   data-default-variables="header-links-style: default"
-                   data-reload="/" data-no-preview="true">
-            <we-button title="Default"
-                       data-name="header_default_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_default"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/header_template_default.svg"/>
-            <we-button title="Hamburger menu"
-                       data-name="header_hamburger_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
-                       data-customize-website-variable="'hamburger'"
-                       data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
-            <we-button title="Rounded box menu"
-                       data-name="header_boxed_opt"
-                       data-trigger="over_content_header_visibility_opt"
-                       data-customize-website-views="website.header_navbar_pills_style,website.template_header_boxed"
-                       data-customize-website-variable="'boxed'"
-                       data-customize-website-variables="header-links-style: pills"
-                       data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
-            <we-button title="Stretch menu"
-                       data-name="header_stretch_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_stretch"
-                       data-customize-website-variable="'stretch'"
-                       data-img="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
-            <we-button title="Vertical"
-                       data-name="header_vertical_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_vertical"
-                       data-customize-website-variable="'vertical'"
-                       data-img="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
-            <we-button title="Menu with Search bar"
-                       data-name="header_search_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_search"
-                       data-customize-website-variable="'search'"
-                       data-img="/website/static/src/img/snippets_options/header_template_search.svg"/>
-            <we-button title="Menu - Sales 1"
-                       data-name="header_sales_one_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_one"
-                       data-customize-website-variable="'sales_one'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
-            <we-button title="Menu - Sales 2"
-                       data-name="header_sales_two_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_two"
-                       data-customize-website-variable="'sales_two'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
-            <we-button title="Menu - Sales 3"
-                       data-name="header_sales_three_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_three"
-                       data-customize-website-variable="'sales_three'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
-            <we-button title="Menu - Sales 4"
-                       data-name="header_sales_four_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_four"
-                       data-customize-website-variable="'sales_four'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
-            <we-button title="Sidebar"
-                       data-name="header_sidebar_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
-                       data-customize-website-variable="'sidebar'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
-        </we-select>
-
-        <!-- Header Sidebar Template - Options -->
-        <we-input string="Width"
-                  class="o_we_sublevel_1"
-                  data-dependencies="header_sidebar_opt"
-                  data-customize-website-variable="null"
-                  data-variable="sidebar-width"
-                  data-unit="px"
-                  data-save-unit="rem"/>
-
-        <we-row string="Background">
-            <we-colorpicker data-customize-website-color="" data-color="menu"
-                            data-customize-website-layer2-color="" data-layer-color="menu-custom" data-layer-gradient="menu-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_one_opt"
-                            data-customize-website-color="" data-color="header-sales_one"
-                            data-customize-website-layer2-color="" data-layer-color="header-sales_one-custom" data-layer-gradient="menu-secondary-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_two_opt"
-                            data-customize-website-color="" data-color="header-sales_two"
-                            data-customize-website-layer2-color="" data-layer-color="header-sales_two-custom" data-layer-gradient="menu-secondary-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_three_opt"
-                            data-customize-website-color="" data-color="header-sales_three"
-                            data-customize-website-layer2-color="" data-layer-color="header-sales_three-custom" data-layer-gradient="menu-secondary-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_four_opt"
-                            data-customize-website-color="" data-color="header-sales_four"
-                            data-customize-website-layer2-color="" data-layer-color="header-sales_four-custom" data-layer-gradient="menu-secondary-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-        </we-row>
-    </div>
 
     <!-- Header - Borders & Shadows -->
     <div data-js="HeaderBox"
@@ -988,75 +838,6 @@
                   data-dependencies="!header_effect_scroll_opt"/>
     </div>
 
-    <!-- Footer - Colors & Layouts -->
-    <div data-js="WebsiteLevelColor"
-         data-selector="#wrapwrap > footer"
-         data-no-check="true"
-         groups="website.group_website_designer">
-
-        <!-- Layouts -->
-        <we-select string="Template"
-            data-variable="footer-template"
-            data-reload="/">
-            <we-button title="Default"
-                       data-customize-website-views="website.footer_custom"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_default.svg"/>
-            <we-button title="Descriptive"
-                       data-customize-website-views="website.template_footer_descriptive"
-                       data-customize-website-variable="'descriptive'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
-            <we-button title="Centered"
-                       data-customize-website-views="website.template_footer_centered"
-                       data-customize-website-variable="'centered'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
-            <we-button title="Links"
-                       data-customize-website-views="website.template_footer_links"
-                       data-customize-website-variable="'links'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_links.svg"/>
-            <we-button title="Minimalist"
-                       data-customize-website-views="website.template_footer_minimalist"
-                       data-customize-website-variable="'minimalist'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
-            <we-button title="Contact"
-                       data-customize-website-views="website.template_footer_contact"
-                       data-customize-website-variable="'contact'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
-            <we-button title="Call-to-action"
-                       data-customize-website-views="website.template_footer_call_to_action"
-                       data-customize-website-variable="'call_to_action'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
-            <we-button title="Headline"
-                       data-customize-website-views="website.template_footer_headline"
-                       data-customize-website-variable="'headline'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
-        </we-select>
-        <!-- Colors -->
-        <we-colorpicker string="Colors"
-                        data-customize-website-color="" data-color="footer"
-                        data-customize-website-layer2-color="" data-layer-color="footer-custom" data-layer-gradient="footer-gradient"
-                        data-no-bundle-reload="true"
-                        data-null-value="'NULL'"
-                        data-with-combinations="customizeWebsiteColor"
-                        data-with-gradients="true"/>
-        <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
-            <we-button string="Regular"
-                       data-customize-website-views=""
-                       data-customize-website-variable=""/>
-            <we-button string="Slide Hover"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_slide_hover'"/>
-            <we-button string="Shadow"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_shadow'"/>
-        </we-select>
-        <we-checkbox string="Copyright"
-                data-name="footer_copyright_opt"
-                data-customize-website-views="website.footer_no_copyright|"
-                data-no-preview="true"
-                data-reload="/"/>
-    </div>
-
     <!-- Footer - Borders & Shadows -->
     <div data-js="Box"
          data-selector="#wrapwrap > footer"
@@ -1093,33 +874,6 @@
                      data-name="hide_footer_page_opt"
                      data-visibility="hidden|shown"
                      data-no-preview="true"/>
-    </div>
-
-    <!-- Copyright -->
-    <div data-js="WebsiteLevelColor"
-         data-selector=".o_footer_copyright"
-         data-no-check="true"
-         groups="website.group_website_designer">
-        <we-colorpicker string="Colors"
-                        data-customize-website-color="" data-color="copyright"
-                        data-customize-website-layer2-color="" data-layer-color="copyright-custom" data-layer-gradient="copyright-gradient"
-                        data-no-bundle-reload="true"
-                        data-null-value="'NULL'"
-                        data-with-combinations="customizeWebsiteColor"
-                        data-with-gradients="true"/>
-        <we-select data-name="footer_language_selector_opt" string="Language Selector" data-reload="/" data-no-preview="true">
-            <we-button data-name="language_selector_none_opt"
-                       data-customize-website-views="">None</we-button>
-            <we-button data-customize-website-views="portal.footer_language_selector">Dropdown</we-button>
-            <we-button data-customize-website-views="portal.footer_language_selector, website.footer_language_selector_inline">Inline</we-button>
-        </we-select>
-        <we-select data-name="footer_language_selector_label_opt" string="Label" class="o_we_sublevel_1" data-dependencies="!language_selector_none_opt" data-reload="/" data-no-preview="true">
-            <we-button data-customize-website-views="">Text</we-button>
-            <we-button data-customize-website-views="website.footer_language_selector_flag, website.footer_language_selector_no_text">Flag</we-button>
-            <we-button data-customize-website-views="website.footer_language_selector_flag">Flag and Text</we-button>
-            <we-button data-customize-website-views="website.footer_language_selector_code, website.footer_language_selector_no_text">Code</we-button>
-            <we-button data-customize-website-views="website.footer_language_selector_flag, website.footer_language_selector_code, website.footer_language_selector_no_text">Flag and Code</we-button>
-        </we-select>
     </div>
 
     <!-- Anchor Name -->
@@ -1175,14 +929,6 @@
         </we-select>
     </div>
 
-    <!-- Image position in grid -->
-    <div data-js="GridImage" data-selector="img">
-        <we-select string="Position">
-            <we-button data-change-grid-image-mode="cover">Cover</we-button>
-            <we-button data-change-grid-image-mode="contain">Contain</we-button>
-        </we-select>
-    </div>
-
     <!-- Text highlight effects -->
     <div data-js="TextHighlight"
         data-selector=".o_text_highlight"
@@ -1226,315 +972,12 @@
             data-unit="px"/>
     </div>
 
-    <!-- Theme options -->
-    <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
-        <we-alert class="o_old_color_system_warning d-none mt-2">
-            It appears your website is still using the old color system of
-            Odoo 13.0 in some places. We made sure it is still working but
-            we recommend you to try to use the new color system, which is
-            still customizable.
-        </we-alert>
-        <we-row class="o_we_theme_colors_selector">
-            <div class="o_we_theme_colors_selector_group">
-                <we-title>Main</we-title>
-                <we-colorpicker data-name="color_1_opt" title="Primary"
-                                data-customize-website-color="" data-color="o-color-1"
-                                data-use-css-color="true" data-selected-tab="custom-colors"/>
-                <we-colorpicker data-name="color_2_opt" title="Secondary"
-                                data-customize-website-color="" data-color="o-color-2"
-                                data-use-css-color="true" data-selected-tab="custom-colors"/>
-            </div>
-            <div class="o_we_theme_colors_selector_group">
-                <we-title>Light &amp; Dark</we-title>
-                <we-colorpicker data-customize-website-color="" data-color="o-color-3"
-                                data-use-css-color="true" data-selected-tab="custom-colors"/>
-                <we-colorpicker data-customize-website-color="" data-color="o-color-4"
-                                data-use-css-color="true" data-selected-tab="custom-colors"/>
-                <we-colorpicker data-customize-website-color="" data-color="o-color-5"
-                                data-use-css-color="true" data-selected-tab="custom-colors"/>
-            </div>
-            <we-select data-img="/website/static/src/img/snippets_options/palette.svg" class="o_we_theme_colors_select" data-variable="color-palettes-name"/>
-        </we-row>
-        <we-collapse class="o_we_theme_presets_collapse" string="Color Presets">
-        </we-collapse>
-    </div>
-    <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">
-        <we-row string="Theme">
-            <we-button data-switch-theme="" data-no-preview="true" class="o_we_bg_brand_primary">Switch Theme</we-button>
-        </we-row>
-        <we-row string="Language">
-            <we-button data-add-language="" data-no-preview="true" class="o_we_bg_brand_primary">Add a Language</we-button>
-        </we-row>
-        <we-select string="Page Layout" data-variable="layout">
-            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
-            <we-button data-customize-website-variable="'framed'">Framed</we-button>
-            <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
-        </we-select>
-        <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
-            <we-colorpicker data-dependencies="!layout_full_opt"
-                            data-customize-website-color=""
-                            data-color="body"/>
-            <we-button-group data-imagepicker="body_bg_image_opt">
-                <we-button title="Image" class="fa fa-fw fa-camera"
-                           data-customize-body-bg-type="'image'"/>
-                <we-button title="Pattern" class="fa fa-fw fa-th"
-                           data-customize-body-bg-type="'pattern'"/>
-                <we-button title="None" class="fa fa-fw fa-ban"
-                           data-customize-body-bg-type="NONE"/>
-            </we-button-group>
-            <!-- Hidden imagepicker enabled by above button-group -->
-            <we-imagepicker data-name="body_bg_image_opt"
-                            data-customize-body-bg=""/>
-        </we-row>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-paragraph" data-no-check="true">
-        <we-collapse>
-            <we-input string="Font Size"
-                    data-customize-website-variable="null"
-                    data-variable="font-size-base"
-                    data-unit="px"
-                    data-save-unit="rem"/>
-            <we-input string="Small"
-                    class="o_we_sublevel_1"
-                    data-customize-website-variable="null"
-                    data-variable="small-font-size"
-                    data-unit="px"
-                    data-save-unit="rem"/>
-        </we-collapse>
-        <we-fontfamilypicker string="Font Family" data-variable="font"/>
-        <!-- "× ": \u00D7\u2000 -->
-        <we-input string="Line Height"
-                  data-customize-website-variable="null"
-                  data-variable="body-line-height"
-                  data-fake-unit="× "/>
-        <we-row string="Margins">
-            <we-input title="Top" data-customize-website-variable="" data-variable="paragraph-margin-top" data-unit="px" data-save-unit="px"/>
-            <we-input title="Bottom" data-customize-website-variable="" data-variable="paragraph-margin-bottom" data-unit="px" data-save-unit="px"/>
-        </we-row>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-headings" data-no-check="true">
-        <t t-set="heading_label">Heading</t>
-        <t t-set="display_label">Display</t>
-        <we-collapse>
-            <we-input string="Font Size"
-                      title="Heading 1"
-                      data-customize-website-variable="null"
-                      data-variable="h1-font-size"
-                      data-unit="px"
-                      data-save-unit="rem"/>
-            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
-                <we-input t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1"
-                          data-customize-website-variable="null"
-                          t-attf-data-variable="h#{depth}-font-size"
-                          data-unit="px"
-                          data-save-unit="rem"/>
-            </t>
-            <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
-            <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
-            <t t-foreach="used_display_font_sizes" t-as="depth">
-                <we-input t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1"
-                          data-customize-website-variable="null"
-                          t-attf-data-variable="display-#{depth}-font-size"
-                          data-unit="px"
-                          data-save-unit="rem"/>
-            </t>
-        </we-collapse>
-        <we-collapse>
-            <we-row string="Font Family" title="Heading 1">
-                <we-fontfamilypicker data-variable="headings-font"/>
-                <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                    data-customize-website-variable="" data-variable="headings-font"
-                    data-remove-font="set-headings-font" data-no-preview="true"/>
-            </we-row>
-            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
-                <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="h#{depth}-font"/>
-                    <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
-                        data-customize-website-variable="" t-attf-data-variable="h#{depth}-font"
-                        t-attf-data-remove-font="set-h#{depth}-font" data-no-preview="true"/>
-                </we-row>
-            </t>
-            <t t-foreach="used_display_font_sizes" t-as="depth">
-                <we-row t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="display-#{depth}-font"/>
-                    <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
-                        data-customize-website-variable="" t-attf-data-variable="display-#{depth}-font"
-                        t-attf-data-remove-font="set-display-#{depth}-font" data-no-preview="true"/>
-                </we-row>
-            </t>
-        </we-collapse>
-        <we-collapse>
-            <!-- "× ": \u00D7\u2000 -->
-            <we-input string="Line Height"
-                      title="Heading 1"
-                      data-customize-website-variable="null"
-                      data-variable="headings-line-height"
-                      data-fake-unit="× "/>
-            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
-                <we-input t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1"
-                          data-customize-website-variable="null"
-                          t-attf-data-variable="h#{depth}-line-height"
-                          data-fake-unit="× "/>
-            </t>
-            <t t-foreach="used_display_font_sizes" t-as="depth">
-                <we-input t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1"
-                          data-customize-website-variable="null"
-                          t-attf-data-variable="display-#{depth}-line-height"
-                          data-fake-unit="× "/>
-            </t>
-        </we-collapse>
-        <we-collapse>
-            <we-row string="Margins" title="Heading 1">
-                <we-input title="Top" data-customize-website-variable="" data-variable="headings-margin-top" data-unit="px" data-save-unit="px"/>
-                <we-input title="Bottom" data-customize-website-variable="" data-variable="headings-margin-bottom" data-unit="px" data-save-unit="px"/>
-            </we-row>
-            <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
-                <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
-                    <we-input title="Top" data-customize-website-variable="" t-attf-data-variable="h#{depth}-margin-top" data-unit="px" data-save-unit="px"/>
-                    <we-input title="Bottom" data-customize-website-variable="" t-attf-data-variable="h#{depth}-margin-bottom" data-unit="px" data-save-unit="px"/>
-                </we-row>
-            </t>
-            <t t-foreach="used_display_font_sizes" t-as="depth">
-                <we-row t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1">
-                    <we-input title="Top" data-customize-website-variable="" t-attf-data-variable="display-#{depth}-margin-top" data-unit="px" data-save-unit="px"/>
-                    <we-input title="Bottom" data-customize-website-variable="" t-attf-data-variable="display-#{depth}-margin-bottom" data-unit="px" data-save-unit="px"/>
-                </we-row>
-            </t>
-        </we-collapse>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-button" data-no-check="true">
-        <we-select string="Primary Style" data-button="primary" data-no-preview="true">
-            <we-button data-customize-button-style="fill">Fill</we-button>
-            <we-button data-customize-button-style="outline" data-name="btn_primary_outline_opt">Outline</we-button>
-            <we-button data-customize-button-style="flat">Flat</we-button>
-        </we-select>
-        <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-primary-outline-border-width" data-dependencies="btn_primary_outline_opt"
-            data-unit="px" data-save-unit="rem"/>
-        <we-select string="Secondary Style" data-button="secondary" data-no-preview="true">
-            <we-button data-customize-button-style="fill">Fill</we-button>
-            <we-button data-customize-button-style="outline" data-name="btn_secondary_outline_opt">Outline</we-button>
-            <we-button data-customize-button-style="flat">Flat</we-button>
-        </we-select>
-        <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-secondary-outline-border-width" data-dependencies="btn_secondary_outline_opt"
-            data-unit="px" data-save-unit="rem"/>
-        <we-row string="Font Family">
-            <we-fontfamilypicker data-variable="buttons-font"/>
-            <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                data-customize-website-variable="" data-variable="buttons-font"
-                data-remove-font="set-buttons-font" data-no-preview="true"/>
-        </we-row>
-        <we-collapse>
-            <we-row string="Padding">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-            <we-row string="Small" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-sm" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-sm" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-            <we-row string="Large" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-lg" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-lg" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-        </we-collapse>
-        <we-collapse>
-            <we-input string="Font Size" data-customize-website-variable="" data-variable="btn-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
-        </we-collapse>
-        <we-collapse>
-            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
-        </we-collapse>
-        <we-select string="On Click Effect" data-variable="btn-ripple">
-            <we-button data-customize-website-variable="false">None</we-button>
-            <we-button data-customize-website-variable="true" data-customize-website-assets="website.ripple_effect_scss, website.ripple_effect_js">Ripple</we-button>
-        </we-select>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-link" data-no-check="true">
-        <we-select string="Link Style" data-variable="link-underline">
-            <we-button data-customize-website-variable="'never'">No Underline</we-button>
-            <we-button data-customize-website-variable="'hover'">Underline On Hover</we-button>
-            <we-button data-customize-website-variable="'always'">Always Underline</we-button>
-        </we-select>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-input" data-no-check="true">
-        <we-collapse>
-            <we-row string="Paddings">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-            <we-row string="Small" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-sm" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-sm" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-            <we-row string="Large" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-lg" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-lg" data-unit="px" data-save-unit="rem"/>
-            </we-row>
-        </we-collapse>
-        <we-collapse>
-            <we-input string="Font Size" data-customize-website-variable="" data-variable="input-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
-        </we-collapse>
-        <we-collapse>
-            <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>
-        </we-collapse>
-        <we-collapse>
-            <we-input string="Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
-        </we-collapse>
-        <we-row string="Background">
-            <we-colorpicker title="Background"
-                data-no-transparency="true"
-                data-customize-website-color=""
-                data-color="input"/>
-        </we-row>
-    </div>
-    <div data-js="OptionsTab" data-selector="theme-advanced" data-no-check="true">
-        <we-checkbox string="Show Header"
-                     data-customize-website-views="website.option_layout_hide_header|"
-                     data-reload="/"/>
-        <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
-            <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;</we-button>
-        </we-row>
-        <we-row string="Google Map">
-            <we-button data-configure-api-key="" data-no-preview="true">Custom Key</we-button>
-        </we-row>
-        <we-row string="Status Colors">
-            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success" data-selected-tab="custom-colors"/>
-            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info" data-selected-tab="custom-colors"/>
-            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning" data-selected-tab="custom-colors"/>
-            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger" data-selected-tab="custom-colors"/>
-        </we-row>
-        <we-collapse>
-            <we-row string="Grays" class="o_we_gray_preview o_we_collapse_toggler">
-                <t t-foreach="9" t-as="i">
-                    <t t-set="grayCode" t-value="str((9 - i) * 100)"/>
-                    <span t-attf-title="Gray #{grayCode}"
-                          t-attf-variable="#{grayCode}"
-                          t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
-                </t>
-            </we-row>
-            <we-range string="Hue" class="o_we_sublevel_1 o_we_slider_tint" data-customize-gray="" data-param="gray-hue" data-min="0" data-max="359.9" data-step="0.1"/>
-            <we-range string="Saturation" class="o_we_sublevel_1" data-customize-gray="" data-param="gray-extra-saturation" data-step="0.1"/>
-        </we-collapse>
-    </div>
     <!-- Info page ('/website/info') -->
     <div data-selector="main:has(.o_website_info)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Info Page">
         <we-checkbox string="Odoo Information"
                         data-customize-website-views="website.show_website_info"
                         data-no-preview="true"
                         data-reload="/"/>
-    </div>
-    <div data-js="SwitchableViews" data-selector="#wrapwrap > main" data-no-check="true" groups="website.group_website_designer">
-            <!-- Options will be populated by JS -->
     </div>
 
     </xpath>

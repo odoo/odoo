@@ -53,6 +53,12 @@
         <WeButton selectCount="'custom'" name="'custom_cols_opt'">Custom</WeButton>
     </WeSelect>
 </t>
+<t t-name="website.grid_columns_option">
+    <WeRow title.translate="Padding (Y, X)">
+        <WeInput selectStyle="''" cssProperty="'--grid-item-padding-y'" unit="'px'" name="'grid_padding_y_opt'"/>
+        <WeInput selectStyle="''" cssProperty="'--grid-item-padding-x'" unit="'px'" name="'grid_padding_x_opt'"/>
+    </WeRow>
+</t>
 <t t-name="website.grid_layout_options">
     <WeButtonGroup class="indent and 'o_we_sublevel_1'" noPreview="'true'"
                    dependencies="'grid_mode'" title.translate="Add Elements">
@@ -347,6 +353,14 @@
     </WeSelect>
 </t>
 
+<t t-name="website.snippet_save_option">
+    <WeButton class="'fa fa-fw fa-save o_we_link o_we_hover_warning'"
+        tooltip.translate="Save the block to use it elsewhere"
+        saveSnippet="''"
+        noPreview="'true'"
+    />
+</t>
+
 <t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
     <xpath expr="//WeRow" position="before">
         <WeRow title.translate="URL">
@@ -615,6 +629,15 @@
 </WeRow>
 </t>
 
+<t t-name="website.replace_media_option" t-inherit="web_editor.replace_media_option" t-inherit-mode="extension">
+    <xpath expr="//t[@t-set='urlInputComponent']" position="after">
+        <t t-if="env.snippetOption.options.isWebsite">
+            <t t-set="urlInputComponent" t-value="'WeUrlPicker'"/>
+            <t t-set="tooltip">Hint: Type '/' to search an existing page and '#' to link to an anchor.</t>
+            <t t-set="extraAttributes" t-value="{tooltip: tooltip}"/>
+        </t>
+    </xpath>
+</t>
 <!-- Website Animate -->
 <t t-name="website.WebsiteAnimate">
     <!-- Animation mode -->
@@ -782,5 +805,239 @@
     <t t-call="web_editor.ImageTools"/>
     <t t-call="web_editor.IconTools"/>
     <t t-call="website.ImageHoverAnimate"/>
+</t>
+<t t-name="website.switchable_views_option">
+    <t t-foreach="renderContext.switchableRelatedViews" t-as="view" t-key="view.name">
+        <WeRow title="view.name">
+            <WeCheckbox customizeWebsiteViews="view.key" noPreview="'true'" reload="'/'"/>
+        </WeRow>
+    </t>
+</t>
+<t t-name="website.grid_image_option">
+    <!-- Image position in grid -->
+    <WeSelect title.translate="Position">
+        <WeButton changeGridImageMode="'cover'">Cover</WeButton>
+        <WeButton changeGridImageMode="'contain'">Contain</WeButton>
+    </WeSelect>
+</t>
+<t t-name="website.header_option">
+    <WeRow title.translate="Template">
+        <WeSelect variable="'header-template'"
+               defaultVariables="'header-links-style: default'"
+               reload="'/'" noPreview="'true'">
+            <WeButton tooltip.translate="Default"
+                   name="'header_default_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_default'"
+                   customizeWebsiteVariable="&quot;'default'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_default.svg'"/>
+            <WeButton tooltip.translate="Hamburger menu"
+                   name="'header_hamburger_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_hamburger, website.no_autohide_menu'"
+                   customizeWebsiteVariable="&quot;'hamburger'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_hamburger.svg'"/>
+            <WeButton tooltip.translate="Rounded box menu"
+                   name="'header_boxed_opt'"
+                   trigger="'over_content_header_visibility_opt'"
+                   customizeWebsiteViews="'website.header_navbar_pills_style,website.template_header_boxed'"
+                   customizeWebsiteVariable="&quot;'boxed'&quot;"
+                   customizeWebsiteVariables="'header-links-style: pills'"
+                   img="'/website/static/src/img/snippets_options/header_template_boxed.svg'"/>
+            <WeButton tooltip.translate="Stretch menu"
+                   name="'header_stretch_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_stretch'"
+                   customizeWebsiteVariable="&quot;'stretch'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_stretch.svg'"/>
+            <WeButton tooltip.translate="Vertical"
+                   name="'header_vertical_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_vertical'"
+                   customizeWebsiteVariable="&quot;'vertical'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_vertical.svg'"/>
+            <WeButton tooltip.translate="Menu with Search bar"
+                   name="'header_search_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_search'"
+                   customizeWebsiteVariable="&quot;'search'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_search.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 1"
+                   name="'header_sales_one_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_one'"
+                   customizeWebsiteVariable="&quot;'sales_one'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_one.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 2"
+                   name="'header_sales_two_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_two'"
+                   customizeWebsiteVariable="&quot;'sales_two'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_two.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 3"
+                   name="'header_sales_three_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_three'"
+                   customizeWebsiteVariable="&quot;'sales_three'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_three.svg'"/>
+            <WeButton tooltip.translate="Menu - Sales 4"
+                   name="'header_sales_four_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sales_four'"
+                   customizeWebsiteVariable="&quot;'sales_four'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sales_four.svg'"/>
+            <WeButton tooltip.translate="Sidebar"
+                   name="'header_sidebar_opt'"
+                   trigger="'regular_header_visibility_opt'"
+                   customizeWebsiteViews="'website.template_header_sidebar, website.no_autohide_menu'"
+                   customizeWebsiteVariable="&quot;'sidebar'&quot;"
+                   img="'/website/static/src/img/snippets_options/header_template_sidebar.svg'"/>
+        </WeSelect>
+    </WeRow>
+
+    <!-- Header Sidebar Template - Options -->
+    <WeRow title.translate="Width">
+        <WeInput
+              class="'o_we_sublevel_1'"
+              dependencies="'header_sidebar_opt'"
+              customizeWebsiteVariable="'null'"
+              variable="'sidebar-width'"
+              unit="'px'"
+              saveUnit="'rem'"/>
+    </WeRow>
+
+    <WeRow title.translate="Background">
+        <WeColorpicker customizeWebsiteColor="''" color="'menu'"
+                        customizeWebsiteLayer2Color="''" layerColor="'menu-custom'" layerGradient="'menu-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_one_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_one'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_one-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_two_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_two'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_two-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_three_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_three'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_three-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+        <WeColorpicker dependencies="'header_sales_four_opt'"
+                        customizeWebsiteColor="''" color="'header-sales_four'"
+                        customizeWebsiteLayer2Color="''" layerColor="'header-sales_four-custom'" layerGradient="'menu-secondary-gradient'"
+                        noBundleReload="'true'"
+                        nullValue="&quot;'NULL'&quot;"
+                        withCombinations="'customizeWebsiteColor'"
+                        withGradients="'true'"/>
+    </WeRow>
+</t>
+<!-- Footer - Colors & Layouts -->
+<t t-name="website.footer_option">
+    <WeRow title.translate="Template">
+        <!-- Layouts -->
+        <WeSelect variable="'footer-template'" reload="'/'">
+            <WeButton tooltip.translate="Default"
+                   customizeWebsiteViews="'website.footer_custom'"
+                   customizeWebsiteVariable="&quot;'default'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_default.svg'"/>
+            <WeButton tooltip.translate="Descriptive"
+                   customizeWebsiteViews="'website.template_footer_descriptive'"
+                   customizeWebsiteVariable="&quot;'descriptive'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_descriptive.svg'"/>
+            <WeButton tooltip.translate="Centered"
+                   customizeWebsiteViews="'website.template_footer_centered'"
+                   customizeWebsiteVariable="&quot;'centered'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_centered.svg'"/>
+            <WeButton tooltip.translate="Links"
+                   customizeWebsiteViews="'website.template_footer_links'"
+                   customizeWebsiteVariable="&quot;'links'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_links.svg'"/>
+            <WeButton tooltip.translate="Minimalist"
+                   customizeWebsiteViews="'website.template_footer_minimalist'"
+                   customizeWebsiteVariable="&quot;'minimalist'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_minimalist.svg'"/>
+            <WeButton tooltip.translate="Contact"
+                   customizeWebsiteViews="'website.template_footer_contact'"
+                   customizeWebsiteVariable="&quot;'contact'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_contact.svg'"/>
+            <WeButton tooltip.translate="Call-to-action"
+                   customizeWebsiteViews="'website.template_footer_call_to_action'"
+                   customizeWebsiteVariable="&quot;'call_to_action'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_call_to_action.svg'"/>
+            <WeButton tooltip.translate="Headline"
+                   customizeWebsiteViews="'website.template_footer_headline'"
+                   customizeWebsiteVariable="&quot;'headline'&quot;"
+                   img="'/website/static/src/img/snippets_options/footer_template_headline.svg'"/>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Colors">
+        <!-- Colors -->
+        <WeColorpicker
+            customizeWebsiteColor="''" color="'footer'"
+            customizeWebsiteLayer2Color="''" layerColor="'footer-custom'" layerGradient="'footer-gradient'"
+            noBundleReload="'true'"
+            nullValue="&quot;'NULL'&quot;"
+            withCombinations="'customizeWebsiteColor'"
+            withGradients="'true'"/>
+    </WeRow>
+    <WeRow title.translate="Slideout Effect">
+        <WeSelect variable="'footer-effect'" reload="'/'">
+            <WeButton customizeWebsiteViews="''"
+                      customizeWebsiteVariable="''">Regular</WeButton>
+            <WeButton customizeWebsiteViews="'website.template_footer_slideout'"
+                      customizeWebsiteVariable="&quot;'slideout_slide_hover'&quot;">Slide Hover</WeButton>
+            <WeButton customizeWebsiteViews="'website.template_footer_slideout'"
+                      customizeWebsiteVariable="&quot;'slideout_shadow'&quot;">Shadow</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow title.translate="Copyright">
+        <WeCheckbox
+                name="'footer_copyright_opt'"
+                customizeWebsiteViews="'website.footer_no_copyright|'"
+                noPreview="'true'"
+                reload="'/'"/>
+    </WeRow>
+</t>
+<!-- Copyright -->
+<t t-name="website.footer_copyright_option">
+    <WeRow title.translate="Colors">
+        <!-- TODO @owl-options Find out why this crashes on click -->
+        <WeColorpicker
+                customizeWebsiteColor="''" color="'copyright'"
+                customizeWebsiteLayer2-Color="''" layerColor="'copyright-custom'" layerGradient="'copyright-gradient'"
+                noBundleReload="'true'"
+                nullValue="&quot;'NULL'&quot;"
+                withCombinations="'customizeWebsiteColor'"
+                withGradients="'true'"/>
+    </WeRow>
+    <WeRow title.translate="Language Selector">
+        <WeSelect name="'footer_language_selector_opt'" reload="'/'" noPreview="'true'">
+            <WeButton name="'language_selector_none_opt'"
+                      customizeWebsiteViews="''">None</WeButton>
+            <WeButton customizeWebsiteViews="'portal.footer_language_selector'">Dropdown</WeButton>
+            <WeButton customizeWebsiteViews="'portal.footer_language_selector, website.footer_language_selector_inline'">Inline</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Label">
+        <WeSelect name="'footer_language_selector_label_opt'" dependencies="'!language_selector_none_opt'" reload="'/'" noPreview="'true'">
+            <WeButton customizeWebsiteViews="''">Text</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag, website.footer_language_selector_no_text'">Flag</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag'">Flag and Text</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_code, website.footer_language_selector_no_text'">Code</WeButton>
+            <WeButton customizeWebsiteViews="'website.footer_language_selector_flag, website.footer_language_selector_code, website.footer_language_selector_no_text'">Flag and Code</WeButton>
+        </WeSelect>
+    </WeRow>
 </t>
 </templates>

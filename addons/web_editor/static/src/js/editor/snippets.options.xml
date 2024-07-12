@@ -103,6 +103,57 @@
     </WeButtonGroup>
 </t>
 
+<t t-name="web_editor.outdated_block_message_option">
+    <we-alert t-if="renderContext.showAlert" class="d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+        <we-title>This block is outdated.</we-title>
+        <span>You might not be able to customize it anymore.</span>
+        <WeButton class="'o_we_bg_brand_primary py-2 my-4 border-0'" noPreview="'true'" replaceSnippet="''">REPLACE BY NEW VERSION</WeButton>
+        <span>You can still access the block options but it might be ineffective.</span>
+        <WeButton class="'o_we_bg_brand_primary py-2 my-4 border-0'" noPreview="'true'" discardAlert="''">ACCESS OPTIONS ANYWAY</WeButton>
+    </we-alert>
+</t>
+
+<t t-name="web_editor.replace_media_option">
+    <!-- Replace a media -->
+    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <WeRow title.translate="Media">
+        <WeButton class="'o_we_bg_success'" replaceMedia="'true'" noPreview="'true'">Replace</WeButton>
+        <div>
+            <WeButton class="'fa fa-link'"
+                name="'media_link_opt'"
+                setLink="'true'" noPreview="'true'"
+                tooltip.translate="Redirect the user elsewhere when he clicks on the media."
+            />
+        </div>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Your URL">
+        <t t-set="urlInputComponent" t-value="'WeInput'"/>
+        <t t-component="this.constructor.components[urlInputComponent]"
+            class="'o_we_large'"
+            name="'media_url_opt'" dependencies="'media_link_opt'"
+            setUrl="''" noPreview="'true'"
+            placeholder="'www.example.com'"
+            requestFocus="'true'"
+            t-props="extraAttributes or {}"
+        />
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'" title.translate="Open in New Window">
+        <WeCheckbox
+            dependencies="'media_url_opt'"
+            setNewWindow="'true'" noPreview="'true'"/>
+    </WeRow>
+</t>
+
+<t t-name="web_editor.dynamic_svg_option">
+    <WeRow name="'colors'" title.translate="Dynamic Colors">
+        <WeColorpicker color="'true'" colorName="'c1'"/>
+        <WeColorpicker color="'true'" colorName="'c2'"/>
+        <WeColorpicker color="'true'" colorName="'c3'"/>
+        <WeColorpicker color="'true'" colorName="'c4'"/>
+        <WeColorpicker color="'true'" colorName="'c5'"/>
+    </WeRow>
+</t>
+
 <t t-name="web_editor.WeTitle">
     <we-title t-att-class="props.class" t-att-style="props.style"
                 t-att-data-tooltip="props.tooltip">
@@ -120,6 +171,21 @@
             <t t-slot="default"/>
         </div>
     </we-row>
+</t>
+
+<t t-name="web_editor.WeCollapse">
+    <we-collapse t-att-class="{'d-none': !this.state.show, 'active': this.state.active, [props.class]: true}" t-att-data-tooltip="props.title || props.tooltip">
+        <t t-slot="first"/>
+    <!-- TODO @owl-options: supposed to add class on we-title
+        <we-title t-if="props.slots.title" class="o_we_collapse_toggler" t-att-style="props.fontFamily ? `font-family: ${props.fontFamily}` : false ">
+            <t t-slot="title"/>
+        </we-title>
+    -->
+        <we-toggler class="o_we_collapse_toggler" t-att-class="{'active': this.state.active}" t-on-click="toggle"/>
+        <div>
+            <t t-slot="default"/>
+        </div>
+    </we-collapse>
 </t>
 
 <t t-name="web_editor.WeButton">

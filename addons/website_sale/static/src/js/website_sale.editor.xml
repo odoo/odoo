@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website_sale.replace_media_option" t-inherit="web_editor.replace_media_option" t-inherit-mode="extension">
+    <xpath expr="." position="inside">
+        <WeRow title.translate="Re-order">
+            <WeButton tooltip.translate="Move to first" class="'fa fa-fw fa-angle-double-left'" noPreview="'true'" title="title" setPosition="'first'" name="'media_wsale_resequence'"/>
+            <WeButton tooltip.translate="Move to previous" class="'fa fa-fw fa-angle-left'" noPreview="'true'" title="title" setPosition="'left'" name="'media_wsale_resequence'"/>
+            <WeButton tooltip.translate="Move to next" class="'fa fa-fw fa-angle-right'" noPreview="'true'" title="title" setPosition="'right'" name="'media_wsale_resequence'"/>
+            <WeButton tooltip.translate="Move to last" class="'fa fa-fw fa-angle-double-right'" noPreview="'true'" title="title" setPosition="'last'" name="'media_wsale_resequence'"/>
+        </WeRow>
+    </xpath>
+    <xpath expr="//WeRow/WeButton" position="after">
+        <WeButton class="'o_we_bg_danger'" removeMedia="'true'" noPreview="'true'" name="'media_wsale_remove'">Remove</WeButton>
+    </xpath>
+</t>
+</templates>

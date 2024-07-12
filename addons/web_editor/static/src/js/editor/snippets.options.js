@@ -267,7 +267,7 @@ export class WeTitle extends Component {
     };
 }
 
-class WeRow extends Component {
+export class WeRow extends Component {
     static template = "web_editor.WeRow";
     static props = {
         class: { type: String, optional: true },
@@ -299,6 +299,16 @@ class WeRow extends Component {
 }
 
 registry.category("snippet_widgets").add("WeRow", WeRow);
+
+export class WeCollapse extends WeRow {
+    static template = "web_editor.WeCollapse";
+
+    toggle() {
+        this.state.active = !this.state.active;
+    }
+}
+
+registry.category("snippet_widgets").add("WeCollapse", WeCollapse);
 
 /**
  * TODO: @owl-options remove when done.
@@ -6184,14 +6194,14 @@ export class LayoutColumn extends ColumnLayoutMixin(SnippetOption) {
     }
 }
 
-legacyRegistry.GridColumns = SnippetOptionWidget.extend({
+export class GridColumns extends SnippetOption {
     /**
      * @override
      */
     cleanUI() {
         // Remove the padding highlights.
         this._removePaddingPreview();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6201,7 +6211,7 @@ legacyRegistry.GridColumns = SnippetOptionWidget.extend({
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectStyle(...arguments);
         if (["--grid-item-padding-y", "--grid-item-padding-x"].includes(params.cssProperty)) {
             // Reset the animation.
             this._removePaddingPreview();
@@ -6215,7 +6225,7 @@ legacyRegistry.GridColumns = SnippetOptionWidget.extend({
             this.removePaddingPreview = this._removePaddingPreview.bind(this);
             this.$target[0].addEventListener("animationend", this.removePaddingPreview);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -6228,8 +6238,8 @@ legacyRegistry.GridColumns = SnippetOptionWidget.extend({
         if (["grid_padding_y_opt", "grid_padding_x_opt"].includes(widgetName)) {
             return this.$target[0].parentElement.classList.contains("o_grid_mode");
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Removes the padding highlights that were added when changing the grid
      * item padding.
@@ -6242,8 +6252,8 @@ legacyRegistry.GridColumns = SnippetOptionWidget.extend({
         this.$target[0].classList.remove("o_we_padding_highlight");
         delete this.removePaddingPreview;
         this.options.wysiwyg.odooEditor.observerActive("removePaddingPreview");
-    },
-});
+    }
+}
 
 export class vAlignment extends SnippetOption {
     /**
@@ -6542,12 +6552,12 @@ registerOption("SnippetMove (Horizontal)", {
 /**
  * Allows for media to be replaced.
  */
-legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
-    init: function () {
-        this._super(...arguments);
+export class ReplaceMedia extends SnippetOption {
+    constructor() {
+        super(...arguments);
         this._activateLinkTool = this._activateLinkTool.bind(this);
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
-    },
+    }
 
     /**
      * @override
@@ -6558,14 +6568,14 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
         // When we start editing an image, rerender the UI to ensure the
         // we-select that suggests the anchors is in a consistent state.
         this.rerender = true;
-    },
+    }
     /**
      * @override
      */
     onBlur() {
         this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
         this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -6579,7 +6589,7 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
     async replaceMedia() {
         // open mediaDialog and replace the media.
         await this.options.wysiwyg.openMediaDialog({ node:this.$target[0] });
-    },
+    }
     /**
      * Makes the image a clickable link by wrapping it in an <a>.
      * This function is also called for the opposite operation.
@@ -6604,7 +6614,7 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
             fragment.append(...parentEl.childNodes);
             parentEl.replaceWith(fragment);
         }
-    },
+    }
     /**
      * Changes the image link so that the URL is opened on another tab or not
      * when it is clicked.
@@ -6618,7 +6628,7 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
         } else {
             linkEl.removeAttribute('target');
         }
-    },
+    }
     /**
      * Records the target url of the hyperlink.
      *
@@ -6642,18 +6652,18 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
         linkEl.setAttribute('href', url);
         this.rerender = true;
         this.$target.trigger('href_changed');
-    },
+    }
     /**
      * @override
      */
     async updateUI() {
         if (this.rerender) {
             this.rerender = false;
-            await this._rerenderXML();
+            // await this._rerenderXML();
             return;
         }
-        return this._super.apply(this, arguments);
-    },
+        return super.updateUI(this, arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -6668,7 +6678,7 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
-    },
+    }
     /**
      * @private
      */
@@ -6677,7 +6687,7 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
-    },
+    }
     /**
      * @override
      */
@@ -6697,8 +6707,8 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
                 return target && target === '_blank' ? 'true' : '';
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -6709,8 +6719,15 @@ legacyRegistry.ReplaceMedia = SnippetOptionWidget.extend({
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+
+registerOption("ReplaceMedia", {
+    Class: ReplaceMedia,
+    template: "web_editor.replace_media_option",
+    selector: "img, .media_iframe_video, span.fa, i.fa",
+    exclude: "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa",
 });
 
 /*
@@ -9459,7 +9476,7 @@ legacyRegistry.many2one = SnippetOptionWidget.extend({
 /**
  * Allows to display a warning message on outdated snippets.
  */
-legacyRegistry.VersionControl = SnippetOptionWidget.extend({
+class VersionControl extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -9471,7 +9488,7 @@ legacyRegistry.VersionControl = SnippetOptionWidget.extend({
     async replaceSnippet() {
         // Getting the new block version.
         let newBlockEl;
-        this.trigger_up("find_snippet_template", {
+        this.env.findSnippetTemplate({
             snippet: this.$target[0],
             callback: (snippet) => {
                 newBlockEl = snippet.baseBody.cloneNode(true);
@@ -9491,27 +9508,27 @@ legacyRegistry.VersionControl = SnippetOptionWidget.extend({
                 });
             });
             await new Promise(resolve => {
-                this.trigger_up("remove_snippet",
-                    {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false}
-                );
+                this.env.removeSnippet({
+                    data: {$snippet: this.$target, onSuccess: resolve, shouldRecordUndo: false},
+                    stopPropagation: (ev) => {},
+                });
             });
             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
             newBlockEl.classList.remove("oe_snippet_body");
             this.options.wysiwyg.odooEditor.historyStep();
         });
-    },
+    }
     /**
      * Allows to still access the options of an outdated block, despite the
      * warning.
      */
     discardAlert() {
-        const alertEl = this.$el[0].querySelector("we-alert");
+        this.renderContext.showAlert = false;
         const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-        alertEl.remove();
         optionsSectionEl.classList.remove("o_we_outdated_block_options");
         // Preventing the alert to reappear at each render.
         controlledSnippets.add(this.$target[0].dataset.snippet);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9520,32 +9537,40 @@ legacyRegistry.VersionControl = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _renderCustomXML(uiFragment) {
+    async _getRenderContext() {
+        const context = await super._getRenderContext();
         const snippetName = this.$target[0].dataset.snippet;
         // Do not display the alert if it was previously discarded.
-        if (controlledSnippets.has(snippetName)) {
-            return;
+        if (! controlledSnippets.has(snippetName)) {
+            this.env.getSnippetVersions({
+                snippetName: snippetName,
+                onSuccess: snippetVersions => {
+                    const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
+                    if (!isUpToDate) {
+                        context.showAlert = true;
+                        // uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
+                        // Hide the other options, to only have the alert displayed.
+                        const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
+                        optionsSectionEl.classList.add("o_we_outdated_block_options");
+                    }
+                },
+            });
         }
-        this.trigger_up("get_snippet_versions", {
-            snippetName: snippetName,
-            onSuccess: snippetVersions => {
-                const isUpToDate = snippetVersions && ["vjs", "vcss", "vxml"].every(key => this.$target[0].dataset[key] === snippetVersions[key]);
-                if (!isUpToDate) {
-                    uiFragment.prepend(renderToElement("web_editor.outdated_block_message"));
-                    // Hide the other options, to only have the alert displayed.
-                    const optionsSectionEl = this.$overlay.data("$optionsSection")[0];
-                    optionsSectionEl.classList.add("o_we_outdated_block_options");
-                }
-            },
-        });
-    },
+        return context;
+    }
+}
+
+registerOption("VersionControl", {
+    Class: VersionControl,
+    template: "web_editor.outdated_block_message_option",
+    selector: "[data-snippet]",
 });
 
 /**
  * Handle the save of a snippet as a template that can be reused later
  */
-legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
-    isTopOption: true,
+export class SnippetSave extends SnippetOption {
+    static isTopOption = true;
 
     //--------------------------------------------------------------------------
     // Options
@@ -9554,7 +9579,7 @@ legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    saveSnippet: function (previewMode, widgetValue, params) {
+    saveSnippet(previewMode, widgetValue, params) {
         return new Promise(resolve => {
             this.dialog.add(ConfirmationDialog, {
                 body: _t("To save a snippet, we need to save all your previous modifications and reload the page."),
@@ -9565,13 +9590,9 @@ legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
                     const isButton = this.$target[0].matches("a.btn");
                     const snippetKey = !isButton ? this.$target[0].dataset.snippet : "s_button";
                     let thumbnailURL;
-                    this.trigger_up('snippet_thumbnail_url_request', {
+                    this.env.snippetThumbnailUrlRequest({
                         key: snippetKey,
                         onSuccess: url => thumbnailURL = url,
-                    });
-                    let context;
-                    this.trigger_up('context_get', {
-                        callback: ctx => context = ctx,
                     });
                     if (this.$target[0].matches("[data-snippet=s_popup]")) {
                         // Do not "cleanForSave" the popup before copying the
@@ -9579,7 +9600,7 @@ legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
                         // therefore not visible in the "add snippet" dialog.
                         targetCopyEl = this.$target[0].cloneNode(true);
                     }
-                    this.trigger_up('request_save', {
+                    this.env.requestSave({
                         reloadEditor: true,
                         invalidateSnippetCache: true,
                         onSuccess: async () => {
@@ -9606,20 +9627,16 @@ legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
                                     break;
                                 }
                             }
-                            context['model'] = editableParentEl.dataset.oeModel;
-                            context['field'] = editableParentEl.dataset.oeField;
-                            context['resId'] = editableParentEl.dataset.oeId;
-                            await rpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
-                                model: "ir.ui.view",
-                                method: "save_snippet",
-                                args: [],
-                                kwargs: {
-                                    'name': defaultSnippetName,
-                                    'arch': targetCopyEl.outerHTML,
-                                    'template_key': this.options.snippets,
-                                    'snippet_key': snippetKey,
-                                    'thumbnail_url': thumbnailURL,
-                                    'context': context,
+                            await this.env.services.orm.call("ir.ui.view", "save_snippet", [], {
+                                'name': defaultSnippetName,
+                                'arch': targetCopyEl.outerHTML,
+                                'template_key': this.options.snippets,
+                                'snippet_key': snippetKey,
+                                'thumbnail_url': thumbnailURL,
+                                'context': {
+                                    'model': editableParentEl.dataset.oeModel,
+                                    'field': editableParentEl.dataset.oeField,
+                                    'resId': editableParentEl.dataset.oeId,
                                 },
                             });
                         },
@@ -9628,27 +9645,13 @@ legacyRegistry.SnippetSave = SnippetOptionWidget.extend({
                 },
             });
         });
-    },
-});
+    }
+}
 
 /**
  * Handles the dynamic colors for dynamic SVGs.
  */
-legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start() {
-        this.$target.on('image_changed.DynamicSvg', this._onImageChanged.bind(this));
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.$target.off('.DynamicSvg');
-        return this._super(...arguments);
-    },
+export class DynamicSvg extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -9677,7 +9680,7 @@ legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
         if (!previewMode) {
             this.previousSrc = src;
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -9691,8 +9694,8 @@ legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
             case 'color':
                 return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -9700,25 +9703,20 @@ legacyRegistry.DynamicSvg = SnippetOptionWidget.extend({
         if ('colorName' in params) {
             return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * @override
      */
     _computeVisibility(methodName, params) {
         return this.$target.is("img[src^='/web_editor/shape/']");
-    },
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onImageChanged(methodName, params) {
-        return this.updateUI();
-    },
+registerOption("DynamicSvg", {
+    Class: DynamicSvg,
+    template: "web_editor.dynamic_svg_option",
+    selector: "img",
 });
 
 /**

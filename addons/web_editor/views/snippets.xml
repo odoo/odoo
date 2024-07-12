@@ -397,35 +397,6 @@
     <div data-selector=".s_hr"
          data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
 
-    <div data-js="VersionControl"
-         data-selector="[data-snippet]"/>
-
-    <!-- Replace a media -->
-    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
-    <div data-js="ReplaceMedia"
-         data-selector="img, .media_iframe_video, span.fa, i.fa"
-         data-exclude="[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa">
-        <we-row string="Media">
-            <we-button class="o_we_bg_success" data-replace-media="true" data-no-preview="true">Replace</we-button>
-            <div>
-                <we-button class="fa fa-link"
-                    data-name="media_link_opt"
-                    data-set-link="true" data-no-preview="true"
-                    title="Redirect the user elsewhere when he clicks on the media."/>
-            </div>
-        </we-row>
-        <we-input string="Your URL"
-            class="o_we_sublevel_1 o_we_large"
-            data-name="media_url_opt" data-dependencies="media_link_opt"
-            data-set-url="" data-no-preview="true"
-            placeholder="www.example.com"
-            data-request-focus="true"/>
-        <we-checkbox string="Open in New Window"
-            class="o_we_sublevel_1"
-            data-dependencies="media_url_opt"
-            data-set-new-window="true" data-no-preview="true"/>
-    </div>
-
     <div data-js="FontawesomeTools" data-selector="span.fa, i.fa" data-exclude="[data-oe-xpath]">
         <we-colorpicker string="Color"
                 title="Color"
@@ -454,16 +425,6 @@
             <we-button data-select-class="fa-1x" data-dependencies="fake"/>
             <we-button data-select-class="fa-lg" data-dependencies="fake"/>
         </we-button-group>
-    </div>
-
-    <div data-js="DynamicSvg" data-selector="img">
-        <we-row string="Dynamic Colors" data-name="colors">
-            <we-colorpicker data-color="true" data-color-name="c1"/>
-            <we-colorpicker data-color="true" data-color-name="c2"/>
-            <we-colorpicker data-color="true" data-color-name="c3"/>
-            <we-colorpicker data-color="true" data-color-name="c4"/>
-            <we-colorpicker data-color="true" data-color-name="c5"/>
-        </we-row>
     </div>
 </template>
 

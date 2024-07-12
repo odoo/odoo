@@ -9,6 +9,10 @@ import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { renderToElement } from "@web/core/utils/render";
 import { ImageToolsAnimate } from "@website/js/editor/snippets.options";
+import {
+    ReplaceMedia,
+} from '@web_editor/js/editor/snippets.options';
+
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -747,11 +751,8 @@ options.registry.SnippetSave.include({
     }
 });
 
-options.registry.ReplaceMedia.include({
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
+
+patch(ReplaceMedia.prototype, {
     /**
      * @override
      */
@@ -761,7 +762,7 @@ options.registry.ReplaceMedia.include({
         // Product Page images may be the product's image or a record of `product.image`
         this.recordModel = parent.data('oe-model');
         this.recordId = parent.data('oe-id');
-        return this._super(...arguments);
+        return super.willStart(...arguments);
     },
     /**
      * Removes the image in the back-end
@@ -770,10 +771,13 @@ options.registry.ReplaceMedia.include({
         if (this.recordModel === "product.image") {
             // Unlink the "product.image" record as it is not the main product
             // image.
-            await this.orm.unlink("product.image", [this.recordId]);
+            await this.env.services.orm.unlink("product.image", [this.recordId]);
         }
         this.$target[0].remove();
-        this.trigger_up("request_save", {reload: true, optionSelector: "#product_detail_main"});
+        this.env.requestSave({
+            reload: true,
+            optionSelector: "#product_detail_main",
+        });
     },
     /**
      * Change sequence of product page images
@@ -784,7 +788,10 @@ options.registry.ReplaceMedia.include({
             image_res_model: this.recordModel,
             image_res_id: this.recordId,
             move: widgetValue,
-        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: '#product_detail_main'}));
+        }).then(() => this.env.requestSave({
+            reload: true,
+            optionSelector: '#product_detail_main',
+        }));
     },
     /**
      * @override
@@ -794,7 +801,7 @@ options.registry.ReplaceMedia.include({
             // Only include these if we are inside of the product's page images
             return this.isProductPageImage;
         }
-        return this._super(...arguments);
+        return super._computeWidgetVisibility(...arguments);
     }
 });
 

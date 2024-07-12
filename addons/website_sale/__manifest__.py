@@ -146,6 +146,7 @@
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.xml',
             'website_sale/static/src/js/website_sale.editor.js',
+            'website_sale/static/src/js/website_sale.editor.xml',
             'website_sale/static/src/js/website_sale_form_editor.js',
         ],
         'website.assets_editor': [

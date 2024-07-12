@@ -262,10 +262,11 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             });
         }
 
+/*
         $(this.menuEl).append($(renderToElement('website.add_google_font_btn', {
             variable: variable,
         })));
-
+*/
         return fontsLoadingProm;
     },
 

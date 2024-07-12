@@ -59,8 +59,10 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      */
     setup() {
         useSubEnv({
+            getSwitchableRelatedViews: (data) => this._onGetSwitchableRelatedViews.call(this, { data }),
             gmapApiRequest: (data) => this._onGMapAPIRequest.call(this, { data }),
             gmapApiKeyRequest: (data) => this._onGMapAPIKeyRequest.call(this, { data }),
+            reloadBundles: (data) => this._onReloadBundles.call(this, { data }),
         });
         super.setup();
         this.notification = useService("notification");
@@ -677,6 +679,11 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             this.props.setCSSVariables(this.el);
             oldSuccess(...args);
         };
+        // TODO: @owl-options Definitely not correct but at least it pretends to work
+        ev.name = 'reload_bundles';
+        this.options.wysiwyg._trigger_up(ev);
+        ev.data.onSuccess();
+        this.env.activateSnippet();
         for (const editor of this.snippetEditors) {
             if (!editor.$target[0].matches(excludeSelector)) {
                 if (this._currentTab === this.tabs.THEME) {

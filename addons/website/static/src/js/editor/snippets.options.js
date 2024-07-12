@@ -30,7 +30,7 @@ import {
     convertRgbToHsl,
     convertHslToRgb,
  } from '@web/core/utils/colors';
-import { renderToElement, renderToFragment } from "@web/core/utils/render";
+import { renderToElement } from "@web/core/utils/render";
 import { browser } from "@web/core/browser/browser";
 import {
     removeTextHighlight,
@@ -45,6 +45,7 @@ import {
     BackgroundToggler,
     Box,
     CarouselHandler,
+    GridColumns,
     ImageTools,
     LayoutColumn,
     Many2oneUserValue,
@@ -56,6 +57,7 @@ import {
     SnippetMove,
     SnippetOption,
     SnippetOptionComponent,
+    SnippetSave,
     UserValue,
     UserValueComponent,
     vAlignment,
@@ -66,9 +68,9 @@ import {
 } from '@web_editor/js/editor/snippets.options';
 import { registerWebsiteOption } from "./snippets.registry";
 
-options.UserValueWidget.include({
+patch(SnippetOption.prototype, {
     loadMethodsData() {
-        this._super(...arguments);
+        super.loadMethodsData(...arguments);
 
         // Method names are sorted alphabetically by default. Exception here:
         // we make sure, customizeWebsiteVariable is considered after
@@ -843,7 +845,12 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 patch(SnippetOption.prototype, {
-    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
+    specialCheckAndReloadMethodsNames: [
+        'customizeWebsiteViews',
+        'customizeWebsiteVariable',
+        'customizeWebsiteColor',
+        'customizeWebsiteLayer2Color',
+    ],
 
     /**
      * @override
@@ -1005,7 +1012,7 @@ patch(SnippetOption.prototype, {
         // Some public widgets may depend on the variables that were
         // customized, so we have to restart them *all*.
         await new Promise((resolve, reject) => {
-            this.trigger_up('widgets_start_request', {
+            this.env.services.website.websiteRootInstance.trigger_up('widgets_start_request', {
                 editableMode: true,
                 onSuccess: () => resolve(),
                 onFailure: () => reject(),
@@ -1143,7 +1150,7 @@ patch(SnippetOption.prototype, {
      */
     _reloadBundles: async function() {
         return new Promise((resolve, reject) => {
-            this.trigger_up('reload_bundles', {
+            this.env.reloadBundles({
                 onSuccess: () => resolve(),
                 onFailure: () => reject(),
             });
@@ -1200,11 +1207,6 @@ patch(SnippetOption.prototype, {
             reloadEditor: true,
         });
     },
-});
-
-options.Class.include({
-    // TODO Keep until WebsiteLevelColor is converted
-    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 });
 
 function _getLastPreFilterLayerElement($el) {
@@ -1291,7 +1293,7 @@ options.registry.BackgroundShape.include({
     },
 });
 
-options.registry.ReplaceMedia.include({
+patch(ReplaceMedia.prototype, {
     /**
      * Adds an anchor to the url.
      * Here "anchor" means a specific section of a page.
@@ -1321,7 +1323,7 @@ options.registry.ReplaceMedia.include({
             }
             return '';
         }
-        return this._super(...arguments);
+        return super._computeWidgetState(...arguments);
     },
     /**
      * @override
@@ -1333,51 +1335,7 @@ options.registry.ReplaceMedia.include({
             const href = linkEl ? linkEl.getAttribute('href') : false;
             return href && href.startsWith('/');
         }
-        return this._super(...arguments);
-    },
-    /**
-     * Fills the dropdown with the available anchors for the page referenced in
-     * the href.
-     *
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        if (!this.options.isWebsite) {
-            return this._super(...arguments);
-        }
-        await this._super(...arguments);
-
-
-
-        const oldURLWidgetEl = uiFragment.querySelector('[data-name="media_url_opt"]');
-
-        const URLWidgetEl = document.createElement('we-urlpicker');
-        // Copy attributes
-        for (const {name, value} of oldURLWidgetEl.attributes) {
-            URLWidgetEl.setAttribute(name, value);
-        }
-        URLWidgetEl.title = _t("Hint: Type '/' to search an existing page and '#' to link to an anchor.");
-        oldURLWidgetEl.replaceWith(URLWidgetEl);
-
-        const hrefValue = this.$target[0].parentElement.getAttribute('href');
-        if (!hrefValue || !hrefValue.startsWith('/')) {
-            return;
-        }
-        const urlWithoutAnchor = hrefValue.split('#')[0];
-        const selectEl = document.createElement('we-select');
-        selectEl.dataset.name = 'media_link_anchor_opt';
-        selectEl.dataset.dependencies = 'media_url_opt';
-        selectEl.dataset.noPreview = 'true';
-        selectEl.classList.add('o_we_sublevel_1');
-        selectEl.setAttribute('string', _t("Page Anchor"));
-        const anchors = await wUtils.loadAnchors(urlWithoutAnchor);
-        for (const anchor of anchors) {
-            const weButtonEl = document.createElement('we-button');
-            weButtonEl.dataset.setAnchor = anchor;
-            weButtonEl.textContent = anchor;
-            selectEl.append(weButtonEl);
-        }
-        URLWidgetEl.after(selectEl);
+        return super._computeWidgetVisibility(...arguments);
     },
 });
 
@@ -1441,16 +1399,14 @@ class BackgroundVideo extends SnippetOption {
     }
 }
 
-options.registry.WebsiteLevelColor = options.Class.extend({
-    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
-        .concat(['customizeWebsiteLayer2Color']),
+export class WebsiteLevelColor extends SnippetOption {
     /**
      * @constructor
      */
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         this._rpc = options.serviceCached(rpc);
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -1472,7 +1428,7 @@ options.registry.WebsiteLevelColor = options.Class.extend({
         await this.customizeWebsiteVariable(previewMode, gradient, params);
         params.noBundleReload = false;
         return this.customizeWebsiteColor(previewMode, color, params);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1491,13 +1447,12 @@ options.registry.WebsiteLevelColor = options.Class.extend({
             params.color = params.layerColor;
             return this._computeWidgetState('customizeWebsiteColor', params);
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
-        const _super = this._super.bind(this);
         if (
             [
                 "footer_language_selector_label_opt",
@@ -1509,22 +1464,51 @@ options.registry.WebsiteLevelColor = options.Class.extend({
                 return false;
             }
         }
-        return _super(...arguments);
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
+
+registerWebsiteOption("Header", {
+    Class: WebsiteLevelColor,
+    template: "website.header_option",
+    selector: "#wrapwrap > header",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
     },
 });
 
-options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
-    GRAY_PARAMS: {EXTRA_SATURATION: "gray-extra-saturation", HUE: "gray-hue"},
+registerWebsiteOption("Footer", {
+    Class: WebsiteLevelColor,
+    template: "website.footer_option",
+    selector: "#wrapwrap > footer",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+});
+
+registerWebsiteOption("Footer Copyright", {
+    Class: WebsiteLevelColor,
+    template: "website.footer_copyright_option",
+    selector: ".o_footer_copyright",
+    noCheck: true,
+    data: {
+        groups: ["website.group_website_designer"],
+    },
+});
+
+export class OptionsTab extends WebsiteLevelColor {
+    static GRAY_PARAMS = {EXTRA_SATURATION: "gray-extra-saturation", HUE: "gray-hue"};
 
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         this.grayParams = {};
         this.grays = {};
-        this.orm = this.bindService("orm");
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -1538,11 +1522,6 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         // option like changing color palette) -> update the preview element.
         const ownerDocument = this.$target[0].ownerDocument;
         const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
-        const grayPreviewEls = this.$el.find(".o_we_gray_preview span");
-        for (const e of grayPreviewEls) {
-            const bgValue = weUtils.getCSSVariableValue(e.getAttribute('variable'), style);
-            e.style.setProperty("background-color", bgValue, "important");
-        }
 
         // If the gray palette has been generated by Odoo standard option,
         // the hue of all gray is the same and the saturation has been
@@ -1583,19 +1562,19 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         // allows to represent more colors that the RGB hexadecimal
         // notation (also: hue 360 = hue 0 and should not be averaged to 180).
         // This also better support random gray palettes.
-        this.grayParams[this.GRAY_PARAMS.HUE] = (!hues.length) ? 0 : Math.round((Math.atan2(
+        this.grayParams[OptionsTab.GRAY_PARAMS.HUE] = (!hues.length) ? 0 : Math.round((Math.atan2(
             hues.map(hue => Math.sin(hue * Math.PI / 180)).reduce((memo, value) => memo + value, 0) / hues.length,
             hues.map(hue => Math.cos(hue * Math.PI / 180)).reduce((memo, value) => memo + value, 0) / hues.length
         ) * 180 / Math.PI) + 360) % 360;
 
         // Average of found saturation diffs, or all grays have no
         // saturation, or all grays are fully saturated.
-        this.grayParams[this.GRAY_PARAMS.EXTRA_SATURATION] = saturationDiffs.length
+        this.grayParams[OptionsTab.GRAY_PARAMS.EXTRA_SATURATION] = saturationDiffs.length
             ? saturationDiffs.reduce((memo, value) => memo + value, 0) / saturationDiffs.length
             : (oneHasNoSaturation ? -100 : 100);
 
-        await this._super(...arguments);
-    },
+        await super.updateUI(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -1619,11 +1598,6 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             this.grays[key] = this._buildGray(key);
         }
 
-        // Preview UI update
-        this.$el.find(".o_we_gray_preview").each((_, e) => {
-            e.style.setProperty("background-color", this.grays[e.getAttribute('variable')], "important");
-        });
-
         // Save all computed (JS side) grays in database
         await this._customizeWebsite(previewMode, undefined, Object.assign({}, params, {
             customCustomization: () => { // TODO this could be prettier
@@ -1632,19 +1606,19 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
                 }));
             },
         }));
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
     async configureApiKey(previewMode, widgetValue, params) {
         return new Promise(resolve => {
-            this.trigger_up('gmap_api_key_request', {
+            this.env.gmapApiKeyRequest({
                 editableMode: true,
                 reconfigure: true,
                 onSuccess: () => resolve(),
             });
         });
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -1657,7 +1631,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         this.bodyImageType = widgetValue;
         const widget = this._requestUserValueWidgets(params.imagepicker)[0];
         widget.enable();
-    },
+    }
     /**
      * @override
      */
@@ -1666,14 +1640,14 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             'body-image-type': this.bodyImageType,
             'body-image': widgetValue ? `'${widgetValue}'` : '',
         }, params.nullValue);
-    },
+    }
     async openCustomCodeDialog(previewMode, widgetValue, params) {
         return new Promise(resolve => {
-            this.trigger_up('open_edit_head_body_dialog', {
-                onSuccess: resolve,
+            this.options.wysiwyg._onOpenEditHeadBodyDialog({
+                data: {onSuccess: resolve},
             });
         });
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -1688,11 +1662,11 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         if (!save) {
             return;
         }
-        this.trigger_up('request_save', {
+        this.env.requestSave({
             reload: false,
             action: 'website.theme_install_kanban_action',
         });
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -1710,7 +1684,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         if (!save) {
             return;
         }
-        this.trigger_up("request_save", {
+        this.env.requestSave({
             reload: false,
             action: "base.action_view_base_language_install",
             options: {
@@ -1722,7 +1696,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
                 },
             }
         });
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -1731,7 +1705,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             [`btn-${params.button}-outline`]: widgetValue === "outline" ? "true" : "false",
             [`btn-${params.button}-flat`]: widgetValue === "flat" ? "true" : "false",
         }, params.nullValue);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1747,40 +1721,51 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         const gray = weUtils.getCSSVariableValue(`base-${id}`, getComputedStyle(document.documentElement));
         const grayRGB = convertCSSColorToRgba(gray);
         const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
-        const adjustedGrayRGB = convertHslToRgb(this.grayParams[this.GRAY_PARAMS.HUE],
-            Math.min(Math.max(hsl.saturation + this.grayParams[this.GRAY_PARAMS.EXTRA_SATURATION], 0), 100),
+        const adjustedGrayRGB = convertHslToRgb(this.grayParams[OptionsTab.GRAY_PARAMS.HUE],
+            Math.min(Math.max(hsl.saturation + this.grayParams[OptionsTab.GRAY_PARAMS.EXTRA_SATURATION], 0), 100),
             hsl.lightness);
         return convertRgbaToCSSColor(adjustedGrayRGB.red, adjustedGrayRGB.green, adjustedGrayRGB.blue);
-    },
+    }
+    /**
+     * @override
+     */
+    async _getRenderContext() {
+        const context = await super._getRenderContext(...arguments);
+        this._updateRenderContext(context);
+        return context;
+    }
+    _updateRenderContext(context) {
+        context = context || this.renderContext;
+        context.grays = this.grays;
+        const baseGrays = range(100, 1000, 100).map(id => {
+            const gray = weUtils.getCSSVariableValue(`base-${id}`);
+            const grayRGB = convertCSSColorToRgba(gray);
+            const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
+            return {id: id, hsl: hsl};
+        });
+        const first = baseGrays[0];
+        const maxValue = baseGrays.reduce((gray, value) => {
+            return gray.hsl.saturation > value.hsl.saturation ? gray : value;
+        }, first);
+        const minValue = baseGrays.reduce((gray, value) => {
+            return gray.hsl.saturation < value.hsl.saturation ? gray : value;
+        }, first);
+        context.extraSaturationRangeMax = 100 - minValue.hsl.saturation;
+        context.extraSaturationRangeMin = -maxValue.hsl.saturation;
+        return context;
+    }
     /**
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        await this._super(...arguments);
-        const extraSaturationRangeEl = uiFragment.querySelector(`we-range[data-param=${this.GRAY_PARAMS.EXTRA_SATURATION}]`);
-        if (extraSaturationRangeEl) {
-            const baseGrays = range(100, 1000, 100).map(id => {
-                const gray = weUtils.getCSSVariableValue(`base-${id}`);
-                const grayRGB = convertCSSColorToRgba(gray);
-                const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
-                return {id: id, hsl: hsl};
-            });
-            const first = baseGrays[0];
-            const maxValue = baseGrays.reduce((gray, value) => {
-                return gray.hsl.saturation > value.hsl.saturation ? gray : value;
-            }, first);
-            const minValue = baseGrays.reduce((gray, value) => {
-                return gray.hsl.saturation < value.hsl.saturation ? gray : value;
-            }, first);
-            extraSaturationRangeEl.dataset.max = 100 - minValue.hsl.saturation;
-            extraSaturationRangeEl.dataset.min = -maxValue.hsl.saturation;
-        }
-    },
+        await super._renderCustomXML(...arguments);
+        this._updateRenderContext();
+    }
     /**
      * @override
      */
     async _checkIfWidgetsUpdateNeedWarning(widgets) {
-        const warningMessage = await this._super(...arguments);
+        const warningMessage = await super._checkIfWidgetsUpdateNeedWarning(...arguments);
         if (warningMessage) {
             return warningMessage;
         }
@@ -1794,7 +1779,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             }
         }
         return '';
-    },
+    }
     /**
      * @override
      */
@@ -1815,8 +1800,8 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
             return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @override
      */
@@ -1824,7 +1809,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         if (widgetName === 'body_bg_image_opt') {
             return false;
         }
-        if (params.param === this.GRAY_PARAMS.HUE) {
+        if (params.param === OptionsTab.GRAY_PARAMS.HUE) {
             return this.grayHueIsDefined;
         }
         if (params.removeFont) {
@@ -1833,36 +1818,23 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             });
             return !!font;
         }
-        return this._super(...arguments);
-    },
-});
+        return super._computeWidgetVisibility(...arguments);
+    }
+}
 
-options.registry.ThemeColors = options.registry.OptionsTab.extend({
+export class ThemeColors extends OptionsTab {
     /**
      * @override
      */
-    async start() {
+    async willStart() {
         // Checks for support of the old color system
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
         const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
         this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
 
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
-        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
-    },
+        return super.willStart(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -1871,39 +1843,74 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     /**
      * @override
      */
-    async _renderCustomXML(uiFragment) {
-        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-name"]');
+    async _getRenderContext() {
+        const context = await super._getRenderContext(...arguments);
+        context.showOldColorSystemWarning = this._showOldColorSystemWarning;
+
+        // Prepare palette colors
         const style = window.getComputedStyle(document.documentElement);
         const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(', ').map((name) => {
             return name.replace(/'/g, "");
         });
-        for (const paletteName of allPaletteNames) {
-            const btnEl = document.createElement('we-button');
-            btnEl.classList.add('o_palette_color_preview_button');
-            btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
-            [1, 3, 2].forEach(c => {
-                const colorPreviewEl = document.createElement('span');
-                colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
-                colorPreviewEl.style.backgroundColor = color;
-                btnEl.appendChild(colorPreviewEl);
-            });
-            paletteSelectorEl.appendChild(btnEl);
-        }
+        context.palettes = allPaletteNames.map((paletteName) => {
+            return {
+                name: paletteName,
+                colors: [1, 3, 2].map((c) => {
+                    return weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
+                }),
+            };
+        });
+        return context;
+    }
+}
 
-        const presetCollapseEl = uiFragment.querySelector('we-collapse.o_we_theme_presets_collapse');
-        let ccPreviewEls = [];
-        for (let i = 1; i <= 5; i++) {
-            const collapseEl = document.createElement('we-collapse');
-            const ccPreviewEl = $(renderToElement('web_editor.color.combination.preview.legacy'))[0];
-            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
-            collapseEl.appendChild(ccPreviewEl);
-            collapseEl.appendChild(renderToFragment('website.color_combination_edition', {number: i}));
-            ccPreviewEls.push(ccPreviewEl);
-            presetCollapseEl.appendChild(collapseEl);
-        }
-        await this._super(...arguments);
-    },
+registerWebsiteOption("ThemeColors", {
+    Class: ThemeColors,
+    template: "website.theme_colors_option",
+    selector: "theme-colors",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Settings", {
+    Class: OptionsTab,
+    template: "website.theme_settings_option",
+    selector: "website-settings",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Paragraph", {
+    Class: OptionsTab,
+    template: "website.theme_paragraph_option",
+    selector: "theme-paragraph",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Headings", {
+    Class: OptionsTab,
+    template: "website.theme_headings_option",
+    selector: "theme-headings",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Button", {
+    Class: OptionsTab,
+    template: "website.theme_button_option",
+    selector: "theme-button",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Link", {
+    Class: OptionsTab,
+    template: "website.theme_link_option",
+    selector: "theme-link",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Input", {
+    Class: OptionsTab,
+    template: "website.theme_input_option",
+    selector: "theme-input",
+    noCheck: true,
+});
+registerWebsiteOption("Theme Advanced", {
+    Class: OptionsTab,
+    template: "website.theme_advanced_option",
+    selector: "theme-advanced",
+    noCheck: true,
 });
 
 options.registry.menu_data = options.Class.extend({
@@ -2385,34 +2392,34 @@ class Parallax extends SnippetOption {
     }
 }
 
-options.registry.collapse = options.Class.extend({
+export class BSCollapse extends SnippetOption {
     /**
      * @override
      */
-    start: function () {
+    async willStart() {
         var self = this;
         this.$bsTarget.on('shown.bs.collapse hidden.bs.collapse', '[role="region"]', function () {
-            self.trigger_up('cover_update');
+            self.callbacks.coverUpdate();
             self.$target.trigger('content_changed');
         });
-        return this._super.apply(this, arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt() {
         this._createIDs();
-    },
+    }
     /**
      * @override
      */
-    onClone: function () {
+    onClone() {
         this._createIDs();
-    },
+    }
     /**
      * @override
      */
-    onMove: function () {
+    onMove() {
         this._createIDs();
         var $panel = this.$bsTarget.find('.collapse').removeData('bs.collapse');
         if ($panel.attr('aria-expanded') === 'true') {
@@ -2423,7 +2430,7 @@ options.registry.collapse = options.Class.extend({
                     $panel.trigger('shown.bs.collapse');
                 });
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2434,7 +2441,7 @@ options.registry.collapse = options.Class.extend({
      *
      * @private
      */
-    _createIDs: function () {
+    _createIDs() {
         let time = new Date().getTime();
         const accordionEl = this.$target[0].closest(".accordion");
         const accordionBtnEl = this.$target[0].querySelector(".accordion-button");
@@ -2462,7 +2469,13 @@ options.registry.collapse = options.Class.extend({
 
         const buttonId = setUniqueId(accordionBtnEl, "myCollapseBtn");
         accordionContentEl.setAttribute("aria-labelledby", buttonId);
-    },
+    }
+}
+
+registerWebsiteOption("Accordion", {
+    Class: BSCollapse,
+    selector: ".accordion > .accordion-item",
+    dropIn: ".accordion:has(> .accordion-item)",
 });
 
 options.registry.HeaderElements = options.Class.extend({
@@ -4639,48 +4652,51 @@ options.registry.sizing.include({
     },
 });
 
-options.registry.SwitchableViews = options.Class.extend({
+export class SwitchableViews extends SnippetOption {
     /**
      * @override
      */
     async willStart() {
-        const _super = this._super.bind(this);
         this.switchableRelatedViews = await new Promise((resolve, reject) => {
-            this.trigger_up('get_switchable_related_views', {
+            this.env.getSwitchableRelatedViews({
                 onSuccess: resolve,
                 onFailure: reject,
             });
         });
-        return _super(...arguments);
-    },
+        return super.willStart(...arguments);
+    }
     /**
      * @override
      */
-    _renderCustomXML(uiFragment) {
-        for (const view of this.switchableRelatedViews) {
-            const weCheckboxEl = document.createElement('we-checkbox');
-            weCheckboxEl.setAttribute('string', view.name);
-            weCheckboxEl.setAttribute('data-customize-website-views', view.key);
-            weCheckboxEl.setAttribute('data-no-preview', 'true');
-            weCheckboxEl.setAttribute('data-reload', '/');
-            uiFragment.appendChild(weCheckboxEl);
-        }
-    },
+    async _getRenderContext() {
+        return {
+            switchableRelatedViews: this.switchableRelatedViews,
+        };
+    }
     /***
      * @override
      */
     _computeVisibility() {
         return !!this.switchableRelatedViews.length;
-    },
+    }
     /**
      * @override
      */
     _checkIfWidgetsUpdateNeedReload() {
         return true;
     }
+}
+
+registerWebsiteOption("SwitchableViews", {
+    Class: SwitchableViews,
+    template: "website.switchable_views_option",
+    selector: "#wrapwrap > main",
+    noCheck: "true",
+    group: "website.group_website_designer",
 });
 
-options.registry.GridImage = options.Class.extend({
+
+export class GridImage extends SnippetOption {
 
     //--------------------------------------------------------------------------
     // Options
@@ -4694,7 +4710,7 @@ options.registry.GridImage = options.Class.extend({
         if (imageGridItemEl) {
             imageGridItemEl.classList.toggle('o_grid_item_image_contain', widgetValue === 'contain');
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -4708,7 +4724,7 @@ options.registry.GridImage = options.Class.extend({
      */
     _getImageGridItem() {
         return this.$target[0].closest(".o_grid_item_image");
-    },
+    }
     /**
      * @override
      */
@@ -4718,11 +4734,11 @@ options.registry.GridImage = options.Class.extend({
         const effectAllowsOption = !["dolly_zoom", "outline", "image_mirror_blur"]
             .includes(this.$target[0].dataset.hoverEffect);
 
-        return this._super(...arguments)
+        return super._computeVisibility(...arguments)
             && !!this._getImageGridItem()
             && (!('shape' in this.$target[0].dataset)
                 || hasSquareShape && effectAllowsOption);
-    },
+    }
     /**
      * @override
      */
@@ -4733,8 +4749,14 @@ options.registry.GridImage = options.Class.extend({
                 ? 'contain'
                 : 'cover';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+
+registerWebsiteOption("GridImage", {
+    Class: GridImage,
+    template: "website.grid_image_option",
+    selector: "img",
 });
 
 
@@ -4768,16 +4790,17 @@ registerWebsiteOption("GalleryElement", {
     selector: ".s_image_gallery img, .s_carousel .carousel-item",
 }, { sequence: 10 });
 
-options.registry.Button = options.Class.extend({
+
+export class Button extends SnippetOption {
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         const isUnremovableButton = this.$target[0].classList.contains("oe_unremovable");
         this.forceDuplicateButton = !isUnremovableButton;
         this.forceNoDeleteButton = isUnremovableButton;
-    },
+    }
     /**
      * @override
      */
@@ -4788,7 +4811,7 @@ options.registry.Button = options.Class.extend({
         if (options.isCurrent) {
             this._adaptButtons();
         }
-    },
+    }
     /**
      * @override
      */
@@ -4798,7 +4821,7 @@ options.registry.Button = options.Class.extend({
         if (options.isCurrent) {
             this._adaptButtons(false);
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -4864,7 +4887,13 @@ options.registry.Button = options.Class.extend({
             }
             this.$target[0].classList.remove("s_custom_button");
         }
-    },
+    }
+}
+
+registerWebsiteOption("Button", {
+    Class: Button,
+    selector: "a.btn",
+    exclude: "so_submit_button_selector",
 });
 
 class WebsiteLayoutColumn extends LayoutColumn {
@@ -4875,6 +4904,13 @@ class WebsiteLayoutColumn extends LayoutColumn {
         return this.env.services.website.context.isMobile;
     }
 }
+
+registerWebsiteOption("GridColumns", {
+    Class: GridColumns,
+    template: "website.grid_columns_option",
+    selector: ".row:not(.s_col_no_resize) > div",
+});
+
 registerWebsiteOption("WebsiteLayoutColumns", {
     Class: WebsiteLayoutColumn,
     template: "website.layout_column",
@@ -4986,3 +5022,13 @@ registerWebsiteOption("ColumnsOnly", {
     selector: "section.s_features_grid, section.s_process_steps",
     target: "> *:has(> .row), > .s_allow_columns",
 }, { sequence: 15 });
+
+// TODO: @owl-options What to do with those ?
+let so_submit_button_selector = ".s_donation_donate_btn, .s_website_form_send";
+
+registerWebsiteOption("SnippetSave", {
+    Class: SnippetSave,
+    template: "website.snippet_save_option",
+    selector: "[data-snippet], a.btn",
+    exclude: `.o_no_save, ${so_submit_button_selector}`,
+});
