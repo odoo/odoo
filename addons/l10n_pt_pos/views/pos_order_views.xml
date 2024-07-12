@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_pt" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit.pt</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <page name="extra" position="inside">
+                <field name="country_code" invisible="1"/>
+                <group string="Portugal" invisible="country_code != 'PT'">
+                    <field name="l10n_pt_pos_inalterable_hash"/>
+                    <field name="l10n_pt_pos_atcud"/>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <record id="action_l10n_pt_pos_report_hash_integrity" model="ir.actions.report">
+        <field name="name">Portuguese POS hash integrity result PDF</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_pt_pos.report_hash_integrity</field>
+        <field name="report_file">l10n_pt_pos.report_hash_integrity</field>
+    </record>
+
+    <record model="ir.actions.server" id="action_l10n_pt_pos_check_hash_integrity">
+        <field name="name">Portuguese POS Inalterability Check</field>
+        <field name="model_id" ref="l10n_pt_pos.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company._l10n_pt_pos_action_check_hash_integrity()
+        </field>
+    </record>
+</odoo>
