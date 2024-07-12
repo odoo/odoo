@@ -439,7 +439,7 @@
                                 </div>
                                 <div class="content-group mt16 row">
                                     <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
-                                    <field name="barcode_nomenclature_id"/>
+                                    <field name="barcode_nomenclature_id" context="{'active_test': False}"/>
                                 </div>
                             </setting>
                             <setting id="update_quantities_stock_setting" groups="base.group_no_one" string="Inventory Management" company_dependent="1" help="Update quantities in stock">

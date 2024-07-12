@@ -1003,7 +1003,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_07_pos_barcodes_scan(self):
         barcode_rule = self.env.ref("point_of_sale.barcode_rule_client")
-        barcode_rule.pattern = barcode_rule.pattern + "|234"
+        barcode_rule.rule_part_ids[0].pattern = '(042|234)'
         # should in theory be changed in the JS code to `|^234`
         # If not, it will fail as it will mistakenly match with the product barcode "0123456789"
 

@@ -53,7 +53,7 @@
                                 <field name="use_event_barcode"/>
                                 <div class="content-group row mt16" invisible="use_event_barcode==False">
                                     <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
-                                    <field name="barcode_nomenclature_id" required="use_event_barcode==True"/>
+                                    <field name="barcode_nomenclature_id" required="use_event_barcode==True" context="{'active_test': False}"/>
                                 </div>
                             </setting>
                         </block>

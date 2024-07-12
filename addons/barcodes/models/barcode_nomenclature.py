@@ -1,8 +1,10 @@
 import re
 
-from odoo import models, fields, api
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
 
+FNC1_CHAR = '\x1D'
 
 UPC_EAN_CONVERSIONS = [
     ('none', 'Never'),
@@ -15,29 +17,55 @@ UPC_EAN_CONVERSIONS = [
 class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
     _description = 'Barcode Nomenclature'
+    _order = 'sequence asc, id'
 
+    sequence = fields.Integer(string='Sequence')
     name = fields.Char(string='Barcode Nomenclature', required=True, help='An internal identification of the barcode nomenclature')
+    active = fields.Boolean(default=True, help="Set active to false to not use this nomenclature")
     rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
     upc_ean_conv = fields.Selection(
         UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
+    is_combined = fields.Boolean(
+        string="Is Combined",
+        help="A combined nomenclature allows to trigger multiple rules in one single barcode. For instance: GS1 and HIBC")
+    separator_expr = fields.Char(
+        string="FNC1 Separator", trim=False, default=r'(Alt029|#|\x1D)',
+        help="Alternative regex delimiter for the FNC1. The separator must not match the begin/end of any related rules pattern.")
+    pattern = fields.Char(string='Nomenclature Pattern', help="In addition of the rules, a barcode must match this pattern to be parsed by this nomenclature.")
+
+    @api.constrains('separator_expr')
+    def _check_pattern(self):
+        for nom in self:
+            if nom.is_combined and nom.separator_expr:
+                try:
+                    re.compile("(?:%s)?" % nom.separator_expr)
+                except re.error as error:
+                    error_message = _("The FNC1 Separator Alternative is not a valid Regex: ")
+                    raise ValidationError(error_message + str(error))
 
     @api.model
-    def sanitize_ean(self, ean):
-        """ Returns a valid zero padded EAN-13 from an EAN prefix.
+    def sanitize_barcode(self, barcode, encoding):
+        """ Ensures the given barcode is encoded with the chosen encoding.
 
-        :type ean: str
+        :param barcode:
+        :type barcode: str
+        :param encoding:
+        :type encoding: str
+        :return: the given barcode rightly encoded
+        :rtype: str
         """
-        ean = ean[0:13].zfill(13)
-        return ean[0:-1] + str(get_barcode_check_digit(ean))
-
-    @api.model
-    def sanitize_upc(self, upc):
-        """ Returns a valid zero padded UPC-A from a UPC-A prefix.
-
-        :type upc: str
-        """
-        return self.sanitize_ean('0' + upc)[1:]
+        barcode_sizes = {
+            'ean8': 8,
+            'ean13': 13,
+            'gtin14': 14,
+            'upca': 12,
+            'sscc': 18,
+        }
+        barcode_size = barcode_sizes[encoding]
+        barcode = barcode[0:barcode_size].ljust(barcode_size, '0')
+        barcode = barcode[0:-1] + str(get_barcode_check_digit(barcode))
+        return barcode
 
     def match_pattern(self, barcode, pattern):
         """Checks barcode matches the pattern and retrieves the optional numeric value in barcode.
@@ -82,53 +110,83 @@ class BarcodeNomenclature(models.Model):
 
         return match
 
-    def parse_barcode(self, barcode):
-        """ Attempts to interpret and parse a barcode.
+    def parse_rule_pattern(self, match, rule):
+        decimal_position = 0
+        results = []
 
-        :param barcode:
-        :type barcode: str
-        :return: A object containing various information about the barcode, like as:
-            - code: the barcode
-            - type: the barcode's type
-            - value: if the id encodes a numerical value, it will be put there
-            - base_code: the barcode code with all the encoding parts set to
-              zero; the one put on the product in the backend
-        :rtype: dict
-        """
-        parsed_result = {
-            'encoding': '',
-            'type': 'error',
-            'code': barcode,
-            'base_code': barcode,
-            'value': 0,
-        }
+        if not check_barcode_encoding(match.group(0), rule.encoding):
+            # Matched barcode doesn't respect rule's encoding.
+            return results
 
-        for rule in self.rule_ids:
-            cur_barcode = barcode
-            if rule.encoding == 'ean13' and check_barcode_encoding(barcode, 'upca') and self.upc_ean_conv in ['upc2ean', 'always']:
-                cur_barcode = '0' + cur_barcode
-            elif rule.encoding == 'upca' and check_barcode_encoding(barcode, 'ean13') and barcode[0] == '0' and self.upc_ean_conv in ['ean2upc', 'always']:
-                cur_barcode = cur_barcode[1:]
+        for i in range(len(rule.rule_part_ids)):
+            value = match.group(i + 1)
+            rule_part = rule.rule_part_ids[i]
+            result = {
+                'rule': rule,
+                'group': rule_part,
+                'string_value': value,
+                'encoding': 'any',
+                'value': value,
+                'base_code': match.group(0),
+                'type': rule_part.type,
+            }
+            # Check if the value matches the rule's or the part's encoding.
+            if rule_part.encoding != 'any' and value == self.sanitize_barcode(value, encoding=rule_part.encoding):
+                result['encoding'] = rule_part.encoding
+            elif rule.encoding != 'any' and value == self.sanitize_barcode(value, encoding=rule.encoding):
+                result['encoding'] = rule.encoding
 
-            if not check_barcode_encoding(barcode, rule.encoding):
-                continue
-
-            match = self.match_pattern(cur_barcode, rule.pattern)
-            if match['match']:
-                if rule.type == 'alias':
-                    barcode = rule.alias
-                    parsed_result['code'] = barcode
+            if rule_part.type == 'decimal_position':
+                result['value'] = int(value)
+                decimal_position = result['value']
+            elif rule_part.type == 'measure':
+                if not value.isnumeric():
+                    raise ValidationError(_(
+                        "There is something wrong with the barcode rule \"%(rule_name)s\" pattern.\n"
+                        "Check the possible matched values can only be digits, otherwise the value can't be casted as a measure.",
+                        rule_name=rule.name))
+                decimal_position = decimal_position or rule_part.decimal_position
+                if decimal_position > 0:
+                    integral = value[:-decimal_position]
+                    decimal = value[-decimal_position:]
+                    result['value'] = float(f'{integral}.{decimal}')
                 else:
-                    parsed_result['encoding'] = rule.encoding
-                    parsed_result['type'] = rule.type
-                    parsed_result['value'] = match['value']
-                    parsed_result['code'] = cur_barcode
-                    if rule.encoding == "ean13":
-                        parsed_result['base_code'] = self.sanitize_ean(match['base_code'])
-                    elif rule.encoding == "upca":
-                        parsed_result['base_code'] = self.sanitize_upc(match['base_code'])
-                    else:
-                        parsed_result['base_code'] = match['base_code']
-                    return parsed_result
+                    result['value'] = int(value)
+            elif rule_part.type in {'date', 'expiration_date', 'pack_date', 'use_date'}:
+                if len(value) != 6:
+                    # TODO: Adapt to more format then only YYMMDD.
+                    return None
+                result['value'] = self.gs1_date_to_date(value)
+            elif rule_part.type == 'product':
+                if rule.encoding != 'any':
+                    result['value'] = self.sanitize_barcode(value, encoding=rule.encoding)
+                    result['encoding'] = rule.encoding
+                elif rule.encoding == 'any' and rule_part.encoding != 'any':
+                    result['value'] = self.sanitize_barcode(value, encoding=rule_part.encoding)
+                    result['encoding'] = rule_part.encoding
 
-        return parsed_result
+            results.append(result)
+        return results
+
+    def parse_barcode(self, barcode):
+        for nomenclature in self:
+            result = []
+            separator_group = FNC1_CHAR + "?"
+            if nomenclature.separator_expr:
+                separator_group = "(?:%s)?" % nomenclature.separator_expr
+
+            while len(barcode) > 0:
+                barcode_length = len(barcode)
+
+                for rule in nomenclature.rule_ids:
+                    match = re.search("^" + rule.pattern + separator_group, barcode)
+                    if match and len(match.groups()) >= 2:
+                        parsed_data = nomenclature.parse_rule_pattern(match, rule)
+                        if parsed_data:
+                            barcode = barcode[match.end():]
+                            result += parsed_data
+                            if len(barcode) == 0:
+                                return result  # Barcode completly parsed, no need to keep looping.
+                if len(barcode) == barcode_length:
+                    break  # The barcode can't be parsed by this nomenclature.
+        return []

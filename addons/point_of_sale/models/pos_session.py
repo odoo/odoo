@@ -1743,7 +1743,7 @@ class PosSession(models.Model):
 
         fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
 
-        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
+        if not self.company_id.nomenclature_id.is_combined and not fallback_nomenclature_id:
             return None
 
         if fallback_nomenclature_id:
@@ -1752,7 +1752,7 @@ class PosSession(models.Model):
                 return None
             domain = [('id', '=', fallback_nomenclature_id)]
         else:
-            domain = [('is_gs1_nomenclature', '=', False)]
+            domain = [('is_combined', '=', False)]
 
         record = self.env['barcode.nomenclature'].search(domain=domain, limit=1)
 

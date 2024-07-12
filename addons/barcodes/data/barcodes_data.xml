@@ -10,6 +10,12 @@
             <field name="sequence">90</field>
             <field name="type">product</field>
             <field name="encoding">any</field>
-            <field name="pattern">.*</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_product" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">product</field>
+                    <field name="pattern">(.+)</field>
+                </record>
+            </field>
         </record>
 </odoo>

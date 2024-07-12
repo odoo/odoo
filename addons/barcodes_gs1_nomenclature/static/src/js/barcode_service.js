@@ -4,7 +4,7 @@ import { session } from "@web/session";
 import { patch } from "@web/core/utils/patch";
 import { barcodeService } from '@barcodes/barcode_service';
 
-import { FNC1_CHAR } from "@barcodes_gs1_nomenclature/js/barcode_parser";
+import { FNC1_CHAR } from "@barcodes/js/barcode_parser";
 
 
 patch(barcodeService, {
