@@ -5,6 +5,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
@@ -666,7 +667,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         pick.button_validate()
         # Create the invoice
         self.so._create_invoices()
-        self.invoice = self.so.account_move_ids
+        self.invoice = self.so.invoice_ids
         # Changed the invoiced quantity of the finished product to 2
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
@@ -1761,7 +1762,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         p2_bom.type = "normal"
 
         so._create_invoices()
-        invoice = so.account_move_ids
+        invoice = so.invoice_ids
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
@@ -1893,7 +1894,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the invoice
         so._create_invoices()
         # Validate the invoice
-        invoice = so.account_move_ids
+        invoice = so.invoice_ids
         invoice.action_post()
 
         amls = invoice.line_ids
@@ -2037,7 +2038,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the invoice
         so._create_invoices()
         # Validate the invoice
-        invoice = so.account_move_ids
+        invoice = so.invoice_ids
         invoice.action_post()
 
         amls = invoice.line_ids

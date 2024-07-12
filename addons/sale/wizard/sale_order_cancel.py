@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class SaleOrderCancel(models.TransientModel):
@@ -46,7 +47,7 @@ class SaleOrderCancel(models.TransientModel):
     def _compute_display_invoice_alert(self):
         for wizard in self:
             wizard.display_invoice_alert = bool(
-                wizard.order_id.account_move_ids.filtered(lambda inv: inv.state == 'draft')
+                wizard.order_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
             )
 
     @api.depends('order_id')
