@@ -31,11 +31,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet;
     }
 
-    displayCreateReport() {
-        const records = this.model.root.selection;
-        return !this.isExpenseSheet && (records.length === 0 || records.some(record => record.data.state === "draft"))
-    }
-
     displayApprove() {
         const records = this.model.root.selection;
         return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
@@ -72,14 +67,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
             });
         }
         await this.model.root.load();
-    }
-
-    async action_show_expenses_to_submit () {
-        const records = this.model.root.selection;
-        const res = await this.orm.call(this.model.config.resModel, 'get_expenses_to_submit', [records.map((record) => record.resId)]);
-        if (res) {
-            await this.actionService.doAction(res, {});
-        }
     }
 }
 
