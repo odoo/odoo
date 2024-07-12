@@ -70,10 +70,13 @@ export class ControlButtons extends Component {
             ? selectedFiscalPosition
             : false;
     }
-    async clickPricelist() {
-        // Create the list to be passed to the SelectionPopup.
-        // Pricelist object is passed as item in the list because it
-        // is the object that will be returned when the popup is confirmed.
+    /**
+     * Create the list to be passed to the SelectionPopup on the `click` function.
+     * Pricelist object is passed as item in the list because it
+     * is the object that will be returned when the popup is confirmed.
+     * @returns {Array}
+     */
+    getPricelistList() {
         const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
@@ -91,7 +94,10 @@ export class ControlButtons extends Component {
                 item: null,
             });
         }
-
+        return selectionList;
+    }
+    async clickPricelist() {
+        const selectionList = this.getPricelistList();
         const payload = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("Select the pricelist"),
             list: selectionList,
