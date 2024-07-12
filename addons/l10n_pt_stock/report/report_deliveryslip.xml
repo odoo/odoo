@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_inherit_l10n_pt_stock" inherit_id="stock.report_delivery_document">
+        <xpath expr='//table[@name="stock_move_line_table"]' position="after">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_stock_qr_code_str" class="text-center" >
+                <div>
+                    ATCUD: <t t-esc="o.l10n_pt_stock_atcud"/>
+                </div>
+                <img style="margin: 0.25cm;"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_stock_qr_code_str, 150, 150)"
+                />
+            </div>
+        </xpath>
+    </template>
+</odoo>
