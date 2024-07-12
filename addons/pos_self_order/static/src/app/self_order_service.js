@@ -206,7 +206,7 @@ export class SelfOrder extends Reactive {
         const values = {
             order_id: this.currentOrder,
             product_id: product,
-            tax_ids: product.taxes_id[0] ? [["link", product.taxes_id[0]]] : [],
+            tax_ids: product.taxes_id.map((tax) => ["link", tax]),
             qty: qty,
             note: customer_note || "",
             price_unit: product.lst_price,
@@ -242,9 +242,10 @@ export class SelfOrder extends Reactive {
                 "create",
                 {
                     product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id[0]
-                        ? [["link", comboLine.combo_line_id.product_id.taxes_id[0]]]
-                        : [],
+                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
+                        "link",
+                        tax,
+                    ]),
                     combo_line_id: comboLine.combo_line_id,
                     price_unit: comboLine.price_unit,
                     order_id: this.currentOrder,
