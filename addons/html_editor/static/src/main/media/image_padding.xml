@@ -1,0 +1,14 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImagePadding">
+        <Dropdown>
+            <button title="Image padding" class="btn btn-light fa fa-plus-square-o"> </button>
+            <t t-set-slot="content">
+                <t t-foreach="this.paddings" t-as="padding" t-key="padding">
+                    <DropdownItem onSelected="() => this.onSelected(padding)">
+                        <div class="user-select-none" t-esc="padding"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

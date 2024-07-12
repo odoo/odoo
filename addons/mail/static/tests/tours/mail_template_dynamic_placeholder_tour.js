@@ -119,8 +119,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             },
         },
         {
-            content: "Click on the the dynamic placeholder commandBar options",
-            trigger: "div.oe-powerbox-commandWrapper:contains(Dynamic Placeholder)",
+            content: "Click on the the dynamic placeholder powerBox options",
+            trigger: "div.o-we-powerbox .o-we-command:contains(Dynamic Placeholder)",
             run: "click",
         },
         {

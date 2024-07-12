@@ -44,6 +44,8 @@ export class DynamicPlaceholderPopover extends Component {
         switch (ev.key) {
             case "Enter": {
                 this.validate();
+                ev.stopPropagation();
+                ev.preventDefault();
                 break;
             }
             case "Escape": {

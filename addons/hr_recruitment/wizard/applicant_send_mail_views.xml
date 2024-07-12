@@ -13,8 +13,9 @@
                     <field name="applicant_ids" widget="many2many_tags" context="{'show_partner_name': 1}"/>
                 </group>
                 <field name="body" nolabel="1" class="oe-bordered-editor"
+                        widget="html_mail"
                         placeholder="Write your message here..."
-                        options="{'style-inline': true}" force_save="1"/>
+                        force_save="1"/>
                 <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                             <field name="template_id" string="Load template" options="{'no_create': True}"/>

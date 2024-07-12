@@ -13,10 +13,14 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 const baseDescriptionContent = "Test project task history version";
-const descriptionField = "div.note-editable.odoo-editor-editable.odoo-editor-qweb p";
+const descriptionField = "div.note-editable.odoo-editor-editable p";
 function changeDescriptionContentAndSave(newContent) {
     const newText = `${baseDescriptionContent} ${newContent}`;
     return [ {
+        // force focus on editable so editor will create initial p (if not yet done)
+        trigger: "div.note-editable.odoo-editor-editable",
+        run: "click",
+    }, {
         trigger: descriptionField,
         run: async function(actions) {
             const textTriggerElement = this.anchor.querySelector(descriptionField);
@@ -133,6 +137,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         in_modal: false,
         trigger: ".modal button.btn-primary:contains(/^Restore$/)",
         run: "click",
+    }, {
+            trigger: "body:not(:has(.modal))",
     }, {
         content: "Verify that the description contains the right text after the restore",
         trigger: descriptionField,

@@ -11,7 +11,7 @@ from odoo import http, tools, _
 from odoo.http import request
 from odoo.tools.mimetypes import guess_mimetype
 
-from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.addons.html_editor.controllers.main import HTML_Editor
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +113,7 @@ class Web_Unsplash(http.Controller):
                 'res_id': res_id,
                 'res_model': res_model,
             }
-            attachment = Web_Editor._attachment_create(self, **attachment_data)
+            attachment = HTML_Editor._attachment_create(self, **attachment_data)
             if value.get('description'):
                 attachment.description = value.get('description')
             attachment.generate_access_token()

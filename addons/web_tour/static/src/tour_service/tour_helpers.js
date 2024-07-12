@@ -141,6 +141,10 @@ export class TourHelpers {
      */
     editor(text, selector) {
         const element = this._get_action_element(selector);
+        const InEditor = !!element.closest(".odoo-editor-editable");
+        if (!InEditor) {
+            throw new Error("run 'editor' always on an element in an editor");
+        }
         hoot.click(element);
         this._set_range(element, "start");
         hoot.keyDown("_");
