@@ -3,13 +3,16 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { ReprintReasonPopup } from "../../app/reprint_reason_popup/reprint_reason_popup";
 
 patch(PosStore.prototype, {
     async setup(...args) {
         await super.setup(...args);
         const values = await this.data.call("pos.session", "l10n_pt_pos_get_software_info", [
             this.company.id,
+            this.config.id,
         ]);
         this.session.l10nPtCertificationNumber = values.l10n_pt_pos_certification_number;
         this.session.l10nPtTrainingMode = values.l10n_pt_training_mode;
@@ -49,15 +52,32 @@ patch(PosStore.prototype, {
         return result;
     },
 
-    async printReceipt() {
+    async printReceipt(orderVals = this.get_order()) {
         if (!this.isPortugueseCompany()) {
             return super.printReceipt(...arguments);
         }
-        const values = await this.l10nPtComputeMissingHashes();
-        this.get_order().name = values.name;
-        this.get_order().l10nPtPosAtcud = values.atcud;
-        this.get_order().l10nPtPosInalterableHashShort = values.hash_short;
-        this.get_order().l10nPtPosQrCodeStr = values.qr_code_str;
+        await this.l10nPtComputeMissingHashes();
+        const order = orderVals.order ? orderVals.order : this.get_order();
+        const values = await this.data.call("pos.order", "l10n_pt_get_order_vals", [order.id]);
+
+        if (values.is_reprint) {
+            const payload = await makeAwaitable(this.dialog, ReprintReasonPopup, { order });
+            if (payload) {
+                await this.data.call("pos.order", "post_reprint_reason", [
+                    order.id,
+                    payload.reprint_reason,
+                ]);
+            }
+        } else {
+            await this.data.call("pos.order", "update_l10n_pt_print_version", [order.id]);
+        }
+
+        order.name = values.name;
+        order.isReprint = values.is_reprint;
+        order.l10nPtPosAtcud = values.atcud;
+        order.l10nPtPosIdentifier = values.document_identifier;
+        order.l10nPtPosInalterableHashShort = values.hash_short;
+        order.l10nPtPosQrCodeStr = values.qr_code_str;
         // Return super to allow printing even if the QR code could not be created
         return super.printReceipt(...arguments);
     },
