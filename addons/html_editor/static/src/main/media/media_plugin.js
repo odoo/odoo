@@ -8,7 +8,7 @@ import {
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { MediaDialog } from "./media_dialog";
+import { MediaDialog } from "./media_dialog/media_dialog";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
