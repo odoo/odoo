@@ -1,5 +1,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
+import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
 import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
 
 import { Component, useState } from "@odoo/owl";
@@ -12,7 +13,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, ImStatus };
+    static components = { Dropdown, NotificationItem, ImStatus, MessagingMenuQuickSearch };
     static props = [];
     static template = "mail.MessagingMenu";
 
@@ -28,6 +29,7 @@ export class MessagingMenu extends Component {
         this.state = useState({
             addingChat: false,
             addingChannel: false,
+            searchOpen: false,
         });
         this.dropdown = useDropdownState();
 
@@ -37,6 +39,8 @@ export class MessagingMenu extends Component {
     }
 
     beforeOpen() {
+        this.state.searchOpen = false;
+        this.store.discuss.searchTerm = "";
         this.store.isReady.then(() => {
             if (
                 !this.store.inbox.isLoaded &&
@@ -220,6 +224,11 @@ export class MessagingMenu extends Component {
         if (this.store.discuss.activeTab !== "main") {
             this.store.discuss.thread = undefined;
         }
+    }
+
+    toggleSearch() {
+        this.store.discuss.searchTerm = "";
+        this.state.searchOpen = !this.state.searchOpen;
     }
 
     get counter() {

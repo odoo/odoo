@@ -1141,3 +1141,30 @@ test("Latest needaction is shown in thread preview", async () => {
     await contains(".o-mail-NotificationItem", { text: serverState.partnerName });
     await contains(".o-mail-NotificationItem", { text: "You: message 2" });
 });
+
+test("Can quick search when more than 20 items", async () => {
+    const pyEnv = await startServer();
+    for (let id = 1; id <= 20; id++) {
+        pyEnv["discuss.channel"].create({ name: `channel${id}` });
+    }
+    pyEnv["discuss.channel"].create([
+        { channel_type: "chat" },
+        { name: "Cool channel" },
+        { name: "Nice channel" },
+    ]);
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem", { count: 23 });
+    await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
+    await contains(".o-mail-NotificationItem", { text: "Cool channel" });
+    await contains(".o-mail-NotificationItem", { text: "Nice channel" });
+    await click(".o-mail-MessagingMenu button .fa-search");
+    await insertText(".o-mail-MessagingMenu-header input", "nice");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem", { text: "Nice channel" });
+    await click(".o-mail-MessagingMenu button .oi-close");
+    await click(".o-mail-MessagingMenu button .fa-search");
+    await insertText(".o-mail-MessagingMenu-header input", "admin");
+    await contains(".o-mail-NotificationItem", { count: 1 });
+    await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
+});
