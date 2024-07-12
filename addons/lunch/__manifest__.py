@@ -52,6 +52,7 @@ If you want to save your employees' time and avoid them to always have coins in 
             'lunch/static/tests/tours/*.js',
         ],
         'web.qunit_suite_tests': [
+            'lunch/static/tests/lunch_is_favorite_field_tests.js',
             'lunch/static/tests/lunch_kanban_tests.js',
         ],
     },
