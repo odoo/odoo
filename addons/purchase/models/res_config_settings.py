@@ -32,8 +32,6 @@ class ResConfigSettings(models.TransientModel):
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")
 
-    group_down_payment = fields.Boolean("Down Payments", implied_group="purchase.group_down_payment", help="Allow creating vendor bills for down payments on purchase orders")
-
     @api.onchange('use_po_lead')
     def _onchange_use_po_lead(self):
         if not self.use_po_lead:

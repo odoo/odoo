@@ -53,6 +53,12 @@
                     <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree" position="inside">
+                <field name="is_downpayment" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="readonly">is_downpayment</attribute>
+            </xpath>
         </field>
     </record>
 
