@@ -152,7 +152,6 @@ class LivechatController(http.Controller):
             channel_info = {
                 'id': -1, # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
-                'model': 'discuss.channel',
                 'name': channel_vals['name'],
                 "operator": {"id": operator_partner.id, "type": "partner"},
                 'state': 'open',
@@ -162,7 +161,7 @@ class LivechatController(http.Controller):
                     'steps': chatbot_script._get_welcome_steps().mapped(lambda s: {'scriptStep': {'id': s.id}}),
                 } if chatbot_script else None
             }
-            store.add("Thread", channel_info)
+            store.add("discuss.channel", channel_info)
         else:
             channel = request.env['discuss.channel'].with_context(
                 mail_create_nosubscribe=False,
@@ -183,7 +182,7 @@ class LivechatController(http.Controller):
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             store.add(channel)
-            store.add("Thread", {"id": channel.id, "model": "discuss.channel", "isLoaded": not chatbot_script})
+            store.add("discuss.channel", {"id": channel.id, "isLoaded": not chatbot_script})
             if guest:
                 store.add({"guest_token": guest._format_auth_cookie()})
         request.env["res.users"]._init_store_data(store)

@@ -27,7 +27,7 @@ patch(MockServer.prototype, {
                 this.mockCreate("discuss.voice.metadata", { attachment_id: attachmentId });
             }
             return {
-                data: { Attachment: this._mockIrAttachment_attachmentFormat([attachmentId]) },
+                data: { "ir.attachment": this._mockIrAttachment_attachmentFormat([attachmentId]) },
             };
         }
         return super.performRPC(...arguments);
@@ -90,7 +90,7 @@ patch(MockServer.prototype, {
                     this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
                     "mail.record/insert",
                     {
-                        Message: {
+                        "mail.message": {
                             id: linkPreview.message_id[0],
                             linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
                         },
@@ -137,14 +137,14 @@ patch(MockServer.prototype, {
                 this._mockMailMessage__busNotificationTarget(args.message_id),
                 "mail.record/insert",
                 {
-                    Message: {
+                    "mail.message": {
                         id: args.message_id,
                         body: args.body,
                         attachments: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
                     },
                 }
             );
-            return { Message: this._mockMailMessageMessageFormat([args.message_id]) };
+            return { "mail.message": this._mockMailMessageMessageFormat([args.message_id]) };
         }
         if (route === "/mail/partner/from_email") {
             return this._mockRouteMailPartnerFromEmail(args.emails, args.additional_values);
@@ -202,7 +202,7 @@ patch(MockServer.prototype, {
             ["res_id", "=", channel_id],
             ["pinned_at", "!=", false],
         ]);
-        return { Message: this._mockMailMessageMessageFormat(messageIds) };
+        return { "mail.message": this._mockMailMessageMessageFormat(messageIds) };
     },
     /**
      * Simulates the `/mail/attachment/delete` route.
@@ -254,11 +254,11 @@ patch(MockServer.prototype, {
         return {
             ...res,
             data: {
-                Message: this._mockMailMessageMessageFormat(
+                "mail.message": this._mockMailMessageMessageFormat(
                     res.messages.map((message) => message.id)
                 ),
             },
-            message: res.messages.map((message) => ({ id: message.id })),
+            "mail.message": res.messages.map((message) => ({ id: message.id })),
         };
     },
     /**
@@ -279,13 +279,8 @@ patch(MockServer.prototype, {
             mute_until_dt = false;
         }
         this.pyEnv["discuss.channel.member"].write([member.id], { mute_until_dt });
-        const channel_data = {
-            id: member.channel_id[0],
-            model: "discuss.channel",
-            mute_until_dt,
-        };
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-            Thread: channel_data,
+            "discuss.channel": [{ id: member.channel_id[0], mute_until_dt }],
         });
         return "dummy";
     },
@@ -330,7 +325,7 @@ patch(MockServer.prototype, {
             this.pyEnv["bus.bus"]._sendone(
                 this._mockMailMessage__busNotificationTarget(message_id),
                 "mail.record/insert",
-                { LinkPreview: linkPreviews }
+                { "mail.link.preview": linkPreviews }
             );
         }
     },
@@ -368,7 +363,7 @@ patch(MockServer.prototype, {
         return {
             ...res,
             data: {
-                Message: this._mockMailMessageMessageFormat(
+                "mail.message": this._mockMailMessageMessageFormat(
                     messagesWithNotification.map((message) => message.id)
                 ),
             },
@@ -399,7 +394,7 @@ patch(MockServer.prototype, {
         return {
             ...res,
             data: {
-                Message: this._mockMailMessageMessageFormat(
+                "mail.message": this._mockMailMessageMessageFormat(
                     res.messages.map((message) => message.id)
                 ),
             },
@@ -532,10 +527,9 @@ patch(MockServer.prototype, {
                 channel,
                 "mail.record/insert",
                 {
-                    Thread: [
+                    "discuss.channel": [
                         {
                             id: Number(channelId), // JS object keys are strings, but the type from the server is number
-                            model: "discuss.channel",
                             rtcSessions: [["DELETE", notificationRtcSessions]],
                         },
                     ],
@@ -626,7 +620,7 @@ patch(MockServer.prototype, {
                 thread.id
             );
         }
-        return { Thread: [res] };
+        return { "mail.thread": [res] };
     },
     /**
      * Simulates the `/mail/thread/messages` route.
@@ -665,7 +659,7 @@ patch(MockServer.prototype, {
         return {
             ...res,
             data: {
-                Message: this._mockMailMessageMessageFormat(
+                "mail.message": this._mockMailMessageMessageFormat(
                     res.messages.map((message) => message.id)
                 ),
             },

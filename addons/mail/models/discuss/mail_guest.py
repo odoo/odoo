@@ -107,14 +107,12 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        guest_data = {
-            'id': self.id,
-            'name': self.name,
-            'type': "guest"
-        }
-        bus_notifs = [(channel, 'mail.record/insert', {'Persona': guest_data}) for channel in self.channel_ids]
-        bus_notifs.append((self, 'mail.record/insert', {'Persona': guest_data}))
-        self.env['bus.bus']._sendmany(bus_notifs)
+        store = Store("mail.guest", {"id": self.id, "name": self.name})
+        bus_notifs = []
+        for channel in self.channel_ids:
+            bus_notifs.append((channel, "mail.record/insert", store.get_result()))
+        bus_notifs.append((self, "mail.record/insert", store.get_result()))
+        self.env["bus.bus"]._sendmany(bus_notifs)
 
     def _update_timezone(self, timezone):
         query = """
@@ -129,19 +127,16 @@ class MailGuest(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None):
         if not fields:
-            fields = {'id': True, 'name': True, 'im_status': True, "write_date": True}
+            fields = {"name": True, "im_status": True, "write_date": True}
         for guest in self:
-            data = {}
-            if 'id' in fields:
-                data['id'] = guest.id
+            data = {"id": guest.id}
             if 'name' in fields:
                 data['name'] = guest.name
             if 'im_status' in fields:
                 data['im_status'] = guest.im_status
             if "write_date" in fields:
                 data["write_date"] = odoo.fields.Datetime.to_string(guest.write_date)
-            data['type'] = "guest"
-            store.add("Persona", data)
+            store.add("mail.guest", data)
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

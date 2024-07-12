@@ -1,3 +1,5 @@
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import {
     Command,
     fields,
@@ -231,7 +233,7 @@ export class MailMessage extends models.ServerModel {
                     }
                 }
             }
-            store.add("Message", response);
+            store.add("mail.message", response);
             if (message.parent_id) {
                 store.add(MailMessage.browse(message.parent_id));
             }
@@ -254,7 +256,6 @@ export class MailMessage extends models.ServerModel {
                 author: false,
                 email_from: message.email_from,
                 id: message.id,
-                type: "partner",
             };
             if (message.author_guest_id) {
                 const [guestId] = MailGuest.search([["id", "=", message.author_guest_id]]);
@@ -278,7 +279,7 @@ export class MailMessage extends models.ServerModel {
                 );
                 data.author = { id: partner.id, type: "partner" };
             }
-            store.add("Message", data);
+            store.add("mail.message", data);
         }
     }
 
@@ -458,9 +459,11 @@ export class MailMessage extends models.ServerModel {
                 ],
             ],
         };
-        BusBus._sendone(this._bus_notification_target(id), "mail.record/insert", {
-            Message: result,
-        });
+        BusBus._sendone(
+            this._bus_notification_target(id),
+            "mail.record/insert",
+            new mailDataHelpers.Store("mail.message", result).get_result()
+        );
     }
 
     /**
@@ -539,13 +542,13 @@ export class MailMessage extends models.ServerModel {
             };
             if (message.res_id) {
                 message_data.thread = { id: message.res_id, model: message.model };
-                store.add("Thread", {
+                store.add("mail.thread", {
                     id: message.res_id,
                     model: message.model,
                     modelName: this.env[message.model]._description,
                 });
             }
-            store.add("Message", message_data);
+            store.add("mail.message", message_data);
         }
         store.add(notifications);
     }
@@ -570,16 +573,14 @@ export class MailMessage extends models.ServerModel {
             notifications.push([
                 partner,
                 "mail.record/insert",
-                {
-                    Thread: {
-                        id: "starred",
-                        messages: [["DELETE", { id: message.id }]],
-                        model: "mail.box",
-                        counter: MailMessage._filter([["starred_partner_ids", "in", partner.id]])
-                            .length,
-                        counter_bus_id: this.env["bus.bus"].lastBusNotificationId,
-                    },
-                },
+                new mailDataHelpers.Store("mail.thread", {
+                    id: "starred",
+                    messages: [["DELETE", { id: message.id }]],
+                    model: "mail.box",
+                    counter: MailMessage._filter([["starred_partner_ids", "in", partner.id]])
+                        .length,
+                    counter_bus_id: this.env["bus.bus"].lastBusNotificationId,
+                }).get_result(),
             ]);
         }
         BusBus._sendmany(notifications);

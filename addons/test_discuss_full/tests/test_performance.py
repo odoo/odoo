@@ -100,19 +100,32 @@ class TestDiscussFullPerformance(HttpCase):
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         self.authenticate('test1', self.password)
-        self.channel_livechat_1 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'anon 1',
-            'channel_id': self.im_livechat_channel.id,
-            'previous_operator_id': self.users[0].partner_id.id,
-        })["Thread"][0]['id'])
+        self.channel_livechat_1 = self.env["discuss.channel"].browse(
+            self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "anon 1",
+                    "channel_id": self.im_livechat_channel.id,
+                    "previous_operator_id": self.users[0].partner_id.id,
+                },
+            )["discuss.channel"][0]["id"]
+        )
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
         self.authenticate(None, None)
-        with patch("odoo.http.GeoIP.country_code", new_callable=PropertyMock(return_value=self.env.ref('base.be').code)):
-            self.channel_livechat_2 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
-                'anonymous_name': 'anon 2',
-                'channel_id': self.im_livechat_channel.id,
-                'previous_operator_id': self.users[0].partner_id.id,
-            })["Thread"][0]['id'])
+        with patch(
+            "odoo.http.GeoIP.country_code",
+            new_callable=PropertyMock(return_value=self.env.ref("base.be").code),
+        ):
+            self.channel_livechat_2 = self.env["discuss.channel"].browse(
+                self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {
+                        "anonymous_name": "anon 2",
+                        "channel_id": self.im_livechat_channel.id,
+                        "previous_operator_id": self.users[0].partner_id.id,
+                    },
+                )["discuss.channel"][0]["id"]
+            )
         self.guest = self.channel_livechat_2.channel_member_ids.guest_id.sudo()
         self.make_jsonrpc_request("/mail/message/post", {
             "post_data": {
@@ -161,7 +174,7 @@ class TestDiscussFullPerformance(HttpCase):
         """
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
-            "Persona": [
+            "res.partner": [
                 {
                     "active": False,
                     "email": "odoobot@example.com",
@@ -171,7 +184,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "type": "partner",
                     "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
@@ -181,7 +193,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "isInternalUser": True,
                     "name": "Ernest Employee",
                     "notification_preference": "inbox",
-                    "type": "partner",
                     "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
@@ -235,19 +246,23 @@ class TestDiscussFullPerformance(HttpCase):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
-            "ChannelMember": [
+            "discuss.channel": [
+                self._expected_result_for_channel(self.channel_channel_group_1),
+                self._expected_result_for_channel(self.channel_chat_1),
+            ],
+            "discuss.channel.member": [
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
             ],
-            "Persona": [
+            "discuss.channel.rtc.session": [
+                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
+            ],
+            "res.partner": [
                 self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[0]),
                 self._expected_result_for_persona(self.users[14]),
-            ],
-            "RtcSession": [
-                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
             "Store": {
                 "inbox": {
@@ -266,10 +281,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "initChannelsUnreadCounter": 1,
                 "odoobotOnboarding": False,
             },
-            "Thread": [
-                self._expected_result_for_channel(self.channel_channel_group_1),
-                self._expected_result_for_channel(self.channel_chat_1),
-            ],
         }
 
     @users("emp")
@@ -291,7 +302,21 @@ class TestDiscussFullPerformance(HttpCase):
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
-            "ChannelMember": [
+            "discuss.channel": [
+                self._expected_result_for_channel(self.channel_general),
+                self._expected_result_for_channel(self.channel_channel_public_1),
+                self._expected_result_for_channel(self.channel_channel_public_2),
+                self._expected_result_for_channel(self.channel_channel_group_1),
+                self._expected_result_for_channel(self.channel_channel_group_2),
+                self._expected_result_for_channel(self.channel_group_1),
+                self._expected_result_for_channel(self.channel_chat_1),
+                self._expected_result_for_channel(self.channel_chat_2),
+                self._expected_result_for_channel(self.channel_chat_3),
+                self._expected_result_for_channel(self.channel_chat_4),
+                self._expected_result_for_channel(self.channel_livechat_1),
+                self._expected_result_for_channel(self.channel_livechat_2),
+            ],
+            "discuss.channel.member": [
                 self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_channel_public_1, self.users[0].partner_id),
@@ -313,7 +338,13 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_channel_member(self.channel_livechat_2, self.users[0].partner_id),
                 self._expected_result_for_channel_member(self.channel_livechat_2, guest=True),
             ],
-            "Message": [
+            "discuss.channel.rtc.session": [
+                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
+            ],
+            "mail.guest": [
+                self._expected_result_for_persona(guest=True),
+            ],
+            "mail.message": [
                 self._expected_result_for_message(self.channel_channel_public_1),
                 self._expected_result_for_message(self.channel_channel_public_2),
                 self._expected_result_for_message(self.channel_channel_group_1),
@@ -321,10 +352,18 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
             ],
-            "Notification": [
+            "mail.notification": [
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
-            "Persona": [
+            "mail.thread": [
+                self._expected_result_for_thread(self.channel_channel_public_1),
+                self._expected_result_for_thread(self.channel_channel_public_2),
+                self._expected_result_for_thread(self.channel_channel_group_1),
+                self._expected_result_for_thread(self.channel_channel_group_2),
+                self._expected_result_for_thread(self.channel_livechat_1),
+                self._expected_result_for_thread(self.channel_livechat_2),
+            ],
+            "res.partner": [
                 self._expected_result_for_persona(self.users[2]),
                 self._expected_result_for_persona(
                     self.users[0],
@@ -336,28 +375,10 @@ class TestDiscussFullPerformance(HttpCase):
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
                 self._expected_result_for_persona(self.users[1]),
-                self._expected_result_for_persona(guest=True),
-            ],
-            "RtcSession": [
-                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
-            ],
-            "Thread": [
-                self._expected_result_for_channel(self.channel_general),
-                self._expected_result_for_channel(self.channel_channel_public_1, has_message=True),
-                self._expected_result_for_channel(self.channel_channel_public_2, has_message=True),
-                self._expected_result_for_channel(self.channel_channel_group_1, has_message=True),
-                self._expected_result_for_channel(self.channel_channel_group_2, has_message=True),
-                self._expected_result_for_channel(self.channel_group_1),
-                self._expected_result_for_channel(self.channel_chat_1),
-                self._expected_result_for_channel(self.channel_chat_2),
-                self._expected_result_for_channel(self.channel_chat_3),
-                self._expected_result_for_channel(self.channel_chat_4),
-                self._expected_result_for_channel(self.channel_livechat_1, has_message=True),
-                self._expected_result_for_channel(self.channel_livechat_2, has_message=True),
             ],
         }
 
-    def _expected_result_for_channel(self, channel, has_message=False):
+    def _expected_result_for_channel(self, channel):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         members = channel.channel_member_ids
@@ -376,7 +397,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": len(self.group_user.users),
-                "model": "discuss.channel",
                 "create_uid": self.user_root.id,
                 "defaultDisplayMode": False,
                 "description": "General announcements for all employees.",
@@ -395,7 +415,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -406,7 +426,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -424,11 +443,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         if channel == self.channel_channel_public_2:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -439,7 +455,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -457,11 +472,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         if channel == self.channel_channel_group_1:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -472,7 +484,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -493,11 +504,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         if channel == self.channel_channel_group_2:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -508,7 +516,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 5,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -526,9 +533,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         if channel == self.channel_group_1:
             return {
                 "allow_public_upload": False,
@@ -541,7 +545,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -571,7 +574,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -601,7 +603,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -631,7 +632,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -661,7 +661,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -680,7 +679,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_1:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -695,7 +694,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.users[1].id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -715,11 +713,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         if channel == self.channel_livechat_2:
-            res = {
+            return {
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -734,7 +729,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
                 "memberCount": 2,
-                "model": "discuss.channel",
                 "create_uid": self.env.ref("base.public_user").id,
                 "defaultDisplayMode": False,
                 "description": False,
@@ -754,9 +748,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "state": "closed",
                 "uuid": channel.uuid,
             }
-            if has_message:
-                res["module_icon"] = "/mail/static/description/icon.png"
-            return res
         return {}
 
     def _expected_result_for_channel_member(self, channel, partner=None, guest=None):
@@ -1260,7 +1251,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "Ernest Employee",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1289,7 +1279,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_company": False,
                 "is_public": False,
                 "name": "test1",
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1299,7 +1288,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "id": user.partner_id.id,
                     "im_status": "offline",
                     "name": "test2",
-                    "type": "partner",
                 }
             return {
                 "active": True,
@@ -1310,7 +1298,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "test2",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1324,7 +1311,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "test3",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
@@ -1338,7 +1324,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "test12",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1352,7 +1337,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "test14",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1366,7 +1350,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "isInternalUser": True,
                 "name": "test15",
                 "out_of_office_date_end": False,
-                "type": "partner",
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1375,7 +1358,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": self.guest.id,
                 "im_status": "offline",
                 "name": "Visitor",
-                "type": "guest",
                 "write_date": fields.Datetime.to_string(self.guest.write_date),
             }
         return {}
@@ -1394,3 +1376,10 @@ class TestDiscussFullPerformance(HttpCase):
                 "isSelfMuted": False,
             }
         return {}
+
+    def _expected_result_for_thread(self, channel):
+        return {
+            "id": channel.id,
+            "model": "discuss.channel",
+            "module_icon": "/mail/static/description/icon.png",
+        }

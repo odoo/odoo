@@ -52,12 +52,17 @@ class TestImLivechatMessage(HttpCase):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
         self.authenticate(self.users[1].login, self.password)
-        channel_livechat_1 = self.env['discuss.channel'].browse(self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'anon 1',
-            'previous_operator_id': self.users[0].partner_id.id,
-            'country_id': self.env.ref('base.in').id,
-            'channel_id': im_livechat_channel.id,
-        })["Thread"][0]['id'])
+        channel_livechat_1 = self.env["discuss.channel"].browse(
+            self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "anon 1",
+                    "previous_operator_id": self.users[0].partner_id.id,
+                    "country_id": self.env.ref("base.in").id,
+                    "channel_id": im_livechat_channel.id,
+                },
+            )["discuss.channel"][0]["id"]
+        )
         record_rating = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('discuss.channel').id,
             'res_id': channel_livechat_1.id,
@@ -77,7 +82,7 @@ class TestImLivechatMessage(HttpCase):
         self.assertEqual(
             Store(message, for_current_user=True).get_result(),
             {
-                "Message": [
+                "mail.message": [
                     {
                         "attachments": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
@@ -113,22 +118,21 @@ class TestImLivechatMessage(HttpCase):
                         "trackingValues": [],
                     },
                 ],
-                "Persona": [
-                    {
-                        "id": self.users[1].partner_id.id,
-                        "is_company": False,
-                        "isInternalUser": True,
-                        "type": "partner",
-                        "user_livechat_username": "chuck",
-                        "userId": self.users[1].id,
-                        "write_date": fields.Datetime.to_string(self.users[1].write_date),
-                    },
-                ],
-                "Thread": [
+                "mail.thread": [
                     {
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
                         "module_icon": "/mail/static/description/icon.png",
+                    },
+                ],
+                "res.partner": [
+                    {
+                        "id": self.users[1].partner_id.id,
+                        "is_company": False,
+                        "isInternalUser": True,
+                        "user_livechat_username": "chuck",
+                        "userId": self.users[1].id,
+                        "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
                 ],
             },

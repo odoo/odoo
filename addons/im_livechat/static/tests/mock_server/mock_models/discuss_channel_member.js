@@ -22,7 +22,6 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
             const data = {
                 id: partner.id,
                 is_public: partner.is_public,
-                type: "partner",
             };
             if (partner.user_livechat_username) {
                 data["user_livechat_username"] = partner.user_livechat_username;
@@ -40,7 +39,7 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                     : false;
             }
             data["write_date"] = partner.write_date;
-            store.add("Persona", data);
+            store.add("res.partner", data);
         } else {
             super._partner_data_to_store(...arguments);
         }

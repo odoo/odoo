@@ -16,6 +16,6 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
             "anonymous_name": "Visitor",
             "previous_operator_id": operator.partner_id.id
         })
-        channel = self.env["discuss.channel"].browse(data["Thread"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         channel.with_user(operator).message_post(body="Hello, how can I help you?")
         self.start_tour("/web", "im_livechat_history_back_and_forth_tour", login="operator", step_delay=25)

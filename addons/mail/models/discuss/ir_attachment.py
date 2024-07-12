@@ -21,7 +21,7 @@ class IrAttachment(models.Model):
     def _to_store(self, store: Store, **kwargs):
         super()._to_store(store, **kwargs)
         for attachment in self:
-            store.add("Attachment", {
+            store.add("ir.attachment", {
                 "id": attachment.id,
                 # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
                 "voice": bool(attachment.sudo().voice_ids)

@@ -43,16 +43,26 @@ class MailRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            store = Store(rtc_sessions)
-            channel_info = {
-                "id": channel.id,
-                "model": "discuss.channel",
-                "rtcSessions": [
-                    ("ADD", [{"id": rtc_session["id"]} for rtc_session in rtc_sessions]),
-                ],
-            }
-            store.add("Thread", channel_info)
-            notifications.append((channel, "mail.record/insert", store.get_result()))
+            notifications.append(
+                (
+                    channel,
+                    "mail.record/insert",
+                    Store(rtc_sessions)
+                    .add(
+                        "discuss.channel",
+                        {
+                            "id": channel.id,
+                            "rtcSessions": [
+                                (
+                                    "ADD",
+                                    [{"id": rtc_session["id"]} for rtc_session in rtc_sessions],
+                                ),
+                            ],
+                        },
+                    )
+                    .get_result(),
+                )
+            )
         self.env["bus.bus"]._sendmany(notifications)
         return rtc_sessions
 
@@ -74,15 +84,24 @@ class MailRtcSession(models.Model):
         for rtc_session in self:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel_info = {
-                "id": channel.id,
-                "model": "discuss.channel",
-                "rtcSessions": [
-                    ("DELETE", [{"id": rtc_session["id"]} for rtc_session in rtc_sessions]),
-                ],
-            }
-            store = Store("Thread", channel_info)
-            notifications.append((channel, "mail.record/insert", store.get_result()))
+            notifications.append(
+                (
+                    channel,
+                    "mail.record/insert",
+                    Store(
+                        "discuss.channel",
+                        {
+                            "id": channel.id,
+                            "rtcSessions": [
+                                (
+                                    "DELETE",
+                                    [{"id": rtc_session["id"]} for rtc_session in rtc_sessions],
+                                ),
+                            ],
+                        },
+                    ).get_result(),
+                )
+            )
         for rtc_session in self:
             target = rtc_session.guest_id or rtc_session.partner_id
             notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
@@ -177,7 +196,7 @@ class MailRtcSession(models.Model):
                         "isScreenSharingOn": rtc_session.is_screen_sharing_on,
                     }
                 )
-            store.add("RtcSession", vals)
+            store.add("discuss.channel.rtc.session", vals)
 
     @api.model
     def _inactive_rtc_session_domain(self):

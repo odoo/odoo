@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.tools import email_normalize
+from odoo.addons.mail.tools.discuss import Store
 
 
 class Users(models.Model):
@@ -144,7 +145,17 @@ class Users(models.Model):
                 )
         if 'notification_type' in vals:
             for user in user_notification_type_modified:
-                self.env["bus.bus"]._sendone(user.partner_id, "mail.record/insert", {"Persona": {"id": user.partner_id.id, "type": "partner", "notification_preference": user.notification_type}})
+                self.env["bus.bus"]._sendone(
+                    user.partner_id,
+                    "mail.record/insert",
+                    Store(
+                        "res.partner",
+                        {
+                            "id": user.partner_id.id,
+                            "notification_preference": user.notification_type,
+                        },
+                    ).get_result(),
+                )
 
         return write_res
 
@@ -274,14 +285,13 @@ class Users(models.Model):
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add(
-                "Persona",
+                "res.partner",
                 {
                     "id": self.env.user.partner_id.id,
                     "isAdmin": self.env.user._is_admin(),
                     "isInternalUser": not self.env.user.share,
                     "name": self.env.user.partner_id.name,
                     "notification_preference": self.env.user.notification_type,
-                    "type": "partner",
                     "userId": self.env.user.id,
                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
                 },
@@ -294,11 +304,10 @@ class Users(models.Model):
             )
         elif guest:
             store.add(
-                "Persona",
+                "mail.guest",
                 {
                     "id": guest.id,
                     "name": guest.name,
-                    "type": "guest",
                     "write_date": fields.Datetime.to_string(guest.write_date),
                 },
             )

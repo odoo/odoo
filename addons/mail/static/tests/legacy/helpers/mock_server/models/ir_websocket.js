@@ -18,14 +18,12 @@ patch(MockServer.prototype, {
         const imStatus = super._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         const { "mail.guest": guestIds } = imStatusIdsByModel;
         if (guestIds) {
-            imStatus["Persona"] = imStatus["Persona"].concat(
-                this.pyEnv["mail.guest"]
-                    .search_read([["id", "in", guestIds]], {
-                        context: { active_test: false },
-                        fields: ["im_status"],
-                    })
-                    .map((g) => ({ ...g, type: "guest" }))
-            );
+            imStatus["mail.guest"] = this.pyEnv["mail.guest"]
+                .search_read([["id", "in", guestIds]], {
+                    context: { active_test: false },
+                    fields: ["im_status"],
+                })
+                .map((g) => ({ id: g.id, im_status: g.im_status }));
         }
         return imStatus;
     },

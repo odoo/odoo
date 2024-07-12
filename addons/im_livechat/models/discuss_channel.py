@@ -41,7 +41,7 @@ class DiscussChannel(models.Model):
         super()._to_store(store)
         chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
         for channel in self:
-            channel_info = {"id": channel.id, "model": "discuss.channel"}
+            channel_info = {"id": channel.id}
             if channel.chatbot_current_step_id:
                 # sudo: chatbot.script.step - returning the current script/step of the channel
                 current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=chatbot_lang)
@@ -76,7 +76,7 @@ class DiscussChannel(models.Model):
                 channel_info["operator"] = {"id": operator.id, "type": "partner"}
             if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
                 channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
-            store.add("Thread", channel_info)
+            store.add("discuss.channel", channel_info)
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

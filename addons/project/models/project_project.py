@@ -1024,7 +1024,7 @@ class Project(models.Model):
         super()._thread_to_store(store, request_list=request_list, **kwargs)
         if "followers" in request_list:
             store.add(
-                "Thread",
+                "mail.thread",
                 {
                     "collaborator_ids": [
                         {"id": partner.id, "type": "partner"}

@@ -14,11 +14,10 @@ export class MailGuest extends models.ServerModel {
      */
     _to_store(ids, store) {
         for (const guest of this._filter([["id", "in", ids]], { active_test: false })) {
-            store.add("Persona", {
+            store.add("mail.guest", {
                 id: guest.id,
                 im_status: guest.im_status,
                 name: guest.name,
-                type: "guest",
                 write_date: guest.write_date,
             });
         }

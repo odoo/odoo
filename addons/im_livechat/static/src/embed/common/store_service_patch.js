@@ -20,8 +20,8 @@ patch(Store.prototype, {
             return;
         }
         const messagingData = {
+            "discuss.channel": [],
             Store: { settings: {} },
-            Thread: [],
         };
         if (session.livechatData?.options.current_partner_id) {
             messagingData.Store.current_partner = {
@@ -29,7 +29,7 @@ patch(Store.prototype, {
             };
         }
         if (livechatService.savedState?.threadData) {
-            messagingData.Thread.push(livechatService.savedState.threadData);
+            messagingData["discuss.channel"].push(livechatService.savedState.threadData);
         }
         this.insert(messagingData);
         this.isReady.resolve();

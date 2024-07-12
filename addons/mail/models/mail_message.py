@@ -873,8 +873,13 @@ class Message(models.Model):
             "personas": personas,
             "message": {"id": self.id},
         }
-        payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
-        self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
+        self.env["bus.bus"]._sendone(
+            self._bus_notification_target(),
+            "mail.record/insert",
+            Store(
+                "mail.message", {"id": self.id, "reactions": [(group_command, group_values)]}
+            ).get_result(),
+        )
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
@@ -975,7 +980,7 @@ class Message(models.Model):
                     (record, self.env.user.partner_id)
                 ):
                     store.add(
-                        "Follower",
+                        "mail.followers",
                         {
                             "id": follower.id,
                             "is_active": True,
@@ -985,7 +990,7 @@ class Message(models.Model):
                     thread_data["selfFollower"] = {"id": follower.id}
                 else:
                     thread_data["selfFollower"] = False
-            store.add("Thread", thread_data)
+            store.add("mail.thread", thread_data)
         for message in self:
             record = record_by_message.get(message)
             if record:
@@ -1069,7 +1074,7 @@ class Message(models.Model):
                 )
                 vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
-            store.add("Message", vals)
+            store.add("mail.message", vals)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
         store.add(self.notification_ids._filtered_for_web_client())
@@ -1106,7 +1111,7 @@ class Message(models.Model):
                     },
                 )
                 data["author"] = {"id": author.id, "type": "partner"}
-            store.add("Message", data)
+            store.add("mail.message", data)
 
     def _extras_to_store(self, store: Store, format_reply):
         pass
@@ -1164,14 +1169,14 @@ class Message(models.Model):
             if message.res_id:
                 message_data["thread"] = {"id": message.res_id, "model": message.model}
                 store.add(
-                    "Thread",
+                    "mail.thread",
                     {
                         "id": message.res_id,
                         "model": message.model,
                         "modelName": message.env["ir.model"]._get(message.model).display_name,
                     },
                 )
-            store.add("Message", message_data)
+            store.add("mail.message", message_data)
         store.add(self.notification_ids._filtered_for_web_client())
 
     def _notify_message_notification_update(self):
@@ -1235,7 +1240,7 @@ class Message(models.Model):
             notifications = []
             for partner in outdated_starred_partners:
                 payload = {
-                    "Thread": {
+                    "mail.thread": {
                         "id": "starred",
                         "messages": [("DELETE", [{"id": msg.id} for msg in self])],
                         "model": "mail.box",

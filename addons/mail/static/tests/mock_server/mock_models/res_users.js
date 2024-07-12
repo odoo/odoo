@@ -34,14 +34,13 @@ export class ResUsers extends webModels.ResUsers {
         });
         if (!this._is_public(this.env.uid)) {
             const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
-            store.add("Persona", {
+            store.add("res.partner", {
                 id: this.env.user?.partner_id,
                 isAdmin: true, // mock server simplification
                 active: true,
                 isInternalUser: !this.env.user?.share,
                 name: this.env.user?.name,
                 notification_preference: this.env.user?.notification_type,
-                type: "partner",
                 userId: this.env.user?.id,
                 write_date: this.env.user?.write_date,
             });
@@ -51,10 +50,9 @@ export class ResUsers extends webModels.ResUsers {
             });
         } else if (this.env.cookie.get("dgid")) {
             const [guest] = MailGuest.read(this.env.cookie.get("dgid"));
-            store.add("Persona", {
+            store.add("mail.guest", {
                 id: guest.id,
                 name: guest.name,
-                type: "guest",
                 write_date: guest.write_date,
             });
             store.add({ self: { id: guest.id, type: "guest" } });

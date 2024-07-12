@@ -60,23 +60,18 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const channel = this._filter([["id", "in", ids]])[0];
-        const custom_store = {
-            Thread: [
-                {
-                    id: channel.id,
-                    is_pinned: false,
-                    isLocallyPinned: false,
-                    model: "discuss.channel",
-                },
-            ],
-        };
+        const custom_store = new mailDataHelpers.Store("discuss.channel", {
+            id: channel.id,
+            is_pinned: false,
+            isLocallyPinned: false,
+        });
         const [partner] = ResPartner.read(this.env.user.partner_id);
         const [channelMember] = DiscussChannelMember._filter([
             ["channel_id", "in", ids],
             ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (!channelMember) {
-            BusBus._sendone(partner, "discuss.channel/leave", custom_store);
+            BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
             return true;
         }
         this.write([channel.id], {
@@ -91,18 +86,15 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         // send custom store after message_post to avoid is_pinned reset to True
-        BusBus._sendone(partner, "discuss.channel/leave", custom_store);
-        const store = {
-            Thread: {
-                id: channel.id,
-                channelMembers: [["DELETE", { id: channelMember.id }]],
-                memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
-                model: "discuss.channel",
-            },
-        };
-        BusBus._sendone(channel, "mail.record/insert", store);
+        BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
+        const store = new mailDataHelpers.Store("discuss.channel", {
+            id: channel.id,
+            channelMembers: [["DELETE", { id: channelMember.id }]],
+            memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+        });
+        BusBus._sendone(channel, "mail.record/insert", store.get_result());
         // limitation of mock server, partner already unsubscribed from channel
-        BusBus._sendone(partner, "mail.record/insert", store);
+        BusBus._sendone(partner, "mail.record/insert", store.get_result());
         return true;
     }
 
@@ -144,7 +136,11 @@ export class DiscussChannel extends models.ServerModel {
                 })
             );
             BusBus._sendone(partner, "discuss.channel/joined", {
-                channel: { ...this.channel_basic_info([channel.id]), is_pinned: true },
+                channel: {
+                    ...this._channel_basic_info([channel.id]),
+                    is_pinned: true,
+                    model: "discuss.channel",
+                },
                 invited_by_user_id: this.env.uid,
             });
         }
@@ -162,14 +158,10 @@ export class DiscussChannel extends models.ServerModel {
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
-            const store = new mailDataHelpers.Store("Thread", {
+            const store = new mailDataHelpers.Store("discuss.channel", {
                 id: channel.id,
                 memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
-                model: "discuss.channel",
-            });
-            store.add(
-                DiscussChannelMember.browse(insertedChannelMembers).map((record) => record.id)
-            );
+            }).add(DiscussChannelMember.browse(insertedChannelMembers).map((record) => record.id));
             BusBus._sendone(channel, "mail.record/insert", store.get_result());
         }
     }
@@ -224,7 +216,7 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    channel_basic_info(ids) {
+    _channel_basic_info(ids) {
         const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
@@ -263,7 +255,6 @@ export class DiscussChannel extends models.ServerModel {
                 }
             })(),
             memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
-            model: "discuss.channel",
         });
         return res;
     }
@@ -392,7 +383,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
-            const res = this.channel_basic_info([channel.id]);
+            const res = this._channel_basic_info([channel.id]);
             res.fetchChannelInfoState = "fetched";
             if (this.env.user) {
                 const message_needaction_counter = MailNotification._filter([
@@ -445,7 +436,7 @@ export class DiscussChannel extends models.ServerModel {
                 ],
             ];
             res.allow_public_upload = channel.allow_public_upload;
-            store.add("Thread", res);
+            store.add("discuss.channel", res);
         }
     }
 
@@ -531,13 +522,14 @@ export class DiscussChannel extends models.ServerModel {
             custom_channel_name: name,
         });
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.record/insert", {
-            Thread: {
+        BusBus._sendone(
+            partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store("discuss.channel", {
                 custom_channel_name: name,
                 id: channelId,
-                model: "discuss.channel",
-            },
-        });
+            }).get_result()
+        );
     }
 
     /** @param {number[]} partners_to */
@@ -755,13 +747,9 @@ export class DiscussChannel extends models.ServerModel {
             makeKwArgs({ limit: 100 })
         );
         const memberCount = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
-        const store = new mailDataHelpers.Store("Thread", {
-            id: ids[0],
-            memberCount,
-            model: "discuss.channel",
-        });
-        store.add(members);
-        return store.get_result();
+        return new mailDataHelpers.Store("discuss.channel", { id: ids[0], memberCount })
+            .add(members)
+            .get_result();
     }
 
     /** @param {number} id */
@@ -831,12 +819,14 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         const [channel] = this.read(id);
-        BusBus._sendone(channel, "mail.record/insert", {
-            Message: {
+        BusBus._sendone(
+            channel,
+            "mail.record/insert",
+            new mailDataHelpers.Store("mail.message", {
                 id: message_id,
                 pinned_at,
-            },
-        });
+            }).get_result()
+        );
     }
 
     /** @type {typeof models.Model["prototype"]["write"]} */
@@ -853,13 +843,14 @@ export class DiscussChannel extends models.ServerModel {
                 avatarCacheKey: DateTime.utc().toFormat("yyyyMMddHHmmss"),
             });
             const channel = this.search_read([["id", "=", firstId]])[0];
-            return BusBus._sendone(channel, "mail.record/insert", {
-                Thread: {
+            return BusBus._sendone(
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store("discuss.channel", {
                     avatarCacheKey: channel.avatarCacheKey,
                     id: firstId,
-                    model: "discuss.channel",
-                },
-            });
+                }).get_result()
+            );
         }
         const notifications = [];
         const [channel] = this._filter([["id", "=", firstId]]);
@@ -873,13 +864,10 @@ export class DiscussChannel extends models.ServerModel {
             notifications.push([
                 channel,
                 "mail.record/insert",
-                {
-                    Thread: {
-                        id: channel.id,
-                        model: "discuss.channel",
-                        ...diff,
-                    },
-                },
+                new mailDataHelpers.Store("discuss.channel", {
+                    id: channel.id,
+                    ...diff,
+                }).get_result(),
             ]);
         }
         const result = super.write(...arguments);
