@@ -2916,7 +2916,7 @@ class AccountMove(models.Model):
                 .filtered(
                     lambda line:
                         line.is_downpayment
-                        and line.account_move_line_ids <= self.mapped('line_ids')  # See https://github.com/odoo/odoo/pull/52648
+                        and line.invoice_lines <= self.mapped('line_ids')  # See https://github.com/odoo/odoo/pull/52648
                 )
         )
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
@@ -4563,14 +4563,14 @@ class AccountMove(models.Model):
         dp_lines._compute_name()  # Update the description of DP lines (Draft -> Posted)
         downpayment_lines = dp_lines.filtered(lambda ol: not ol.order_id._is_locked())
         other_order_lines = downpayment_lines.order_id.order_line - downpayment_lines
-        real_invoices = set(other_order_lines.account_move_line_ids.move_id)
+        real_invoices = set(other_order_lines.invoice_lines.move_id)
         for dpl in downpayment_lines:
             dpl.price_unit = sum(
                 l.price_unit if l.move_id.move_type in ('out_invoice', 'in_invoice') else -l.price_unit
-                for l in dpl.account_move_line_ids
+                for l in dpl.invoice_lines
                 if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
             )
-            dpl.tax_ids = dpl.account_move_line_ids.tax_ids
+            dpl.tax_ids = dpl.invoice_lines.tax_ids
         return res
 
     def js_assign_outstanding_line(self, line_id):

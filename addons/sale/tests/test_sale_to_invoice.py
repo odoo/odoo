@@ -309,7 +309,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(downpayment_line.price_unit, 100)
 
         # post the downpayment invoice and ensure the downpayment_line amount is still 100
-        downpayment_invoice = downpayment_line.order_id.order_line.account_move_line_ids.move_id
+        downpayment_invoice = downpayment_line.order_id.order_line.invoice_lines.move_id
         downpayment_invoice.action_post()
         self.assertEqual(downpayment_line.price_unit, 100)
 
@@ -469,7 +469,7 @@ class TestSaleToInvoice(TestSaleCommon):
         sale_order_data = self.sale_order.copy_data()[0]
         sale_order_data['order_line'] = [
             (0, 0, line.copy_data({
-                'account_move_line_ids': [(6, 0, line.account_move_line_ids.ids)],
+                'invoice_lines': [(6, 0, line.invoice_lines.ids)],
             })[0])
             for line in self.sale_order.order_line
         ]
