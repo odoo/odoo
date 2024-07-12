@@ -512,7 +512,7 @@ export class PosStore extends Reactive {
             price_unit: 0,
             order_id: this.get_order(),
             qty: 1,
-            tax_ids: product.taxes_id.length ? [["link", ...product.taxes_id]] : [],
+            tax_ids: product.taxes_id.map((tax) => ["link", tax]),
             ...vals,
         };
 
@@ -614,9 +614,10 @@ export class PosStore extends Reactive {
                 "create",
                 {
                     product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.length
-                        ? [["link", ...comboLine.combo_line_id.product_id.taxes_id]]
-                        : [],
+                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.map((tax) => [
+                        "link",
+                        tax,
+                    ]),
                     combo_line_id: comboLine.combo_line_id,
                     price_unit: comboLine.price_unit,
                     order_id: order,
