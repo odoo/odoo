@@ -153,7 +153,7 @@ class PurchaseOrder(models.Model):
             order.reminder_date_before_receipt = order.partner_id.with_company(order.company_id).reminder_date_before_receipt
 
     @api.depends_context('lang')
-    @api.depends('order_line.tax_ids', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
+    @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)

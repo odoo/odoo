@@ -4570,7 +4570,7 @@ class AccountMove(models.Model):
                 for l in dpl.invoice_lines
                 if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
             )
-            dpl.tax_ids = dpl.invoice_lines.tax_ids
+            dpl.tax_id = dpl.invoice_lines.tax_ids
         return res
 
     def js_assign_outstanding_line(self, line_id):

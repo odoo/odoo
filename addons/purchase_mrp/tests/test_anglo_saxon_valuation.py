@@ -134,7 +134,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         with po_form.order_line.new() as pol_form:
             pol_form.product_id = kit
             pol_form.price_unit = 100
-            pol_form.tax_ids.clear()
+            pol_form.taxes_id.clear()
         po = po_form.save()
         po.button_confirm()
 

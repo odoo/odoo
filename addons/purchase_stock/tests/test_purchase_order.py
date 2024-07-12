@@ -419,7 +419,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'product_qty': 7,
                 'product_uom': super_product.uom_id.id,
                 'price_unit': super_product.standard_price,
-                'tax_ids': [(4, tax.id)],
+                'taxes_id': [(4, tax.id)],
             })],
         })
 
