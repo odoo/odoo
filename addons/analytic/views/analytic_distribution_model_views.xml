@@ -4,7 +4,8 @@
         <field name="name">account.analytic.distribution.model.tree</field>
         <field name="model">account.analytic.distribution.model</field>
         <field name="arch" type="xml">
-            <tree string="Analytic Distribution Model" editable="top" multi_edit="1">
+            <tree string="Analytic Distribution Model" editable="top" multi_edit="1" default_order="sequence, id desc">
+                <field name="sequence" widget="handle"/>
                 <field name="partner_id" optional="show"/>
                 <field name="partner_category_id" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
