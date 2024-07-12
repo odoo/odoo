@@ -600,67 +600,62 @@
             <field name="image_1920" type="base64" file="product/static/img/monitor_stand.png"/>
         </record>
 
-        <record id="desk_organizer_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.desk_organizer"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="desk_pad_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.desk_pad"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="monitor_stand_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.monitor_stand"/>
-            <field name="extra_price">2</field>
-        </record>
         <record id="desk_accessories_combo" model="product.combo">
             <field name="name">Desk Accessories Combo</field>
             <field
                 name="combo_item_ids"
-                eval="[(6, 0, [
-                    ref('desk_organizer_combo_item'),
-                    ref('desk_pad_combo_item'),
-                    ref('monitor_stand_combo_item'),
-                ])]"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.desk_organizer'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.desk_pad'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.monitor_stand'),
+                        'extra_price': 2,
+                    }),
+                ]"
             />
         </record>
 
-        <record id="product_3_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.product_product_3"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="product_5_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.product_product_5"/>
-            <field name="extra_price">0</field>
-        </record>
         <record id="desks_combo" model="product.combo">
             <field name="name">Desks Combo</field>
             <field
                 name="combo_item_ids"
-                eval="[(6, 0, [ref('product_3_combo_item'), ref('product_5_combo_item')])]"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.product_product_3'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_5'),
+                        'extra_price': 0,
+                    }),
+                ]"
             />
         </record>
 
-        <record id="product_11_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.product_product_11"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="product_11b_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.product_product_11b"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="product_12_combo_item" model="product.combo.item">
-            <field name="product_id" ref="product.product_product_12"/>
-            <field name="extra_price">0</field>
-        </record>
         <record id="chairs_combo" model="product.combo">
             <field name="name">Chairs Combo</field>
             <field
                 name="combo_item_ids"
-                eval="[(6, 0, [
-                    ref('product_11_combo_item'),
-                    ref('product_11b_combo_item'),
-                    ref('product_12_combo_item'),
-                ])]"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product.product_product_11'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_11b'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product.product_product_12'),
+                        'extra_price': 0,
+                    }),
+                ]"
             />
         </record>
 

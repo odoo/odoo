@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -62,15 +62,14 @@ class TestPointOfSale(TransactionCase):
             'available_in_pos': True,
         })
 
-        product_1_combo_item = self.env["product.combo.item"].create({
-                "product_id": product.id,
-        })
-
         product_combo = self.env["product.combo"].create(
             {
                 "name": "Product combo",
                 "combo_item_ids": [
-                    (6, 0, [product_1_combo_item.id])
+                    Command.create({
+                        "product_id": product.id,
+                        "extra_price": 0,
+                    }),
                 ],
             }
         )

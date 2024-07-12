@@ -331,38 +331,42 @@
             <field name="value_ids" eval="[(6, 0, [ref('product_attribute_value_39'), ref('product_attribute_value_40'), ref('product_attribute_value_41'), ref('product_attribute_value_42'), ref('product_attribute_value_43')])]" />
         </record>
 
-        <record id="product_jeans_combo_item_1" model="product.combo.item">
-            <field name="product_id" ref="product_blue_denim_jeans_slim"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="product_jeans_combo_item_2" model="product.combo.item">
-            <field name="product_id" ref="product_blue_denim_jeans"/>
-            <field name="extra_price">0</field>
-        </record>
-
         <record id="jeans_combo" model="product.combo">
             <field name="name">Jeans Combo</field>
-            <field name="combo_item_ids" eval="[(6, 0, [ref('product_jeans_combo_item_1'), ref('product_jeans_combo_item_2')])]"/>
-        </record>
-
-        <record id="product_tshirt_combo_item_1" model="product.combo.item">
-            <field name="product_id" ref="casual_t_shirt"/>
-            <field name="extra_price">0</field>
-        </record>
-
-        <record id="product_tshirt_combo_item_2" model="product.combo.item">
-            <field name="product_id" ref="t_shirt_slim"/>
-            <field name="extra_price">0</field>
-        </record>
-
-        <record id="product_tshirt_combo_item_3" model="product.combo.item">
-            <field name="product_id" ref="t_shirt_black_embroidered"/>
-            <field name="extra_price">0</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('product_blue_denim_jeans_slim'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('product_blue_denim_jeans'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
         </record>
 
         <record id="tshirt_combo" model="product.combo">
             <field name="name">T-shirt Combo</field>
-            <field name="combo_item_ids" eval="[(6, 0, [ref('product_tshirt_combo_item_1'), ref('product_tshirt_combo_item_2'), ref('product_tshirt_combo_item_3')])]"/>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('casual_t_shirt'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('t_shirt_slim'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('t_shirt_black_embroidered'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
         </record>
 
         <record model="product.product" id="product_t_shirt_pants">
