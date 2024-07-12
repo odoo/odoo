@@ -62,6 +62,9 @@ function odooListFormat(id, position, field, getters, locale) {
             return locale.dateFormat;
         case "datetime":
             return locale.dateFormat + " " + locale.timeFormat;
+        case "char":
+        case "text":
+            return "@";
         default:
             return undefined;
     }
