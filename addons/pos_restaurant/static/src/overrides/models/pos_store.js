@@ -284,6 +284,29 @@ patch(PosStore.prototype, {
             }
         }
     },
+    async setTableFromUi(table, orderUuid = null) {
+        try {
+            this.tableSyncing = true;
+            await this.setTable(table, orderUuid);
+        } catch (e) {
+            if (!(e instanceof ConnectionLostError)) {
+                throw e;
+            }
+            // Reject error in a separate stack to display the offline popup, but continue the flow
+            Promise.reject(e);
+        } finally {
+            this.tableSyncing = false;
+            const orders = this.getTableOrders(table.id);
+            if (orders.length > 0) {
+                this.set_order(orders[0]);
+                this.orderToTransferUuid = null;
+                this.showScreen(orders[0].get_screen_data().name);
+            } else {
+                this.add_new_order();
+                this.showScreen("ProductScreen");
+            }
+        }
+    },
     getTableOrders(tableId) {
         return this.get_open_orders().filter((order) => order.table_id?.id === tableId);
     },

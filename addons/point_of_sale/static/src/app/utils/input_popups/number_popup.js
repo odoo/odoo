@@ -14,6 +14,8 @@ export class NumberPopup extends Component {
         startingValue: { type: [Number, String], optional: true },
         feedback: { type: Function, optional: true },
         formatDisplayedValue: { type: Function, optional: true },
+        placeholder: { type: String, optional: true },
+        defaultPayload: { type: [String, { value: null }], optional: true },
         getPayload: Function,
         close: Function,
     };
@@ -22,6 +24,7 @@ export class NumberPopup extends Component {
         startingValue: "",
         formatDisplayedValue: (x) => x,
         feedback: () => false,
+        defaultPayload: "0",
     };
 
     setup() {
@@ -35,7 +38,7 @@ export class NumberPopup extends Component {
         });
     }
     confirm() {
-        this.props.getPayload(this.state.buffer || "0");
+        this.props.getPayload(this.state.buffer || this.props.defaultPayload);
         this.props.close();
     }
 }

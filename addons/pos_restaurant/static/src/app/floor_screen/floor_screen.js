@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { ConnectionLostError } from "@web/core/network/rpc";
 import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
@@ -14,6 +13,12 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import {
+    getButtons,
+    DECIMAL,
+    ZERO,
+    BACKSPACE,
+} from "@point_of_sale/app/generic_components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
@@ -470,14 +475,14 @@ export class FloorScreen extends Component {
     }
     _getNewTableName() {
         let firstNum = 1;
-        const tablesNameNumber = this.activeTables
+        const tablesNumber = this.activeTables
             .map((table) => +table.name)
             .sort(function (a, b) {
                 return a - b;
             });
 
-        for (let i = 0; i < tablesNameNumber.length; i++) {
-            if (tablesNameNumber[i] == firstNum) {
+        for (let i = 0; i < tablesNumber.length; i++) {
+            if (tablesNumber[i] == firstNum) {
                 firstNum += 1;
             } else {
                 break;
@@ -543,27 +548,7 @@ export class FloorScreen extends Component {
             await this.pos.transferOrder(table);
             this.pos.showScreen("ProductScreen");
         } else {
-            try {
-                this.pos.tableSyncing = true;
-                await this.pos.setTable(table);
-            } catch (e) {
-                if (!(e instanceof ConnectionLostError)) {
-                    throw e;
-                }
-                // Reject error in a separate stack to display the offline popup, but continue the flow
-                Promise.reject(e);
-            } finally {
-                this.pos.tableSyncing = false;
-                const orders = this.pos.getTableOrders(table.id);
-                if (orders.length > 0) {
-                    this.pos.set_order(orders[0]);
-                    this.pos.orderToTransferUuid = null;
-                    this.pos.showScreen(orders[0].get_screen_data().name);
-                } else {
-                    this.pos.add_new_order();
-                    this.pos.showScreen("ProductScreen");
-                }
-            }
+            await this.pos.setTableFromUi(table);
         }
     }
     unselectTables() {
@@ -643,33 +628,34 @@ export class FloorScreen extends Component {
         if (this.selectedTables.length > 1) {
             return;
         }
-        this.dialog.add(
-            TextInputPopup,
-            this.selectedTables.length === 1
-                ? {
-                      startingValue: this.selectedTables[0].name,
-                      title: _t("Table Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.selectedTables[0].name) {
-                              this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-                : {
-                      startingValue: this.activeFloor.name,
-                      title: _t("Floor Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.activeFloor.name) {
-                              this.activeFloor.name = newName;
-                              this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-        );
+        if (this.selectedTables.length === 1) {
+            this.dialog.add(NumberPopup, {
+                startingValue: parseInt(this.selectedTables[0].name) || false,
+                title: _t("Change table number?"),
+                placeholder: _t("Enter a table number"),
+                buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
+                getPayload: (newNumber) => {
+                    if (newNumber !== this.selectedTables[0].name) {
+                        this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
+                            name: newNumber,
+                        });
+                    }
+                },
+            });
+        } else {
+            this.dialog.add(TextInputPopup, {
+                startingValue: this.activeFloor.name,
+                title: _t("Floor Name ?"),
+                getPayload: (newName) => {
+                    if (newName !== this.activeFloor.name) {
+                        this.activeFloor.name = newName;
+                        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+                            name: newName,
+                        });
+                    }
+                },
+            });
+        }
     }
     async changeSeatsNum() {
         const selectedTables = this.selectedTables;

@@ -20,8 +20,7 @@
                     <i class="fa fa-clone" role="img" aria-label="Copy" title="Copy" />Copy</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="deleteFloorOrTable">
                     <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete" />Delete</button>
-                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="closeEditMode">
-                    <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Close</button>
+                <button t-attf-class="ms-auto text-uppercase my-1 btn btn-primary" t-on-click.stop="closeEditMode">Save</button>
             </div>
             <div t-if="pos.isEditMode and state.isColorPicker" class="d-flex justify-content-center align-items-center bg-200">
                 <t t-set="lighter" t-value="selectedTables.length === 0" />

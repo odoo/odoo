@@ -28,7 +28,7 @@ patch(ControlButtons.prototype, {
             title: _t("Guests?"),
             feedback: (buffer) => {
                 const value = this.env.utils.formatCurrency(
-                    this.currentOrder.amountPerGuest(parseInt(buffer, 10) || 0)
+                    this.currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
                 );
                 return value ? `${value} / ${_t("Guest")}` : "";
             },
@@ -37,6 +37,7 @@ patch(ControlButtons.prototype, {
                 if (guestCount == 0 && this.currentOrder.lines.length === 0) {
                     this.pos.removeOrder(this.currentOrder);
                     this.pos.showScreen("FloorScreen");
+                    return;
                 }
                 this.currentOrder.setCustomerCount(guestCount);
                 this.pos.addPendingOrder([this.currentOrder.id]);
