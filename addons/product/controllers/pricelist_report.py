@@ -4,7 +4,10 @@ import csv
 import io
 import json
 
-import xlsxwriter
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
 
 from odoo import _
 from odoo.http import Controller, request, route, content_disposition

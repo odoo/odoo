@@ -3,12 +3,12 @@
 import itertools
 import logging
 import math
+import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
-from werkzeug.urls import url_parse
 
 import pytz
-import uuid
+from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
