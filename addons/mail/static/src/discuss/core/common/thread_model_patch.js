@@ -59,9 +59,6 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
-    async mute({ minutes = false } = {}) {
-        await rpc("/discuss/channel/mute", { channel_id: this.id, minutes });
-    },
     /** @param {string} body */
     async post(body) {
         if (this.model === "discuss.channel" && body.startsWith("/")) {
@@ -76,14 +73,6 @@ const threadPatch = {
             }
         }
         return super.post(...arguments);
-    },
-    async updateCustomNotifications(custom_notifications) {
-        // Update the UI instantly to provide a better UX (no need to wait for the RPC to finish).
-        this.custom_notifications = custom_notifications;
-        await rpc("/discuss/channel/update_custom_notifications", {
-            channel_id: this.id,
-            custom_notifications,
-        });
     },
 };
 patch(Thread.prototype, threadPatch);
