@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_pt_report_template_note_certified_program">
+        <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+            <div class="row">
+                <div name="l10n_pt_certified_program_note" class="mx-auto text-center text-muted">
+                    <t t-if="l10n_pt_training_mode">
+                        Documento emitido para fins de Formação
+                    </t>
+                    <t t-else="">
+                        <t t-if="o and o._name == 'account.move' and o.l10n_pt_inalterable_hash_short">
+                            <t t-out="o.l10n_pt_inalterable_hash_short"/> - Processado por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
+                        </t>
+                        <t t-else="">
+                            Este documento não serve de fatura<br/>
+                            Emitido por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="l10n_pt_report_template_address_training_mode">
+        <div>Odoo</div>
+        <div>Chaussée de Namur 40</div>
+        <div>1367 Ramillies</div>
+        <div>Belgium</div>
+    </template>
+
+    <template id="l10n_pt_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+<!--            Can't put $0 in template-->
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+<!--            Can't put $0 in template-->
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+<!--            Can't put $0 in template-->
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+<!--            Can't put $0 in template-->
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+</odoo>
