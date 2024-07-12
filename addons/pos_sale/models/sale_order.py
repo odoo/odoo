@@ -42,12 +42,10 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
-    @api.depends('order_line', 'amount_total', 'order_line.account_move_line_ids.parent_state',
-                 'order_line.account_move_line_ids.price_total', 'order_line.pos_order_line_ids')
+    @api.depends('order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped(
-                'account_move_line_ids').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
+            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
             total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
 
