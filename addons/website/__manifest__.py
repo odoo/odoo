@@ -246,6 +246,8 @@
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_image_gallery/000.xml',
             'website/static/src/snippets/s_instagram_page/options.js',
+            'website/static/src/snippets/s_card/001.xml',
+            'website/static/src/snippets/s_card/options.js',
             'website/static/src/snippets/s_countdown/options.js',
             'website/static/src/snippets/s_countdown/options.xml',
             'website/static/src/snippets/s_masonry_block/options.js',
