@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A movement document series is not tied to a journal. The condition is added to any other module's,
+         after them (priority). -->
+    <record id="view_l10n_pt_at_series_form_inherit_stock" model="ir.ui.view">
+        <field name="name">at.series.form.inherit.stock</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_form"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="attributes">
+                <attribute name="invisible" add="document_type in ('outgoing', 'internal', 'incoming')" separator=" or "/>
+            </field>
+        </field>
+    </record>
+</odoo>

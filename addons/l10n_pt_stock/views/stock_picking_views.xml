@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_pt" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.inherit.pt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- An operation type without AT series issues no transport document -->
+            <xpath expr="//sheet" position="before">
+                <div name="warning_at_series"
+                     class="alert alert-warning"
+                     role="alert"
+                     invisible="country_code != 'PT' or not l10n_pt_show_no_at_series_warning or l10n_pt_document_number or state in ('done', 'cancel') or l10n_pt_documented_elsewhere">
+                  The Operation Type (<field name="picking_type_id" readonly="1"/>) has no AT Series: this
+                  transfer will be validated without a transport document. To issue one, set an AT series on
+                  the operation type before validating.
+                </div>
+                <div name="info_no_transport_document"
+                     class="alert alert-info"
+                     role="status"
+                     invisible="country_code != 'PT' or state != 'done' or not l10n_pt_document_type or l10n_pt_document_number or l10n_pt_documented_elsewhere">
+                  This transfer was validated without a transport document: its operation type had no AT Series.
+                </div>
+                <div name="info_without_transport_document"
+                     class="alert alert-info"
+                     role="status"
+                     invisible="country_code != 'PT' or not l10n_pt_no_transport_document">
+                  This transfer issues no transport document: another document, such as its invoice, accompanies the
+                  goods<span invisible="not l10n_pt_transport_document_reference">: <field name="l10n_pt_transport_document_reference" readonly="1"/></span>.
+                </div>
+            </xpath>
+            <!-- Buttons -->
+            <!-- An issued transport document is annulled with a reason, asked for from this button only -->
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="context">{'l10n_pt_cancel_with_reason': True}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='do_print_picking']" position="after">
+                <!-- A transport document is printed once issued: at validation, or before, to communicate it.
+                     A transfer validated without one prints as a plain delivery slip. -->
+                <button name="action_open_reprint_wizard"
+                        string="Print"
+                        invisible="country_code != 'PT' or not (l10n_pt_document_number or (state == 'done' and l10n_pt_document_type))"
+                        type="object"
+                        groups="base.group_user"
+                        data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="invisible">country_code == 'PT'</attribute>
+            </xpath>
+            <!-- PT Fields -->
+            <!-- The series comes from the operation type; the number is the transfer's PT identity once issued -->
+            <xpath expr="//field[@name='backorder_id']" position="after">
+                <field name="l10n_pt_document_number" invisible="country_code != 'PT' or not l10n_pt_document_number"/>
+            </xpath>
+            <xpath expr="//div[field[@name='scheduled_date']]" position="after">
+                <label for="l10n_pt_start_transport_date" invisible="country_code != 'PT'"/>
+                <div class="o_row" invisible="country_code != 'PT'">
+                    <!-- Frozen once issued: it is part of the transport document -->
+                    <field name="l10n_pt_start_transport_date" readonly="l10n_pt_document_number"/>
+                </div>
+                <!-- Offered while the transfer would issue a transport document and has not -->
+                <field name="l10n_pt_no_transport_document"
+                       invisible="country_code != 'PT' or not (l10n_pt_no_transport_document or (l10n_pt_document_type and not l10n_pt_document_number))"
+                       readonly="state in ('done', 'cancel') or l10n_pt_document_number"/>
+                <field name="l10n_pt_transport_document_reference"
+                       invisible="country_code != 'PT' or not l10n_pt_no_transport_document"
+                       readonly="state in ('done', 'cancel')"
+                       placeholder="e.g. FT 2026/00012"/>
+            </xpath>
+            <!-- What issuing records, in the same tab and order on every PT document -->
+            <xpath expr="//page[@name='extra']" position="after">
+                <page name="l10n_pt_info" string="Portugal" invisible="country_code != 'PT'">
+                    <group name="l10n_pt_info_group">
+                        <group string="Document" name="l10n_pt_document_group">
+                            <field name="l10n_pt_document_type"/>
+                            <field name="l10n_pt_document_number"/>
+                            <field name="l10n_pt_at_series_id" readonly="1"/>
+                            <field name="l10n_pt_atcud"
+                                   help="Unique document code formed by the AT series validation code and the number of the
+                                   document in the series. Only assigned once the document is secured."/>
+                        </group>
+                        <group string="Issue" name="l10n_pt_issue_group" invisible="not l10n_pt_document_number">
+                            <field name="l10n_pt_issued_on"/>
+                            <field name="l10n_pt_issue_user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Cancellation" name="l10n_pt_cancel_group" invisible="state != 'cancel'">
+                            <field name="l10n_pt_cancel_date"/>
+                            <field name="l10n_pt_cancel_user_id" widget="many2one_avatar_user"/>
+                            <field name="l10n_pt_cancel_reason"/>
+                        </group>
+                        <group string="Signature" name="l10n_pt_signature_group" groups="base.group_no_one" invisible="not l10n_pt_inalterable_hash">
+                            <field name="l10n_pt_inalterable_hash"/>
+                            <field name="l10n_pt_hashed_on"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_l10n_pt_stock" model="ir.ui.view">
+        <field name="name">stock.picking.tree.view.inherit.pt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+               <field name="l10n_pt_document_number" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_pt_stock_report_hash_integrity" model="ir.actions.report">
+        <field name="name">Portuguese stock hash integrity result PDF</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_pt_stock.report_hash_integrity</field>
+        <field name="report_file">l10n_pt_stock.report_hash_integrity</field>
+    </record>
+
+    <record model="ir.actions.server" id="action_l10n_pt_stock_check_hash_integrity">
+        <field name="name">Portuguese Stock Inalterability Check</field>
+        <field name="model_id" ref="l10n_pt_stock.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company._l10n_pt_stock_action_check_hash_integrity()
+        </field>
+    </record>
+</odoo>

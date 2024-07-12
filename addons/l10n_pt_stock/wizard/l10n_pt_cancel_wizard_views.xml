@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pt_cancel_wizard_view_inherit_stock" model="ir.ui.view">
+        <field name="name">l10n_pt.cancel.form.inherit.stock</field>
+        <field name="model">l10n_pt.cancel</field>
+        <field name="inherit_id" ref="l10n_pt_certification.pt_cancel_wizard_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_pt_notice">
+                    <field name="l10n_pt_notice" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

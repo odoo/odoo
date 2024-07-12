@@ -1,0 +1,26 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Portugal - Stock',
+    'description': """Stock module for Portugal which allows hash and QR code on stock pickings""",
+    'category': 'Accounting/Localizations/Stock',
+    'depends': [
+        'l10n_pt_certification',
+        'stock',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/ir_cron.xml',
+        'views/stock_picking_views.xml',
+        'views/stock_picking_type_views.xml',
+        'views/l10n_pt_at_series_views.xml',
+        'wizard/l10n_pt_cancel_wizard_views.xml',
+        'wizard/l10n_pt_stock_no_document_warning_views.xml',
+        'views/res_config_settings_views.xml',
+        'report/l10n_pt_stock_hash_integrity_templates.xml',
+        'report/report_deliveryslip.xml',
+    ],
+    'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

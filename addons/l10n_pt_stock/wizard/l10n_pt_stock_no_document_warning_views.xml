@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pt_stock_no_document_warning_view_form" model="ir.ui.view">
+        <field name="name">l10n.pt.stock.no.document.warning.form</field>
+        <field name="model">l10n.pt.stock.no.document.warning</field>
+        <field name="arch" type="xml">
+            <form string="No Transport Document">
+                <field name="message" nolabel="1" class="text-prewrap"/>
+                <footer>
+                    <button name="action_open_operation_types" type="object" data-hotkey="q"
+                            string="Go to Operation Type" class="btn-primary"/>
+                    <button name="action_validate" type="object" data-hotkey="w"
+                            string="Validate Anyway" class="btn-secondary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
