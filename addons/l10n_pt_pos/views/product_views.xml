@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_product_view_list" model="ir.ui.view">
+        <field name="name">product.product.list.l10n_pt_pos.incorrect</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <list string="Incorrect Products" create="0" delete="0" multi_edit="1">
+                <field name="name"/>
+                <field name="default_code"/>
+                <field name="taxes_id" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+</odoo>
