@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
@@ -42,11 +41,11 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         we can see the attributes of a product or the choices of a combo
         """
         setup_product_combo_items(self)
-        desk_organizer_with_attributes_combo_item = self.env["product.combo.item"].create({
+        self.env["product.combo.item"].create({
             "product_id": self.desk_organizer.id,
             "extra_price": 0,
+            "combo_id": self.desk_accessories_combo.id,
         })
-        self.desk_accessories_combo.combo_item_ids += desk_organizer_with_attributes_combo_item
 
         self_route = self.pos_config._get_self_order_route()
 

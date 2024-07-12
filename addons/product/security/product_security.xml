@@ -54,5 +54,13 @@
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
     </record>
 
+    <record model="ir.rule" id="product_combo_comp_rule">
+        <field name="name">Product combo multi-company rule</field>
+        <field name="model_id" ref="model_product_combo"/>
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]
+        </field>
+    </record>
+
 </data>
 </odoo>

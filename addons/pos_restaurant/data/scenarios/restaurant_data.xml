@@ -530,38 +530,46 @@
         </record>
 
         <!-- Combo -->
-        <record id="cheeseburger_combo_item" model="product.combo.item">
-            <field name="product_id" ref="pos_food_cheeseburger"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="bacon_burger_combo_item" model="product.combo.item">
-            <field name="product_id" ref="pos_food_bacon"/>
-            <field name="extra_price">0</field>
-        </record>
         <record id="burger_combo" model="product.combo">
             <field name="name">Burgers Choice</field>
-            <field name="combo_item_ids" eval="[(6, 0, [ref('cheeseburger_combo_item'), ref('bacon_burger_combo_item')])]"/>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('pos_food_cheeseburger'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('pos_food_bacon'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
         </record>
 
-        <record id="coke_combo_item" model="product.combo.item">
-            <field name="product_id" ref="coke"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="water_combo_item" model="product.combo.item">
-            <field name="product_id" ref="water"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="maid_combo_item" model="product.combo.item">
-            <field name="product_id" ref="minute_maid"/>
-            <field name="extra_price">0</field>
-        </record>
-        <record id="milkshake_combo_item" model="product.combo.item">
-            <field name="product_id" ref="milkshake_banana"/>
-            <field name="extra_price">2</field>
-        </record>
         <record id="drink_combo" model="product.combo">
             <field name="name">Drinks choice</field>
-            <field name="combo_item_ids" eval="[(6, 0, [ref('coke_combo_item'), ref('water_combo_item'), ref('maid_combo_item'), ref('milkshake_combo_item')])]"/>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.create({
+                        'product_id': ref('coke'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('water'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('minute_maid'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('milkshake_banana'),
+                        'extra_price': 2,
+                    }),
+                ]"
+            />
         </record>
 
         <record id="burger_drink_combo" model="product.product">

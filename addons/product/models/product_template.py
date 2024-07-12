@@ -19,6 +19,7 @@ class ProductTemplate(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product"
     _order = "is_favorite desc, name"
+    _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
     @tools.ormcache()
@@ -62,7 +63,9 @@ class ProductTemplate(models.Model):
         required=True,
         default='consu',
     )
-    combo_ids = fields.Many2many(string="Combo Choices", comodel_name='product.combo')
+    combo_ids = fields.Many2many(
+        string="Combo Choices", comodel_name='product.combo', check_company=True
+    )
     service_tracking = fields.Selection(selection=[
             ('no', 'Nothing'),
         ],
