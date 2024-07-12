@@ -1147,13 +1147,13 @@ class SaleOrder(models.Model):
 
     # INVOICING #
 
-    def _prepare_account_move_values(self):
+    def _prepare_invoice(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        values = super()._prepare_account_move_values()
+        values = super()._prepare_invoice()
 
         txs_to_be_linked = self.transaction_ids.filtered(
             lambda tx: (

@@ -51,7 +51,7 @@ class AccountMove(models.Model):
             return
 
         # Copy data from PO
-        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_account_move_values()
+        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
         has_invoice_lines = bool(self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')))
         new_currency_id = self.currency_id if has_invoice_lines else invoice_vals.get('currency_id')
         del invoice_vals['ref'], invoice_vals['payment_reference']

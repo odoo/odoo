@@ -228,8 +228,8 @@ class SaleOrder(models.Model):
         action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
         return action
 
-    def _prepare_account_move_values(self):
-        invoice_vals = super()._prepare_account_move_values()
+    def _prepare_invoice(self):
+        invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
 
