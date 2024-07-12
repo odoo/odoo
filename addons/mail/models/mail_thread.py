@@ -4411,7 +4411,7 @@ class MailThread(models.AbstractModel):
         if not reset:
             followers_data = [("ADD", followers_data)]
         relation = "recipients" if filter_recipients else "followers"
-        store.add("Thread", {"id": self.id, "model": self._name, relation: followers_data})
+        store.add("mail.thread", {"id": self.id, "model": self._name, relation: followers_data})
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4534,7 +4534,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res["translationValue"] = False
-        broadcast_store.add("Message", res)
+        broadcast_store.add("mail.message", res)
         self.env["bus.bus"]._sendone(
             message._bus_notification_target(), "mail.record/insert", broadcast_store.get_result()
         )
@@ -4595,7 +4595,7 @@ class MailThread(models.AbstractModel):
             self._message_followers_to_store(store, filter_recipients=True, reset=True)
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()
-        store.add("Thread", res)
+        store.add("mail.thread", res)
 
     @api.model
     def get_views(self, views, options=None):

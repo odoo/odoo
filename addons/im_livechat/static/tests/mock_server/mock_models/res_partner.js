@@ -38,12 +38,11 @@ export class ResPartner extends mailModels.ResPartner {
                     ["create_uid", "=", serverState.userId],
                 ]),
                 is_available: activeLivechatPartners.includes(partner.id),
-                type: "partner",
             };
             if (partner.lang) {
                 data.lang_name = ResLang.search_read([["code", "=", partner.lang]])[0].name;
             }
-            store.add("Persona", data);
+            store.add("res.partner", data);
         }
     }
     /**
@@ -59,9 +58,8 @@ export class ResPartner extends mailModels.ResPartner {
             active_test: false,
         });
         for (const partner of partners) {
-            store.add("Persona", {
+            store.add("res.partner", {
                 id: partner.id,
-                type: "partner",
                 // Not a real field but ease the testing
                 user_livechat_username: partner.user_livechat_username,
             });

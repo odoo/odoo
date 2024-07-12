@@ -52,7 +52,7 @@ export class IrAttachment extends webModels.IrAttachment {
             if (voice) {
                 res.voice = true;
             }
-            store.add("Attachment", res);
+            store.add("ir.attachment", res);
         }
     }
 }

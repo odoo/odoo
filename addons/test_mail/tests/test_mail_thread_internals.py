@@ -388,7 +388,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "Thread": {
+                        "mail.thread": {
                             "id": "starred",
                             "messages": [["DELETE", [{"id": msg.id}]]],
                             "model": "mail.box",
@@ -400,7 +400,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "Thread": {
+                        "mail.thread": {
                             "id": "starred",
                             "messages": [["DELETE", [{"id": msg.id}]]],
                             "model": "mail.box",
@@ -518,12 +518,12 @@ class TestNoThread(MailCommon, TestRecipients):
             'record_name': 'Not used in message _to_store',
             'res_id': test_record.id,
         })
-        formatted = Store(message, for_current_user=True).get_result()["Message"][0]
+        formatted = Store(message, for_current_user=True).get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
-        formatted = Store(message, for_current_user=True).get_result()["Message"][0]
+        formatted = Store(message, for_current_user=True).get_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

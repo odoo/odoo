@@ -69,9 +69,8 @@ async function get_session(request) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
         store.add(ResPartner.browse(operatorPartner.id));
-        store.add("Thread", {
+        store.add("discuss.channel", {
             id: -1,
-            model: "discuss.channel",
             isLoaded: true,
             name: channelVals["name"],
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
@@ -94,7 +93,7 @@ async function get_session(request) {
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
     store.add(DiscussChannel.browse(channelId).map((record) => record.id));
-    store.add("Thread", { id: channelId, model: "discuss.channel", isLoaded: true });
+    store.add("discuss.channel", { id: channelId, isLoaded: true });
     return store.get_result();
 }
 

@@ -56,13 +56,13 @@ class TestPartner(TransactionCase):
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(
-            Store(self.partner).get_result()["Persona"][0]["out_of_office_date_end"],
+            Store(self.partner).get_result()["res.partner"][0]["out_of_office_date_end"],
             fields.Date.to_string(self.today + relativedelta(days=2)),
             'Return date is the first return date of all users associated with a partner',
         )
         self.leaves[1].action_refuse()
         self.assertEqual(
-            Store(self.partner).get_result()["Persona"][0]["out_of_office_date_end"],
+            Store(self.partner).get_result()["res.partner"][0]["out_of_office_date_end"],
             False,
             'Partner is not considered out of office if one of their users is not on holiday',
         )

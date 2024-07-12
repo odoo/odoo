@@ -601,7 +601,7 @@ class MailActivity(models.Model):
                 for attachment in record.attachment_ids
             ]
             activity["persona"] = {"id": record.user_id.partner_id.id, "type": "partner"}
-            store.add("Activity", activity)
+            store.add("mail.activity", activity)
 
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):

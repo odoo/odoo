@@ -103,4 +103,4 @@ class IrAttachment(models.Model):
             }
             if access_token:
                 res["accessToken"] = attachment.access_token
-            store.add("Attachment", res)
+            store.add("ir.attachment", res)

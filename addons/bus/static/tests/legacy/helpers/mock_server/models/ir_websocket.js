@@ -31,10 +31,14 @@ patch(MockServer.prototype, {
         const imStatus = {};
         const { "res.partner": partnerIds } = imStatusIdsByModel;
         if (partnerIds) {
-            imStatus["Persona"] = this.mockSearchRead("res.partner", [[["id", "in", partnerIds]]], {
-                context: { active_test: false },
-                fields: ["im_status"],
-            }).map((p) => ({ ...p, type: "partner" }));
+            imStatus["res.partner"] = this.mockSearchRead(
+                "res.partner",
+                [[["id", "in", partnerIds]]],
+                {
+                    context: { active_test: false },
+                    fields: ["im_status"],
+                }
+            ).map((p) => ({ id: p.id, im_status: p.im_status }));
         }
         return imStatus;
     },

@@ -81,7 +81,7 @@ export class MailThread extends models.ServerModel {
             followers_data = [["ADD", followers_data]];
         }
         const relation = filter_recipients ? "recipients" : "followers";
-        store.add("Thread", { id: ids[0], model: this._name, [relation]: followers_data });
+        store.add("mail.thread", { id: ids[0], model: this._name, [relation]: followers_data });
     }
 
     /** @param {number[]} ids */
@@ -447,13 +447,10 @@ export class MailThread extends models.ServerModel {
                 notifications.push([
                     [channel, "members"],
                     "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            is_pinned: true,
-                            model: "discuss.channel",
-                        },
-                    },
+                    new mailDataHelpers.Store("discuss.channel", {
+                        id: channel.id,
+                        is_pinned: true,
+                    }).get_result(),
                 ]);
                 notifications.push([
                     channel,
@@ -669,6 +666,6 @@ export class MailThread extends models.ServerModel {
                 id,
             ]);
         }
-        store.add("Thread", res);
+        store.add("mail.thread", res);
     }
 }

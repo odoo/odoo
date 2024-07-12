@@ -14,7 +14,7 @@ export class MailFollowers extends models.ServerModel {
         followers.sort((f1, f2) => (f1.id < f2.id ? -1 : 1));
         store.add(ResPartner.browse(followers.map((follower) => follower.partner_id)));
         for (const follower of followers) {
-            store.add("Follower", {
+            store.add("mail.followers", {
                 display_name: follower.display_name,
                 email: follower.email,
                 id: follower.id,

@@ -31,7 +31,7 @@ test("simplest layout of a followed subtype", async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -63,7 +63,7 @@ test("simplest layout of a not followed subtype", async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -91,7 +91,7 @@ test("toggle follower subtype checkbox", async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();

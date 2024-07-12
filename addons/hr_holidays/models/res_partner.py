@@ -37,12 +37,11 @@ class ResPartner(models.Model):
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
                 store.add(
-                    "Persona",
+                    "res.partner",
                     {
                         "id": partner.id,
                         "out_of_office_date_end": (
                             odoo.fields.Date.to_string(date) if state == "validate" else False
                         ),
-                        "type": "partner",
                     },
                 )

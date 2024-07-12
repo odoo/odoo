@@ -43,7 +43,7 @@ class MailMessage(models.Model):
                 )
                 if chatbot_message.script_step_id:
                     store.add(
-                        "Message",
+                        "mail.message",
                         {
                             "id": message.id,
                             "chatbotStep": {
@@ -90,7 +90,7 @@ class MailMessage(models.Model):
                 },
             )
             store.add(
-                "Message",
+                "mail.message",
                 {
                     "id": message.id,
                     "author": {"id": message.author_id.id, "type": "partner"},

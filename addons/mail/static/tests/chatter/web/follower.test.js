@@ -31,7 +31,7 @@ test("base rendering not editable", async () => {
         _thread_to_store(ids, store) {
             // mimic user without write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
     await start();

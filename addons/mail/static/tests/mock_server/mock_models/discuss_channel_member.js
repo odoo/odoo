@@ -36,7 +36,7 @@ export class DiscussChannelMember extends models.ServerModel {
             const store = new mailDataHelpers.Store(
                 DiscussChannelMember.browse(member.id).map((record) => record.id)
             );
-            store.add("ChannelMember", { id: member.id, isTyping: is_typing });
+            store.add("discuss.channel.member", { id: member.id, isTyping: is_typing });
             notifications.push([channel, "mail.record/insert", store.get_result()]);
         }
         BusBus._sendmany(notifications);
@@ -171,7 +171,7 @@ export class DiscussChannelMember extends models.ServerModel {
             if ("new_message_separator" in fields) {
                 data.new_message_separator = member.new_message_separator;
             }
-            store.add("ChannelMember", data);
+            store.add("discuss.channel.member", data);
         }
     }
 
@@ -319,7 +319,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 },
             })
         );
-        store.add("ChannelMember", { id: member.id, syncUnread: sync });
+        store.add("discuss.channel.member", { id: member.id, syncUnread: sync });
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
         this.env["bus.bus"]._sendone(guest ?? partner, "mail.record/insert", store.get_result());
     }

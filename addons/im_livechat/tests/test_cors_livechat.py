@@ -34,7 +34,7 @@ class TestCorsLivechat(HttpCase):
                 "persisted": True,
             },
         )
-        channel = self.env["discuss.channel"].browse(data["Thread"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         self.assertEqual(channel.channel_member_ids[0].partner_id, self.operator.partner_id)
         self.assertFalse(channel.channel_member_ids[1].partner_id)
         self.assertTrue(channel.channel_member_ids[1].guest_id)
@@ -50,7 +50,7 @@ class TestCorsLivechat(HttpCase):
             },
             headers={"Cookie": f"{guest._cookie_name}={guest.id}{guest._cookie_separator}{guest.access_token};"},
         )
-        channel = self.env["discuss.channel"].browse(data["Thread"][0]["id"])
+        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         channel_guest = channel.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
         self.assertNotEqual(channel_guest, guest)
 
@@ -68,7 +68,7 @@ class TestCorsLivechat(HttpCase):
             "/im_livechat/cors/channel/messages",
             {
                 "guest_token": data["Store"]["guest_token"],
-                "channel_id": data["Thread"][0]["id"],
+                "channel_id": data["discuss.channel"][0]["id"],
             },
         )
 
@@ -88,6 +88,6 @@ class TestCorsLivechat(HttpCase):
                 "/im_livechat/cors/channel/messages",
                 {
                     "guest_token": guest.access_token,
-                    "channel_id": data["Thread"][0]["id"],
+                    "channel_id": data["discuss.channel"][0]["id"],
                 },
             )

@@ -192,7 +192,7 @@ class ChannelMember(models.Model):
         notifications = []
         for member in self:
             store = Store(member)
-            store.add("ChannelMember", {"id": member.id, "isTyping": is_typing})
+            store.add("discuss.channel.member", {"id": member.id, "isTyping": is_typing})
             notifications.append([member.channel_id, "mail.record/insert", store.get_result()])
         self.env['bus.bus']._sendmany(notifications)
 
@@ -203,13 +203,10 @@ class ChannelMember(models.Model):
                 (
                     member.partner_id,
                     "mail.record/insert",
-                    {
-                        "Thread": {
-                            "id": member.channel_id.id,
-                            "model": "discuss.channel",
-                            "mute_until_dt": member.mute_until_dt,
-                        }
-                    },
+                    Store(
+                        "discuss.channel",
+                        {"id": member.channel_id.id, "mute_until_dt": member.mute_until_dt},
+                    ).get_result(),
                 )
             )
             if member.mute_until_dt and member.mute_until_dt != -1:
@@ -222,13 +219,10 @@ class ChannelMember(models.Model):
         self.env["bus.bus"]._sendone(
             self.partner_id,
             "mail.record/insert",
-            {
-                "Thread": {
-                    "id": self.channel_id.id,
-                    "model": "discuss.channel",
-                    "custom_notifications": custom_notifications,
-                }
-            },
+            Store(
+                "discuss.channel",
+                {"id": self.channel_id.id, "custom_notifications": self.custom_notifications},
+            ).get_result(),
         )
 
     @api.model
@@ -294,7 +288,7 @@ class ChannelMember(models.Model):
                 data["message_unread_counter_bus_id"] = bus_last_id
             if fields.get("last_interest_dt"):
                 data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
-            store.add("ChannelMember", data)
+            store.add("discuss.channel.member", data)
 
     def _partner_data_to_store(self, store: Store, fields=None):
         self.ensure_one()
@@ -331,10 +325,9 @@ class ChannelMember(models.Model):
         self._join_sfu(ice_servers)
         if store:
             store.add(
-                "Thread",
+                "discuss.channel",
                 {
                     "id": self.channel_id.id,
-                    "model": "discuss.channel",
                     "rtcSessions": [
                         ("ADD", [{"id": session.id} for session in current_rtc_sessions]),
                         ("DELETE", [{"id": session.id} for session in outdated_rtc_sessions]),
@@ -455,34 +448,46 @@ class ChannelMember(models.Model):
                 target = member.partner_id
             else:
                 target = member.guest_id
-            channel_data = {
-                "id": self.channel_id.id,
-                "model": "discuss.channel",
-                "rtcInvitingSession": {"id": member.rtc_inviting_session_id.id},
-            }
-            store = Store("Thread", channel_data)
-            store.add(member.rtc_inviting_session_id)
-            invitation_notifications.append((target, "mail.record/insert", store.get_result()))
+            invitation_notifications.append(
+                (
+                    target,
+                    "mail.record/insert",
+                    Store(
+                        "discuss.channel",
+                        {
+                            "id": self.channel_id.id,
+                            "rtcInvitingSession": {"id": member.rtc_inviting_session_id.id},
+                        },
+                    )
+                    .add(member.rtc_inviting_session_id)
+                    .get_result(),
+                )
+            )
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
-            channel_data = {
-                "id": self.channel_id.id,
-                "model": "discuss.channel",
-                "invitedMembers": [("ADD", [{"id": member.id} for member in members])],
-            }
-            store = Store("Thread", channel_data)
-            store.add(
-                members,
-                fields={
-                    "id": True,
-                    "channel": {},
-                    "persona": {
-                        "partner": {"id": True, "name": True, "im_status": True},
-                        "guest": {"id": True, "name": True, "im_status": True},
+            self.env["bus.bus"]._sendone(
+                self.channel_id,
+                "mail.record/insert",
+                Store(
+                    "discuss.channel",
+                    {
+                        "id": self.channel_id.id,
+                        "invitedMembers": [("ADD", [{"id": member.id} for member in members])],
                     },
-                },
+                )
+                .add(
+                    members,
+                    fields={
+                        "id": True,
+                        "channel": {},
+                        "persona": {
+                            "partner": {"id": True, "name": True, "im_status": True},
+                            "guest": {"id": True, "name": True, "im_status": True},
+                        },
+                    },
+                )
+                .get_result(),
             )
-            self.env["bus.bus"]._sendone(self.channel_id, "mail.record/insert", store.get_result())
         return members
 
     def _mark_as_read(self, last_message_id, sync=False):
@@ -565,5 +570,5 @@ class ChannelMember(models.Model):
                 },
             },
         )
-        store.add("ChannelMember", {"id": self.id, "syncUnread": sync})
+        store.add("discuss.channel.member", {"id": self.id, "syncUnread": sync})
         self.env["bus.bus"]._sendone(target, "mail.record/insert", store.get_result())

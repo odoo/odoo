@@ -27,9 +27,8 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const notifications = [];
         for (const [channelId, sessions] of Object.entries(sessionsByChannelId)) {
             const [channel] = DiscussChannel.search_read([["id", "=", Number(channelId)]]);
-            const store = new mailDataHelpers.Store("Thread", {
+            const store = new mailDataHelpers.Store("discuss.channel", {
                 id: channel.id,
-                model: "discuss.channel",
                 rtcSessions: [["ADD", sessions.map((session) => ({ id: session.id }))]],
             });
             store.add(sessions.map((session) => session.id));
@@ -68,7 +67,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                     isScreenSharingOn: rtcSession.is_screen_sharing_on,
                 });
             }
-            store.add("RtcSession", vals);
+            store.add("discuss.channel.rtc.session", vals);
         }
     }
 

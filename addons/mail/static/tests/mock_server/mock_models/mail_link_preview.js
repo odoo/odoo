@@ -6,7 +6,7 @@ export class MailLinkPreview extends models.ServerModel {
     /** @param {object} linkPreview */
     _to_store(ids, store) {
         for (const linkPreview of this.browse(ids)) {
-            store.add("LinkPreview", {
+            store.add("mail.link.preview", {
                 id: linkPreview.id,
                 image_mimetype: linkPreview.image_mimetype,
                 message: linkPreview.message_id ? { id: linkPreview.message_id } : false,

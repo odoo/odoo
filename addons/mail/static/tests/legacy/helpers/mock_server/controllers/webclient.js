@@ -39,7 +39,7 @@ patch(MockServer.prototype, {
                 channelsDomain.push(["channel_type", "in", channelTypes]);
             }
             this._addToRes(res, {
-                Thread: this._mockDiscussChannelChannelInfo(
+                "discuss.channel": this._mockDiscussChannelChannelInfo(
                     this.pyEnv["discuss.channel"].search(channelsDomain)
                 ),
             });

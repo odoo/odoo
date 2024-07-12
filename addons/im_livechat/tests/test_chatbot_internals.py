@@ -49,7 +49,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             'chatbot_script_id': self.chatbot_script.id,
             'channel_id': self.livechat_channel.id,
         })
-        discuss_channel = self.env['discuss.channel'].browse(data["Thread"][0]['id'])
+        discuss_channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
 
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 

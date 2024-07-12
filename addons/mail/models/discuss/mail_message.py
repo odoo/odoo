@@ -25,7 +25,7 @@ class MailMessage(models.Model):
                 if message.parent_id:
                     store.add(message.parent_id, format_reply=False)
                 store.add(
-                    "Message",
+                    "mail.message",
                     {
                         "id": message.id,
                         "parentMessage": (

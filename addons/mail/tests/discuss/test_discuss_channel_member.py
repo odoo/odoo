@@ -224,8 +224,8 @@ class TestDiscussChannelMember(MailCommon):
         data = self.env["res.partner"].search_for_channel_invite(
             partner.name, channel_id=self.public_channel.id
         )["data"]
-        self.assertEqual(len(data["Persona"]), 1)
-        self.assertEqual(data["Persona"][0]["id"], partner.id)
+        self.assertEqual(len(data["res.partner"]), 1)
+        self.assertEqual(data["res.partner"][0]["id"], partner.id)
 
     # ------------------------------------------------------------
     # UNREAD COUNTER TESTS

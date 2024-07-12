@@ -22,13 +22,15 @@ class TestUploadAttachment(HttpCase):
                 "persisted": True,
             },
         )
-        self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": data["Thread"][0]["id"]})
+        self.make_jsonrpc_request(
+            "/im_livechat/visitor_leave_session", {"channel_id": data["discuss.channel"][0]["id"]}
+        )
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             response = self.url_open(
                 "/mail/attachment/upload",
                 {
                     "csrf_token": http.Request.csrf_token(self),
-                    "thread_id": data["Thread"][0]["id"],
+                    "thread_id": data["discuss.channel"][0]["id"],
                     "thread_model": "discuss.channel",
                 },
                 files={"ufile": file},
