@@ -565,36 +565,26 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
-                    <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_start"/>
                     <field name="state"/>
-                    <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="o_kanban_record_top">
-                                    <field name="priority" widget="priority"/>
-                                    <div class="o_kanban_record_headings ms-1">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.product_id.value"/></span></strong>
-                                    </div>
-                                    <span class="float-end text-end"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left text-muted">
-                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_start.value and record.date_start.value.split(' ')[0] or False"/></span>
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                        <field name="delay_alert_date" invisible="1"/>
-                                        <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'bg-200' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-primary'}"><t t-esc="record.state.value"/></span>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <div class="d-flex mb-1">
+                                <field name="priority" widget="priority"/>
+                                <field name="product_id" class="fw-bolder fs-6 ms-1"/>
+                                <field name="product_qty" class="ms-auto"/>
+                                <field name="product_uom_id" class="small ms-1"/>
                             </div>
+                            <footer class="fs-6 text-muted">
+                                <div class="d-flex">
+                                    <field name="name" class="me-1"/>
+                                    <field name="date_start" widget="datetime" options="{'show_time': false}"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                </div>
+                                <field name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
+                                <span t-attf-class="ms-auto badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'bg-200' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-primary'}"><field name="state"/></span>
+                            </footer>
                         </t>
                     </templates>
                 </kanban>

@@ -18,10 +18,8 @@ describe.current.tags("desktop");
 defineMrpModels();
 
 const newArchs = {
-    "product.document,false,kanban": `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-box">
-                    <div>
-                        <field name="name"/>
-                    </div>
+    "product.document,false,kanban": `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-card">
+                    <field name="name"/>
                 </t></templates></kanban>`,
 };
 
@@ -76,17 +74,13 @@ test("mrp: click on image opens attachment viewer", async () => {
         "product.document,false,kanban": `
                 <kanban js_class="product_documents_kanban" create="false">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="o_kanban_image" t-if="record.ir_attachment_id.raw_value">
-                                <div class="o_kanban_previewer">
-                                    <field name="ir_attachment_id" invisible="1"/>
-                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
-                                </div>
+                        <t t-name="kanban-card">
+                            <div class="o_kanban_previewer" t-if="record.ir_attachment_id.raw_value">
+                                <field name="ir_attachment_id" invisible="1"/>
+                                <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
                             </div>
-                            <div>
-                                <field name="name"/>
-                                <field name="mimetype"/>
-                            </div>
+                            <field name="name"/>
+                            <field name="mimetype"/>
                         </t>
                     </templates>
                 </kanban>`,
