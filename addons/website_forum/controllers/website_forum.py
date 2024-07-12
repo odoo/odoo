@@ -139,6 +139,14 @@ class WebsiteForum(WebsiteProfile):
             my_profile=request.env.user == author,
             **post
         )
+
+        if tag and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
+            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
+            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
+            # This permanent redirect is placed to instruct the bots that this page is no longer valid
+            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
+            return request.redirect(f'/forum/{slug(forum)}', code=301)
+
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
             "forum_posts_only", search, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
@@ -221,6 +229,13 @@ class WebsiteForum(WebsiteProfile):
         if not isinstance(tag_char, str) or len(tag_char) > 1 or (tag_char and not tag_char.isalpha()):
             # So that further development does not miss this. Users shouldn't see it with normal usage.
             raise werkzeug.exceptions.BadRequest(_('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
+
+        if tag_char and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
+            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
+            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
+            # This permanent redirect is placed to instruct the bots that this page is no longer valid
+            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
+            return request.redirect(f'/forum/{slug(forum)}/tag', code=301)
 
         domain = [('forum_id', '=', forum.id), ('posts_count', '=' if filters == "unused" else '>', 0)]
         if filters == 'followed' and not request.env.user._is_public():
