@@ -1,5 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
+import { cleanTerm } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -30,10 +31,13 @@ const StorePatch = {
             /** @this {import("models").Store} */
             compute() {
                 /** @type {import("models").Thread[]} */
+                const searchTerm = cleanTerm(this.discuss.searchTerm);
                 let threads = Object.values(this.Thread.records).filter(
                     (thread) =>
-                        thread.displayToSelf ||
-                        (thread.needactionMessages.length > 0 && thread.model !== "mail.box")
+                        (thread.displayToSelf ||
+                            (thread.needactionMessages.length > 0 &&
+                                thread.model !== "mail.box")) &&
+                        cleanTerm(thread.displayName).includes(searchTerm)
                 );
                 const tab = this.discuss.activeTab;
                 if (tab !== "main") {

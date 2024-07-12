@@ -42,6 +42,7 @@ export class DiscussApp extends Record {
 
     /** @type {'main'|'channel'|'chat'|'livechat'} */
     activeTab = "main";
+    searchTerm = "";
     isActive = false;
     allCategories = Record.many("DiscussAppCategory", {
         inverse: "app",
