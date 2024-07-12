@@ -1,7 +1,8 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
+import { getContent, setSelection } from "../_helpers/selection";
 
 async function testCoreEditor(testConfig) {
     return testEditor({ ...testConfig, config: { Plugins: CORE_PLUGINS } });
@@ -213,6 +214,40 @@ describe("deleteRange method", () => {
                 stepFunction: deleteRange,
                 contentAfter: "<div>ab[]ef<br>ghi</div>",
             });
+        });
+    });
+    describe("Fake line breaks", () => {
+        test("should not crash if cursor is inside a fake BR", async () => {
+            // The goal of this tests is to make sure deleteRange does not rely
+            // on selection normaliztion.  It should not assume that the cursor
+            // is never inside a BR.
+            const contentBefore = unformat(
+                `<table><tbody>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                </tbody></table>`
+            );
+            const { editor, el } = await setupEditor(contentBefore);
+            // Place the cursor inside the BR.
+            setSelection({
+                anchorNode: el,
+                anchorOffset: 0,
+                focusNode: el.querySelector("tr:nth-child(2) td br"),
+                focusOffset: 0,
+            });
+            /* [<table><tbody>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><]br></td><td><br></td></tr>
+                </tbody></table>
+            */
+            deleteRange(editor);
+            const contentAfter = unformat(
+                `[<table><tbody>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td>]<br></td><td><br></td></tr>
+                </tbody></table>`
+            );
+            expect(getContent(el)).toBe(contentAfter);
         });
     });
 });
