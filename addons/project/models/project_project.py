@@ -125,7 +125,7 @@ class Project(models.Model):
             "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
             "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
             "When following a project, portal users will only get access to the specific tasks they are following.\n\n"
-            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks they are following, but not edit them.\n"
+            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
             "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
@@ -976,13 +976,14 @@ class Project(models.Model):
 
         dict_tasks_per_partner = {}
         dict_partner_ids_to_subscribe_per_partner = {}
+        access_mode = self.env.context.get('access_mode')
         for task in self.task_ids:
             if task.partner_id in dict_tasks_per_partner:
                 dict_tasks_per_partner[task.partner_id] |= task
             else:
                 partner_ids_to_subscribe = [
                     partner.id for partner in partners
-                    if partner == task.partner_id or partner in task.partner_id.child_ids
+                    if partner == task.partner_id or partner in task.partner_id.child_ids or access_mode == 'read'
                 ]
                 if partner_ids_to_subscribe:
                     dict_tasks_per_partner[task.partner_id] = task

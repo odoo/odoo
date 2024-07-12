@@ -69,6 +69,6 @@ class ProjectShareWizard(models.TransientModel):
             # send mail to users
             self._send_public_link(portal_partners)
             self._send_signup_link(partners=self.with_context({'signup_valid': True}).partner_ids - portal_partners)
-            self.resource_ref._add_followers(self.partner_ids)
+            self.resource_ref.with_context(access_mode=self.access_mode)._add_followers(self.partner_ids)
             return {'type': 'ir.actions.act_window_close'}
         return super().action_send_mail()

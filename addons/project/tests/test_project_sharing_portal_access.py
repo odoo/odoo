@@ -110,6 +110,35 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.assertIn('href="http://localhost:8069/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
         self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')
 
+    def test_project_share_readonly_wizard(self):
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_portal.id,
+            'access_mode': 'read',
+            'send_email': True,
+        })
+        new_portal_user = self.env['res.users'].with_context({'no_reset_password': True}).create({
+            'name': 'Alice Grey',
+            'login': 'alice',
+            'email': 'alice@grey.com',
+            'signature': 'SignAlice',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])]})
+        new_partner = self.env['res.partner'].create({
+            'name': 'Alice Grey',
+            'email': 'alice@grey.com',
+            'company_id': False,
+            'user_ids': [Command.link(new_portal_user.id)]})
+        self.project_portal.with_user(new_portal_user)
+        with self.assertRaises(AccessError):
+            self.project_portal.with_user(new_portal_user).check_access_rule('read')
+            self.task_portal.with_user(new_portal_user).check_access_rule('read')
+        project_share_wizard.write({'partner_ids': [Command.link(new_partner.id)]})
+        project_share_wizard.action_send_mail()
+        # following a project should also grand read access to its tasks
+        self.project_portal.with_user(new_portal_user).check_access_rule('read')
+        self.task_portal.with_user(new_portal_user).check_access_rule('read')
+
 
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
