@@ -22,14 +22,14 @@ class AccountOrderMixin(models.AbstractModel):
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string='Total', store=True, compute='_compute_amounts')
 
-    account_move_ids = fields.Many2many('account.move')
+    invoice_ids = fields.Many2many('account.move')
     order_line = fields.One2many('account.order.line.mixin')
 
     invoice_status = fields.Selection([], compute='_compute_invoice_status', store=True)
     name = fields.Char(string="Order Reference", required=True, copy=False, readonly=False, index='trigram', default=lambda self: _('New'))
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', check_company=True)
 
-    @api.depends('account_move_ids.state', 'currency_id', 'amount_total')
+    @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
     def _compute_amount_to_invoice(self):
         pass  # To override
 

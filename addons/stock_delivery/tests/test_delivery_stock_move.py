@@ -65,11 +65,11 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.sale_prepaid._create_invoices()
 
         # I check that the invoice was created
-        self.assertEqual(len(self.sale_prepaid.account_move_ids), 1, "Invoice not created.")
+        self.assertEqual(len(self.sale_prepaid.invoice_ids), 1, "Invoice not created.")
 
         # I confirm the invoice
 
-        self.invoice = self.sale_prepaid.account_move_ids
+        self.invoice = self.sale_prepaid.invoice_ids
         self.invoice.action_post()
 
         # I pay the invoice.
