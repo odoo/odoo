@@ -872,6 +872,7 @@ export class PosStore extends Reactive {
 
         const order = this.createNewOrder(data);
         this.selectedOrderUuid = order.uuid;
+        this.searchProductWord = "";
         return order;
     }
 

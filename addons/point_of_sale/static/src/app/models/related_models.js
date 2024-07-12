@@ -235,7 +235,7 @@ export class Base {
                     if (name === "id" && typeof value === "string") {
                         value = serializedData[name].split("_")[1];
                     }
-                    serializedDataOrm[name] = value || false;
+                    serializedDataOrm[name] = value !== undefined ? value : false;
                 }
             }
 
