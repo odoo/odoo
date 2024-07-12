@@ -15,6 +15,7 @@ export class SubtaskOne2ManyField extends X2ManyField {
 export const subtaskOne2ManyField = {
     ...x2ManyField,
     component: SubtaskOne2ManyField,
+    additionalClasses: ["o_field_one2many"],
 }
 
 registry.category("fields").add("subtasks_one2many", subtaskOne2ManyField);
