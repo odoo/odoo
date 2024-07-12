@@ -133,7 +133,7 @@ class TestLinkPreview(MailCommon):
                         {
                             "type": "mail.record/insert",
                             "payload": {
-                                "LinkPreview": [
+                                "mail.link.preview": [
                                     {
                                         "id": message.link_preview_ids.id,
                                         "image_mimetype": False,
@@ -147,7 +147,7 @@ class TestLinkPreview(MailCommon):
                                         "source_url": self.source_url,
                                     },
                                 ],
-                                "Message": [
+                                "mail.message": [
                                     {
                                         "id": message.id,
                                         "linkPreviews": [{"id": message.link_preview_ids.id}],

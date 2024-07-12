@@ -243,7 +243,7 @@ patch(MockServer.prototype, {
             });
         }
         this._mockMailThread_NotifyThread(model, ids, messageId, context?.temporary_id);
-        return { Message: this._mockMailMessageMessageFormat([messageId]) };
+        return { "mail.message": this._mockMailMessageMessageFormat([messageId]) };
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.
@@ -308,29 +308,17 @@ patch(MockServer.prototype, {
                 notifications.push([
                     [channel, "members"],
                     "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            is_pinned: true,
-                            model: "discuss.channel",
-                        },
-                    },
+                    { "discuss.channel": [{ id: channel.id, is_pinned: true }] },
                 ]);
                 notifications.push([
                     channel,
                     "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            last_interest_dt: now,
-                            model: "discuss.channel",
-                        },
-                    },
+                    { "discuss.channel": [{ id: channel.id, last_interest_dt: now }] },
                 ]);
                 notifications.push([
                     channel,
                     "discuss.channel/new_message",
-                    { data: { Message: messageFormat }, id: channel.id, temporary_id },
+                    { data: { "mail.message": messageFormat }, id: channel.id, temporary_id },
                 ]);
             }
         }

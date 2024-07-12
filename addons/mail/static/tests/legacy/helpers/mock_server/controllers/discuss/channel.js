@@ -12,7 +12,7 @@ patch(MockServer.prototype, {
         if (args.channels_as_member) {
             const channels = this._mockDiscussChannel__get_channels_as_member();
             this._addToRes(res, {
-                Message: channels
+                "mail.message": channels
                     .map((channel) => {
                         const channelMessages = this.getRecords("mail.message", [
                             ["model", "=", "discuss.channel"],
@@ -29,7 +29,9 @@ patch(MockServer.prototype, {
                             : false;
                     })
                     .filter((lastMessage) => lastMessage),
-                Thread: this._mockDiscussChannelChannelInfo(channels.map((channel) => channel.id)),
+                "discuss.channel": this._mockDiscussChannelChannelInfo(
+                    channels.map((channel) => channel.id)
+                ),
             });
         }
         return res;

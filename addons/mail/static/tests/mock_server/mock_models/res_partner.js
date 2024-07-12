@@ -235,14 +235,13 @@ export class ResPartner extends webModels.ResPartner {
             } else if (users.length > 0) {
                 mainUser = users[0];
             }
-            store.add("Persona", {
+            store.add("res.partner", {
                 active: partner.active,
                 email: partner.email,
                 id: partner.id,
                 im_status: partner.im_status,
                 is_company: partner.is_company,
                 name: partner.name,
-                type: "partner",
                 userId: mainUser ? mainUser.id : false,
                 isInternalUser: mainUser ? !mainUser.share : false,
                 write_date: partner.write_date,

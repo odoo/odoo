@@ -55,7 +55,7 @@ class LinkPreview(models.Model):
             link_previews += link_previews.create(link_preview_values)
         if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
             store = Store(
-                "Message",
+                "mail.message",
                 {"id": message.id, "linkPreviews": [{"id": p.id} for p in link_previews]},
             )
             store.add(link_previews)
@@ -69,13 +69,16 @@ class LinkPreview(models.Model):
         notifications = [
             (
                 link_preview.message_id._bus_notification_target(),
-                'mail.record/insert', {
-                    'Message': {
-                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
-                        'id': link_preview.message_id.id,
-                    }
-                }
-            ) for link_preview in self
+                "mail.record/insert",
+                Store(
+                    "mail.message",
+                    {
+                        "id": link_preview.message_id.id,
+                        "linkPreviews": [("DELETE", {"id": link_preview.id})],
+                    },
+                ).get_result(),
+            )
+            for link_preview in self
         ]
         self.is_hidden = True
         self.env['bus.bus']._sendmany(notifications)
@@ -86,13 +89,16 @@ class LinkPreview(models.Model):
         notifications = [
             (
                 link_preview.message_id._bus_notification_target(),
-                'mail.record/insert', {
-                    'Message': {
-                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
-                        'id': link_preview.message_id.id,
-                    }
-                }
-            ) for link_preview in self
+                "mail.record/insert",
+                Store(
+                    "mail.message",
+                    {
+                        "id": link_preview.message_id.id,
+                        "linkPreviews": [("DELETE", {"id": link_preview.id})],
+                    },
+                ).get_result(),
+            )
+            for link_preview in self
         ]
         self.env['bus.bus']._sendmany(notifications)
         self.unlink()
@@ -120,7 +126,7 @@ class LinkPreview(models.Model):
     def _to_store(self, store: Store, /):
         for preview in self:
             store.add(
-                "LinkPreview",
+                "mail.link.preview",
                 {
                     "id": preview.id,
                     "image_mimetype": preview.image_mimetype,

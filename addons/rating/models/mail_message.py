@@ -37,7 +37,7 @@ class MailMessage(models.Model):
             ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', rating_mixin_messages.ids), ('consumed', '=', True)])
             for rating in ratings:
                 store.add(
-                    "Message",
+                    "mail.message",
                     {
                         "id": rating.message_id.id,
                         "rating": {

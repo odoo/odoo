@@ -15,11 +15,10 @@ export class ResPartner extends mailModels.ResPartner {
             active_test: false,
         });
         for (const partner of partners) {
-            store.add("Persona", {
+            store.add("res.partner", {
                 id: partner.id,
                 // Not a real field but ease the testing
                 out_of_office_date_end: partner.out_of_office_date_end,
-                type: "partner",
             });
         }
     }

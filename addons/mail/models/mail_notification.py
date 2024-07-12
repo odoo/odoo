@@ -133,15 +133,14 @@ class MailNotification(models.Model):
         for notif in self:
             if notif.res_partner_id:
                 store.add(
-                    "Persona",
+                    "res.partner",
                     {
                         "displayName": notif.res_partner_id.display_name,
                         "id": notif.res_partner_id.id,
-                        "type": "partner",
                     },
                 )
             store.add(
-                "Notification",
+                "mail.notification",
                 {
                     "failure_type": notif.failure_type,
                     "id": notif.id,

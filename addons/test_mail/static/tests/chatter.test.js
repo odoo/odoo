@@ -36,8 +36,8 @@ test("Send message button activation (access rights dependent)", async () => {
     let userAccess = {};
     onRpc("/mail/thread/data", async (req) => {
         const res = await mail_thread_data.bind(MockServer.current)(req);
-        res["Thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
-        res["Thread"][0].hasReadAccess = userAccess.hasReadAccess;
+        res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
+        res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
         return res;
     });
     await start();

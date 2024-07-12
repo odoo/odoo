@@ -193,9 +193,8 @@ async function channel_call_join(request) {
     const rtcSessions = DiscussChannelRtcSession._filter([
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
-    const store = new mailDataHelpers.Store("Thread", {
+    const store = new mailDataHelpers.Store("discuss.channel", {
         id: channel_id,
-        model: "discuss.channel",
         rtcSessions: [["ADD", rtcSessions.map((rtcSession) => ({ id: rtcSession.id }))]],
     });
     store.add("Rtc", {
@@ -238,12 +237,14 @@ async function channel_call_leave(request) {
     }
     for (const [channelId, sessions] of Object.entries(sessionsByChannelId)) {
         const channel = DiscussChannel.search_read([["id", "=", parseInt(channelId)]])[0];
-        const store = new mailDataHelpers.Store("Thread", {
-            id: Number(channelId), // JS object keys are strings, but the type from the server is number
-            model: "discuss.channel",
-            rtcSessions: [["DELETE", sessions.map((session) => ({ id: session.id }))]],
-        });
-        notifications.push([channel, "mail.record/insert", store.get_result()]);
+        notifications.push([
+            channel,
+            "mail.record/insert",
+            new mailDataHelpers.Store("discuss.channel", {
+                id: Number(channelId), // JS object keys are strings, but the type from the server is number
+                rtcSessions: [["DELETE", sessions.map((session) => ({ id: session.id }))]],
+            }).get_result(),
+        ]);
     }
     for (const rtcSession of rtcSessions) {
         const target = rtcSession.guest_id
@@ -356,13 +357,15 @@ async function discuss_settings_mute(request) {
     if (channel_id) {
         const member = DiscussChannel._find_or_create_member_for_self(channel_id);
         DiscussChannelMember.write([member.id], { mute_until_dt });
-        const channel_data = {
-            id: member.channel_id,
-            model: "discuss.channel",
-            mute_until_dt,
-        };
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.record/insert", { Thread: channel_data });
+        BusBus._sendone(
+            partner,
+            "mail.record/insert",
+            new mailDataHelpers.Store("discuss.channel", {
+                id: member.channel_id,
+                mute_until_dt,
+            }).get_result()
+        );
     } else {
         const settings = ResUsersSettings._find_or_create_for_user(this.env.user.id);
         ResUsersSettings.set_res_users_settings(settings.id, { mute_until_dt });
@@ -543,12 +546,10 @@ async function mail_link_preview_hide(request) {
         BusBus._sendone(
             MailMessage._bus_notification_target(linkPreview.message_id[0]),
             "mail.record/insert",
-            {
-                Message: {
-                    id: linkPreview.message_id[0],
-                    linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
-                },
-            }
+            new mailDataHelpers.Store("mail.message", {
+                id: linkPreview.message_id[0],
+                linkPreviews: [["DELETE", [{ id: linkPreview.id }]]],
+            }).get_result()
         );
     }
     return { link_preview_ids };
@@ -658,7 +659,7 @@ async function mail_message_update_content(request) {
     }
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     const broadcast_store = new mailDataHelpers.Store(IrAttachment.browse(attachment_ids));
-    broadcast_store.add("Message", {
+    broadcast_store.add("mail.message", {
         id: message_id,
         body,
         attachments: attachment_ids.map((id) => ({ id })),
@@ -938,10 +939,9 @@ async function processRequest(request) {
 }
 
 const ids_by_model = {
-    Persona: ["type", "id"],
+    "mail.thread": ["model", "id"],
     Rtc: [],
     Store: [],
-    Thread: ["model", "id"],
 };
 
 class Store {

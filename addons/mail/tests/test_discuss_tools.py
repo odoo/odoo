@@ -172,31 +172,31 @@ class TestDiscussTools(TransactionCase):
     def test_210_store_thread_dict(self):
         """Test Thread dict is present in result."""
         store = Store()
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": True})
         self.assertEqual(
-            store.get_result(), {"Thread": [{"id": 1, "model": "res.partner", "test": True}]}
+            store.get_result(), {"mail.thread": [{"id": 1, "model": "res.partner", "test": True}]}
         )
 
     def test_211_store_thread_dict_update_same_id(self):
         """Test Thread dict update same id."""
         store = Store()
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": True})
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": False, "abc": 1})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": False, "abc": 1})
         self.assertEqual(
             store.get_result(),
-            {"Thread": [{"id": 1, "model": "res.partner", "test": False, "abc": 1}]},
+            {"mail.thread": [{"id": 1, "model": "res.partner", "test": False, "abc": 1}]},
         )
 
     def test_212_store_thread_dict_update_multiple_ids(self):
         """Test Thread dict update multiple ids."""
         store = Store()
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": True})
-        store.add("Thread", {"id": 2, "model": "res.partner", "test": True})
-        store.add("Thread", {"id": 2, "model": "res.partner", "test": False, "abc": 1})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 2, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 2, "model": "res.partner", "test": False, "abc": 1})
         self.assertEqual(
             store.get_result(),
             {
-                "Thread": [
+                "mail.thread": [
                     {"id": 1, "model": "res.partner", "test": True},
                     {"id": 2, "model": "res.partner", "test": False, "abc": 1},
                 ]
@@ -206,15 +206,15 @@ class TestDiscussTools(TransactionCase):
     def test_213_store_thread_dict_update_multiple_models(self):
         """Test Thread dict update multiple models."""
         store = Store()
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": True})
-        store.add("Thread", {"id": 2, "model": "res.partner", "test": True})
-        store.add("Thread", {"id": 2, "model": "discuss.channel", "test": True, "abc": 1})
-        store.add("Thread", {"id": 2, "model": "discuss.channel", "test": False, "abc": 2})
-        store.add("Thread", {"id": 1, "model": "res.partner", "test": False})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 2, "model": "res.partner", "test": True})
+        store.add("mail.thread", {"id": 2, "model": "discuss.channel", "test": True, "abc": 1})
+        store.add("mail.thread", {"id": 2, "model": "discuss.channel", "test": False, "abc": 2})
+        store.add("mail.thread", {"id": 1, "model": "res.partner", "test": False})
         self.assertEqual(
             store.get_result(),
             {
-                "Thread": [
+                "mail.thread": [
                     {"id": 1, "model": "res.partner", "test": False},
                     {"id": 2, "model": "res.partner", "test": True},
                     {"id": 2, "model": "discuss.channel", "test": False, "abc": 2},
@@ -226,7 +226,7 @@ class TestDiscussTools(TransactionCase):
         """Test Thread dict update multiple models with a single list."""
         store = Store()
         store.add(
-            "Thread",
+            "mail.thread",
             [
                 {"id": 1, "model": "res.partner", "test": True},
                 {"id": 2, "model": "res.partner", "test": True},
@@ -238,7 +238,7 @@ class TestDiscussTools(TransactionCase):
         self.assertEqual(
             store.get_result(),
             {
-                "Thread": [
+                "mail.thread": [
                     {"id": 1, "model": "res.partner", "test": False},
                     {"id": 2, "model": "res.partner", "test": True},
                     {"id": 2, "model": "discuss.channel", "test": False, "abc": 2},
@@ -249,21 +249,27 @@ class TestDiscussTools(TransactionCase):
     def test_220_store_thread_list(self):
         """Test Thread list is present in result."""
         store = Store()
-        store.add("Thread", [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}])
+        store.add(
+            "mail.thread", [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]
+        )
         self.assertEqual(
             store.get_result(),
-            {"Thread": [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]},
+            {"mail.thread": [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]},
         )
 
     def test_221_store_thread_list_append(self):
         """Test Thread list append."""
         store = Store()
-        store.add("Thread", [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}])
-        store.add("Thread", [{"id": 4, "model": "res.partner"}, {"id": 5, "model": "res.partner"}])
+        store.add(
+            "mail.thread", [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]
+        )
+        store.add(
+            "mail.thread", [{"id": 4, "model": "res.partner"}, {"id": 5, "model": "res.partner"}]
+        )
         self.assertEqual(
             store.get_result(),
             {
-                "Thread": [
+                "mail.thread": [
                     {"id": 1, "model": "res.partner"},
                     {"id": 2, "model": "res.partner"},
                     {"id": 4, "model": "res.partner"},
@@ -276,12 +282,17 @@ class TestDiscussTools(TransactionCase):
         """Test Thread adding several keys."""
         store = Store()
         store.add("key1", {"id": 1, "test": True})
-        store.add("Thread", [{"id": 4, "model": "res.partner"}, {"id": 5, "model": "res.partner"}])
+        store.add(
+            "mail.thread", [{"id": 4, "model": "res.partner"}, {"id": 5, "model": "res.partner"}]
+        )
         self.assertEqual(
             store.get_result(),
             {
                 "key1": [{"id": 1, "test": True}],
-                "Thread": [{"id": 4, "model": "res.partner"}, {"id": 5, "model": "res.partner"}],
+                "mail.thread": [
+                    {"id": 4, "model": "res.partner"},
+                    {"id": 5, "model": "res.partner"},
+                ],
             },
         )
 
@@ -289,55 +300,55 @@ class TestDiscussTools(TransactionCase):
         """Test Thread adding invalid bool value."""
         store = Store()
         with self.assertRaises(AssertionError):
-            store.add("Thread", True)
+            store.add("mail.thread", True)
 
     def test_241_store_thread_invalid_list(self):
         """Test Thread adding invalid list value."""
         store = Store()
         with self.assertRaises(AssertionError):
-            store.add("Thread", [True])
+            store.add("mail.thread", [True])
 
     def test_242_store_thread_invalid_missing_id(self):
         """Test Thread adding invalid list value."""
         store = Store()
         with self.assertRaises(AssertionError):
-            store.add("Thread", {"model": "res.partner"})
+            store.add("mail.thread", {"model": "res.partner"})
 
     def test_243_store_thread_invalid_missing_model(self):
         """Test Thread adding invalid list value."""
         store = Store()
         with self.assertRaises(AssertionError):
-            store.add("Thread", {"id": 1})
+            store.add("mail.thread", {"id": 1})
 
     def test_250_store_thread_dict_to_list(self):
         """Test Thread adding dict to a list."""
         store = Store()
-        store.add("Thread", [{"id": 2, "model": "res.partner"}])
-        store.add("Thread", {"id": 1, "model": "res.partner"})
+        store.add("mail.thread", [{"id": 2, "model": "res.partner"}])
+        store.add("mail.thread", {"id": 1, "model": "res.partner"})
         self.assertEqual(
             store.get_result(),
-            {"Thread": [{"id": 2, "model": "res.partner"}, {"id": 1, "model": "res.partner"}]},
+            {"mail.thread": [{"id": 2, "model": "res.partner"}, {"id": 1, "model": "res.partner"}]},
         )
 
     def test_251_store_thread_list_to_dict(self):
         """Test Thread adding list to a dict."""
         store = Store()
-        store.add("Thread", {"id": 1, "model": "res.partner"})
-        store.add("Thread", [{"id": 2, "model": "res.partner"}])
+        store.add("mail.thread", {"id": 1, "model": "res.partner"})
+        store.add("mail.thread", [{"id": 2, "model": "res.partner"}])
         self.assertEqual(
             store.get_result(),
-            {"Thread": [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]},
+            {"mail.thread": [{"id": 1, "model": "res.partner"}, {"id": 2, "model": "res.partner"}]},
         )
 
     def test_260_store_thread_data_empty_val(self):
         """Test Thread empty values are not present in result."""
         store = Store()
-        store.add("Thread", {})
+        store.add("mail.thread", {})
         self.assertEqual(store.get_result(), {})
 
     def test_261_store_thread_data_empty_not_empty(self):
         """Test Thread mixing empty and non-empty values."""
         store = Store()
         store.add("key1", {})
-        store.add("Thread", {"id": 1, "model": "res.partner"})
-        self.assertEqual(store.get_result(), {"Thread": [{"id": 1, "model": "res.partner"}]})
+        store.add("mail.thread", {"id": 1, "model": "res.partner"})
+        self.assertEqual(store.get_result(), {"mail.thread": [{"id": 1, "model": "res.partner"}]})

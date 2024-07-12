@@ -882,7 +882,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         self.authenticate(self.env.user.login, self.env.user.login)
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
         expected = {
-            "Message": [
+            "mail.message": [
                 {
                     "attachments": [],
                     "author": {"id": self.user_admin.partner_id.id, "type": "partner"},
@@ -915,7 +915,7 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "write_date": fields.Datetime.to_string(message.write_date),
                 },
             ],
-            "Notification": [
+            "mail.notification": [
                 {
                     "failure_type": False,
                     "id": notif.id,
@@ -925,29 +925,27 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                     "persona": {"id": self.env.user.partner_id.id, "type": "partner"},
                 },
             ],
-            "Persona": [
-                {
-                    "id": self.user_admin.partner_id.id,
-                    "isInternalUser": True,
-                    "is_company": False,
-                    "name": "Mitchell Admin",
-                    "type": "partner",
-                    "userId": self.user_admin.id,
-                    "write_date": fields.Datetime.to_string(self.user_admin.write_date),
-                },
-                {
-                    "displayName": "Ernest Employee",
-                    "id": self.env.user.partner_id.id,
-                    "type": "partner",
-                },
-            ],
-            "Thread": [
+            "mail.thread": [
                 {
                     "id": test_record.id,
                     "model": "mail.test.simple",
                     "module_icon": "/base/static/description/icon.png",
                     "name": "Test",
                     "selfFollower": False,
+                },
+            ],
+            "res.partner": [
+                {
+                    "id": self.user_admin.partner_id.id,
+                    "isInternalUser": True,
+                    "is_company": False,
+                    "name": "Mitchell Admin",
+                    "userId": self.user_admin.id,
+                    "write_date": fields.Datetime.to_string(self.user_admin.write_date),
+                },
+                {
+                    "displayName": "Ernest Employee",
+                    "id": self.env.user.partner_id.id,
                 },
             ],
         }
@@ -960,14 +958,14 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
         )
         data = self.make_jsonrpc_request("/mail/inbox/messages")["data"]
         expected_with_follower = copy.deepcopy(expected)
-        expected_with_follower["Follower"] = [
+        expected_with_follower["mail.followers"] = [
             {
                 "id": follower.id,
                 "is_active": True,
                 "partner": {"id": self.env.user.partner_id.id, "type": "partner"},
             },
         ]
-        expected_with_follower["Thread"][0]["selfFollower"] = {"id": follower.id}
+        expected_with_follower["mail.thread"][0]["selfFollower"] = {"id": follower.id}
         self.assertEqual(data, expected_with_follower)
 
         # The user doesn't follow the record anymore

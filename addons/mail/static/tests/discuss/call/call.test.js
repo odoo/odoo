@@ -13,6 +13,8 @@ import {
     step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { describe, test } from "@odoo/hoot";
 import { hover, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -171,36 +173,38 @@ test("should display invitations", async () => {
     ]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
-        RtcSession: [
-            {
-                id: sessionId,
-                channelMember: {
-                    id: memberId,
-                    channel_id: channelId,
-                    persona: {
-                        id: partnerId,
-                        type: "partner",
-                    },
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.record/insert",
+        new mailDataHelpers.Store("discuss.channel.rtc.session", {
+            id: sessionId,
+            channelMember: {
+                id: memberId,
+                channel_id: channelId,
+                persona: {
+                    id: partnerId,
+                    type: "partner",
                 },
             },
-        ],
-        Thread: {
-            id: channelId,
-            model: "discuss.channel",
-            rtcInvitingSession: { id: sessionId },
-        },
-    });
+        })
+            .add("discuss.channel", {
+                id: channelId,
+                rtcInvitingSession: { id: sessionId },
+            })
+            .get_result()
+    );
     await contains(".o-discuss-CallInvitation");
     await assertSteps(["play - incoming-call"]);
     // Simulate stop receiving call invitation
-    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
-        Thread: {
+
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.record/insert",
+        new mailDataHelpers.Store("discuss.channel", {
             id: channelId,
-            model: "discuss.channel",
             rtcInvitingSession: false,
-        },
-    });
+        }).get_result()
+    );
     await contains(".o-discuss-CallInvitation", { count: 0 });
     await assertSteps(["stop - incoming-call"]);
 });

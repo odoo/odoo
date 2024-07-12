@@ -219,8 +219,8 @@ class Partner(models.Model):
             data = {"id": partner.id}
             if 'name' in fields:
                 data['name'] = partner.name
-            if 'email' in fields:
-                data['email'] = partner.email
+            if "email" in fields and self.env.user._is_internal():
+                data["email"] = partner.email
             if 'active' in fields:
                 data['active'] = partner.active
             if 'im_status' in fields:
@@ -235,10 +235,7 @@ class Partner(models.Model):
                 main_user = internal_users[0] if len(internal_users) > 0 else users[0] if len(users) > 0 else self.env['res.users']
                 data['userId'] = main_user.id
                 data["isInternalUser"] = not main_user.share if main_user else False
-            if not self.env.user._is_internal():
-                data.pop('email', None)
-            data['type'] = "partner"
-            store.add("Persona", data)
+            store.add("res.partner", data)
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):

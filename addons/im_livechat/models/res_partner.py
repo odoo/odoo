@@ -27,13 +27,12 @@ class Partners(models.Model):
         )
         for partner in self:
             store.add(
-                "Persona",
+                "res.partner",
                 {
                     "invite_by_self_count": invite_by_self_count_by_partner_id.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
                     "lang_name": lang_name_by_code[partner.lang],
                     "id": partner.id,
-                    "type": "partner",
                 },
             )
 
@@ -46,9 +45,9 @@ class Partners(models.Model):
         super()._to_store(store, fields=fields)
         if fields and fields.get("user_livechat_username"):
             for partner in self:
-                data = {"id": partner.id, "type": "partner"}
+                data = {"id": partner.id}
                 if partner.user_livechat_username:
                     data["user_livechat_username"] = partner.user_livechat_username
                 else:
                     data["name"] = partner.name
-                store.add("Persona", data)
+                store.add("res.partner", data)

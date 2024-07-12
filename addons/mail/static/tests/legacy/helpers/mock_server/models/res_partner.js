@@ -228,7 +228,7 @@ patch(MockServer.prototype, {
             (partner) => !excluded_ids.includes(partner.id)
         );
         return {
-            Persona: [
+            "res.partner": [
                 ...this._mockResPartnerMailPartnerFormat(
                     resultPartners.map((partner) => partner.id)
                 ).values(),

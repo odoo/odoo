@@ -181,7 +181,9 @@ export class LivechatService {
         expirableStorage.setItem(
             SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
-                threadData: persisted ? { id: threadData.id, model: threadData.model } : threadData,
+                threadData: persisted
+                    ? { id: threadData.id, model: "discuss.channel" }
+                    : threadData,
                 persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
             }),
@@ -212,7 +214,7 @@ export class LivechatService {
             },
             { shadow: true }
         );
-        const threadData = data.Thread?.[0];
+        const threadData = data["discuss.channel"]?.[0];
         if (!threadData?.operator) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leave({ notifyServer: false });
@@ -221,6 +223,7 @@ export class LivechatService {
         threadData["scrollUnread"] = false;
         // clean copy of data for saving in storage, because store insert will add cyclic references
         const saveThreadData = JSON.parse(JSON.stringify(threadData));
+        saveThreadData["model"] = "discuss.channel";
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         this.store.insert(data); // before save to have guest_token in store
         this._saveLivechatState(saveThreadData, { persisted: persist });

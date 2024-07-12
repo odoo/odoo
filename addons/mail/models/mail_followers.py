@@ -516,7 +516,7 @@ GROUP BY fol.id%s%s""" % (
         store.add(self.partner_id)
         for follower in self:
             store.add(
-                "Follower",
+                "mail.followers",
                 {
                     "display_name": follower.display_name,
                     "email": follower.email,

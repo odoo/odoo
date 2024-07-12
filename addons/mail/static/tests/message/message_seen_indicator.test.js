@@ -6,6 +6,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+
 import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -241,15 +243,17 @@ test("mark channel as seen from the bus", async () => {
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-        ChannelMember: {
+    pyEnv["bus.bus"]._sendone(
+        channel,
+        "mail.record/insert",
+        new mailDataHelpers.Store("discuss.channel.member", {
             id: pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channelId],
                 ["partner_id", "=", partnerId],
             ])[0],
             seen_message_id: messageId,
-        },
-    });
+        }).get_result()
+    );
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
@@ -287,15 +291,17 @@ test("should display message indicator when message is fetched/seen", async () =
     });
     await contains(".o-mail-MessageSeenIndicator i");
     // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-        ChannelMember: {
+    pyEnv["bus.bus"]._sendone(
+        channel,
+        "mail.record/insert",
+        new mailDataHelpers.Store("discuss.channel.member", {
             id: pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channelId],
                 ["partner_id", "=", partnerId],
             ])[0],
             seen_message_id: messageId,
-        },
-    });
+        }).get_result()
+    );
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 

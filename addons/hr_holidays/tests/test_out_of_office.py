@@ -49,8 +49,8 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'name': 'test'
         })
         data = Store(channel).get_result()
-        partner_info = next(p for p in data["Persona"] if p["id"] == partner.id)
-        partner2_info = next(p for p in data["Persona"] if p["id"] == partner2.id)
+        partner_info = next(p for p in data["res.partner"] if p["id"] == partner.id)
+        partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
         self.assertFalse(
             partner2_info["out_of_office_date_end"], "current user should not be out of office"
         )

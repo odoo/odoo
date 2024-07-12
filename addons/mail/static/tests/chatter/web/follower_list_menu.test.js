@@ -33,7 +33,7 @@ test("base rendering editable", async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -64,7 +64,7 @@ test('click on "add followers" button', async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     mockService("action", {
@@ -122,7 +122,7 @@ test("click on remove follower", async () => {
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     onRpc("res.partner", "message_unsubscribe", ({ args, method }) => {
@@ -163,7 +163,7 @@ test('Hide "Add follower" and subtypes edition/removal buttons except own user o
         _thread_to_store(ids, store) {
             // mimic user without write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -301,7 +301,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
         _thread_to_store(ids, store) {
             // mimic user with write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: true, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: true, id: ids[0], model: this._name });
         },
     });
     await start();
@@ -323,7 +323,7 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
         _thread_to_store(ids, store) {
             // mimic user without write access
             super._thread_to_store(...arguments);
-            store.add("Thread", { hasWriteAccess: false, id: ids[0], model: this._name });
+            store.add("mail.thread", { hasWriteAccess: false, id: ids[0], model: this._name });
         },
     });
     await start();

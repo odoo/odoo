@@ -38,13 +38,12 @@ export class MailNotification extends models.ServerModel {
         for (const notification of notifications) {
             const partner = ResPartner._filter([["id", "=", notification.res_partner_id]])[0];
             if (partner) {
-                store.add("Persona", {
+                store.add("res.partner", {
                     displayName: partner.display_name,
                     id: partner.id,
-                    type: "partner",
                 });
             }
-            store.add("Notification", {
+            store.add("mail.notification", {
                 failure_type: notification.failure_type,
                 id: notification.id,
                 message: { id: notification.mail_message_id },

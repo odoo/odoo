@@ -20,11 +20,10 @@ patch(MockServer.prototype, {
                 channel,
                 "mail.record/insert",
                 {
-                    RtcSession: [sessionData],
-                    Thread: [
+                    "discuss.channel.rtc.session": [sessionData],
+                    "discuss.channel": [
                         {
                             id: channel.id,
-                            model: "discuss.channel",
                             rtcSessions: [
                                 ["ADD", sessionData.map((session) => ({ id: session.id }))],
                             ],
@@ -100,7 +99,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(
             channel,
             "discuss.channel.rtc.session/update_and_broadcast",
-            { data: { RtcSession: [sessionData] }, channelId: channel.id }
+            { data: { "discuss.channel.rtc.session": [sessionData] }, channelId: channel.id }
         );
     },
 });

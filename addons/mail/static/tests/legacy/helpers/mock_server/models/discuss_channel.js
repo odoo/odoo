@@ -32,13 +32,7 @@ patch(MockServer.prototype, {
                 notifications.push([
                     channel,
                     "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            model: "discuss.channel",
-                            ...diff,
-                        },
-                    },
+                    { "discuss.channel": [{ id: channel.id, ...diff }] },
                 ]);
             }
         }
@@ -93,7 +87,7 @@ patch(MockServer.prototype, {
             if (!channelInfos.length) {
                 return;
             }
-            return { Thread: channelInfos };
+            return { "discuss.channel": channelInfos };
         }
         if (args.model === "discuss.channel" && args.method === "add_members") {
             const ids = args.args[0];
@@ -269,14 +263,15 @@ patch(MockServer.prototype, {
             this._mockDiscussChannelChannelInfo([channel.id])[0]
         );
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Thread: {
-                id: channel.id,
-                channelMembers: [["DELETE", { id: channelMember.id }]],
-                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                    ["channel_id", "=", channel.id],
-                ]),
-                model: "discuss.channel",
-            },
+            "discuss.channel": [
+                {
+                    id: channel.id,
+                    channelMembers: [["DELETE", { id: channelMember.id }]],
+                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                        ["channel_id", "=", channel.id],
+                    ]),
+                },
+            ],
         });
         return true;
     },
@@ -312,6 +307,7 @@ patch(MockServer.prototype, {
                 channel: {
                     ...this._mockDiscussChannel__channel_basic_info([channel.id]),
                     is_pinned: true,
+                    model: "discuss.channel",
                 },
                 invited_by_user_id: this.pyEnv.currentUserId,
             });
@@ -331,21 +327,22 @@ patch(MockServer.prototype, {
             ]) > 0;
         if (isSelfMember) {
             this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-                Thread: {
-                    id: channel.id,
-                    channelMembers: [
-                        [
-                            "ADD",
-                            this._mockDiscussChannelMember_DiscussChannelMemberFormat(
-                                insertedChannelMembers
-                            ),
+                "discuss.channel": [
+                    {
+                        id: channel.id,
+                        channelMembers: [
+                            [
+                                "ADD",
+                                this._mockDiscussChannelMember_DiscussChannelMemberFormat(
+                                    insertedChannelMembers
+                                ),
+                            ],
                         ],
-                    ],
-                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                        ["channel_id", "=", channel.id],
-                    ]),
-                    model: "discuss.channel",
-                },
+                        memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                            ["channel_id", "=", channel.id],
+                        ]),
+                    },
+                ],
             });
         }
     },
@@ -373,7 +370,7 @@ patch(MockServer.prototype, {
         });
         const [channel] = this.pyEnv["discuss.channel"].search_read([["id", "=", id]]);
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Message: {
+            "mail.message": {
                 id: message_id,
                 pinned_at,
             },
@@ -416,7 +413,11 @@ patch(MockServer.prototype, {
                 ["id", "=", partner_id],
             ]);
             for (const channelInfo of channelInfos) {
-                notifications.push([relatedPartner, "mail.record/insert", { Thread: channelInfo }]);
+                notifications.push([
+                    relatedPartner,
+                    "mail.record/insert",
+                    { "discuss.channel": channelInfo },
+                ]);
             }
         }
         return notifications;
@@ -519,7 +520,7 @@ patch(MockServer.prototype, {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return { Thread: this._mockDiscussChannelChannelInfo([channel.id]) };
+                return { "discuss.channel": this._mockDiscussChannelChannelInfo([channel.id]) };
             }
         }
         const id = this.pyEnv["discuss.channel"].create({
@@ -535,7 +536,7 @@ patch(MockServer.prototype, {
             id,
             partners.map(({ id }) => id)
         );
-        return { Thread: this._mockDiscussChannelChannelInfo([id]) };
+        return { "discuss.channel": this._mockDiscussChannelChannelInfo([id]) };
     },
     /**
      * Simulates `_channel_basic_info` on `discuss.channel`.
@@ -566,7 +567,6 @@ patch(MockServer.prototype, {
             memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                 ["channel_id", "=", channel.id],
             ]),
-            model: "discuss.channel",
         });
         return res;
     },
@@ -665,6 +665,7 @@ patch(MockServer.prototype, {
                     ),
                 ],
             ];
+            res.model = "discuss.channel";
             return res;
         });
     },
@@ -691,7 +692,9 @@ patch(MockServer.prototype, {
             });
         } else {
             const store = {};
-            Object.assign(store, { Thread: this._mockDiscussChannelChannelInfo([channel.id]) });
+            Object.assign(store, {
+                "discuss.channel": this._mockDiscussChannelChannelInfo([channel.id]),
+            });
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", store);
         }
     },
@@ -751,11 +754,7 @@ patch(MockServer.prototype, {
             custom_channel_name: name,
         });
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-            Thread: {
-                custom_channel_name: name,
-                id: channelId,
-                model: "discuss.channel",
-            },
+            "discuss.channel": [{ custom_channel_name: name, id: channelId }],
         });
     },
     /**
@@ -900,11 +899,7 @@ patch(MockServer.prototype, {
         });
         const channel = this.pyEnv["discuss.channel"].search_read([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Thread: {
-                avatarCacheKey: channel.avatarCacheKey,
-                id,
-                model: "discuss.channel",
-            },
+            "discuss.channel": [{ avatarCacheKey: channel.avatarCacheKey, id }],
         });
     },
     /**

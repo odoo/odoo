@@ -104,7 +104,7 @@ export class MailActivity extends models.ServerModel {
             const [user] = ResUsers._filter([["id", "=", record.user_id[0]]]);
             record.persona = { id: user.partner_id, type: "partner" };
             store.add(ResPartner.browse(user.partner_id));
-            store.add("Activity", record);
+            store.add("mail.activity", record);
         }
     }
 

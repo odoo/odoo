@@ -38,7 +38,7 @@ patch(MockServer.prototype, {
             .sort()
             .slice(0, limit)
             .map(({ id }) => id);
-        return { Attachment: this._mockIrAttachment_attachmentFormat(attachmentIds) };
+        return { "ir.attachment": this._mockIrAttachment_attachmentFormat(attachmentIds) };
     },
 
     /**

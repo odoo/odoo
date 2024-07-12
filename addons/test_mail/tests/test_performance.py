@@ -1286,8 +1286,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         with self.assertQueryCount(employee=27):
             res = Store(messages_all, for_current_user=True).get_result()
 
-        self.assertEqual(len(res["Message"]), 2 * 2)
-        for message in res["Message"]:
+        self.assertEqual(len(res["mail.message"]), 2 * 2)
+        for message in res["mail.message"]:
             self.assertEqual(len(message['attachments']), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -1299,8 +1299,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         with self.assertQueryCount(employee=24):
             res = Store(message, for_current_user=True).get_result()
 
-        self.assertEqual(len(res["Message"]), 1)
-        self.assertEqual(len(res["Message"][0]["attachments"]), 2)
+        self.assertEqual(len(res["mail.message"]), 1)
+        self.assertEqual(len(res["mail.message"][0]["attachments"]), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
@@ -1319,14 +1319,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
 
         with self.assertQueryCount(employee=7):
             res = Store(messages, for_current_user=True).get_result()
-            self.assertEqual(len(res["Message"]), 6)
+            self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(employee=15):
             res = Store(messages, for_current_user=True).get_result()
-            self.assertEqual(len(res["Message"]), 6)
+            self.assertEqual(len(res["mail.message"]), 6)
 
     @warmup
     def test_message_to_store_multi_followers_inbox(self):
@@ -1358,7 +1358,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                     {
                         "type": "mail.message/inbox",
                         "payload": {
-                            "Follower": [
+                            "mail.followers": [
                                 {
                                     "id": follower_1.id,
                                     "is_active": True,
@@ -1368,7 +1368,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "Message": [
+                            "mail.message": [
                                 {
                                     "attachments": [],
                                     "author": {
@@ -1402,7 +1402,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
                             ],
-                            "Notification": [
+                            "mail.notification": [
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
@@ -1426,28 +1426,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "Persona": [
-                                {
-                                    "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
-                                    "is_company": False,
-                                    "name": "OdooBot",
-                                    "type": "partner",
-                                    "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                                },
-                                {
-                                    "displayName": "Paulette Testouille",
-                                    "id": self.user_test_inbox.partner_id.id,
-                                    "type": "partner",
-                                },
-                                {
-                                    "displayName": "Jeannette Testouille",
-                                    "id": self.user_test_inbox_2.partner_id.id,
-                                    "type": "partner",
-                                },
-                            ],
-                            "Thread": [
+                            "mail.thread": [
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
@@ -1456,12 +1435,30 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "selfFollower": {"id": follower_1.id},
                                 },
                             ],
+                            "res.partner": [
+                                {
+                                    "id": self.env.user.partner_id.id,
+                                    "isInternalUser": True,
+                                    "is_company": False,
+                                    "name": "OdooBot",
+                                    "userId": self.env.user.id,
+                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                },
+                                {
+                                    "displayName": "Paulette Testouille",
+                                    "id": self.user_test_inbox.partner_id.id,
+                                },
+                                {
+                                    "displayName": "Jeannette Testouille",
+                                    "id": self.user_test_inbox_2.partner_id.id,
+                                },
+                            ],
                         },
                     },
                     {
                         "type": "mail.message/inbox",
                         "payload": {
-                            "Follower": [
+                            "mail.followers": [
                                 {
                                     "id": follower_2.id,
                                     "is_active": True,
@@ -1471,7 +1468,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "Message": [
+                            "mail.message": [
                                 {
                                     "attachments": [],
                                     "author": {
@@ -1505,7 +1502,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "write_date": fields.Datetime.to_string(message.write_date),
                                 },
                             ],
-                            "Notification": [
+                            "mail.notification": [
                                 {
                                     "failure_type": False,
                                     "id": notif_1.id,
@@ -1529,34 +1526,31 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                             ],
-                            "Persona": [
-                                {
-                                    "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
-                                    "is_company": False,
-                                    "name": "OdooBot",
-                                    "type": "partner",
-                                    "userId": self.env.user.id,
-                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
-                                },
-                                {
-                                    "displayName": "Paulette Testouille",
-                                    "id": self.user_test_inbox.partner_id.id,
-                                    "type": "partner",
-                                },
-                                {
-                                    "displayName": "Jeannette Testouille",
-                                    "id": self.user_test_inbox_2.partner_id.id,
-                                    "type": "partner",
-                                },
-                            ],
-                            "Thread": [
+                            "mail.thread": [
                                 {
                                     "id": record.id,
                                     "model": "mail.test.simple",
                                     "module_icon": "/base/static/description/icon.png",
                                     "name": "Test",
                                     "selfFollower": {"id": follower_2.id},
+                                },
+                            ],
+                            "res.partner": [
+                                {
+                                    "id": self.env.user.partner_id.id,
+                                    "isInternalUser": True,
+                                    "is_company": False,
+                                    "name": "OdooBot",
+                                    "userId": self.env.user.id,
+                                    "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                                },
+                                {
+                                    "displayName": "Paulette Testouille",
+                                    "id": self.user_test_inbox.partner_id.id,
+                                },
+                                {
+                                    "displayName": "Jeannette Testouille",
+                                    "id": self.user_test_inbox_2.partner_id.id,
                                 },
                             ],
                         },

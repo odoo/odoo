@@ -4,22 +4,23 @@ import re
 
 from odoo import models
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 
 class IrWebsocket(models.AbstractModel):
     _inherit = "ir.websocket"
 
-    def _get_im_status(self, data):
-        im_status = super()._get_im_status(data)
-        if "mail.guest" in data:
+    def _im_status_to_store(self, store: Store, im_status_ids_by_model):
+        super()._im_status_to_store(store, im_status_ids_by_model=im_status_ids_by_model)
+        if guest_ids := im_status_ids_by_model.get("mail.guest"):
             # sudo: mail.guest - necessary to read im_status from other guests, information is not considered sensitive
-            im_status["Persona"] += [{**g, 'type': "guest"} for g in (
+            store.add(
+                "mail.guest",
                 self.env["mail.guest"]
                 .sudo()
                 .with_context(active_test=False)
-                .search_read([("id", "in", data["mail.guest"])], ["im_status"])
-            )]
-        return im_status
+                .search_read([("id", "in", guest_ids)], ["im_status"]),
+            )
 
     @add_guest_to_context
     def _build_bus_channel_list(self, channels):

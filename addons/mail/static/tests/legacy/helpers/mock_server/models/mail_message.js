@@ -87,7 +87,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(
             this._mockMailMessage__busNotificationTarget(messageId),
             "mail.record/insert",
-            { Message: result }
+            { "mail.message": result }
         );
     },
     /**

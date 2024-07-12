@@ -19,6 +19,27 @@ import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
+export const pyToJsModels = {
+    "discuss.channel.member": "ChannelMember",
+    "discuss.channel.rtc.session": "RtcSession",
+    "discuss.channel": "Thread",
+    "ir.attachment": "Attachment",
+    "mail.activity": "Activity",
+    "mail.guest": "Persona",
+    "mail.followers": "Follower",
+    "mail.link.preview": "LinkPreview",
+    "mail.message": "Message",
+    "mail.notification": "Notification",
+    "mail.thread": "Thread",
+    "res.partner": "Persona",
+};
+
+export const addFieldsByPyModel = {
+    "discuss.channel": { model: "discuss.channel" },
+    "mail.guest": { type: "guest" },
+    "res.partner": { type: "partner" },
+};
+
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
@@ -253,9 +274,22 @@ export class Store extends BaseStore {
      */
     insert(dataByModelName = {}, options = {}) {
         const store = this;
+        const pyModels = Object.values(pyToJsModels);
         return Record.MAKE_UPDATE(function storeInsert() {
             const res = {};
-            for (const [modelName, data] of Object.entries(dataByModelName)) {
+            for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
+                if (pyModels.includes(pyOrJsModelName)) {
+                    console.warn(
+                        `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
+                    );
+                }
+                for (const vals of Array.isArray(data) ? data : [data]) {
+                    const extraFields = addFieldsByPyModel[pyOrJsModelName];
+                    if (extraFields) {
+                        Object.assign(vals, extraFields);
+                    }
+                }
+                const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
                 res[modelName] = store[modelName].insert(data, options);
             }
             return res;

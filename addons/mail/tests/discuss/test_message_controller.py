@@ -97,7 +97,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
         self.assertEqual(
-            data1["Attachment"],
+            data1["ir.attachment"],
             [
                     {
                     "checksum": False,
@@ -120,7 +120,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": data1["Message"][0]["id"],
+                        "message_id": data1["mail.message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                         "attachment_tokens": ["wrong token"],
@@ -141,7 +141,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": data1["Message"][0]["id"],
+                        "message_id": data1["mail.message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                         "attachment_tokens": [self.attachments[1].access_token],
@@ -153,7 +153,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res4.status_code, 200)
         data2 = res4.json()["result"]
         self.assertEqual(
-            data2["Attachment"],
+            data2["ir.attachment"],
             [
                 {
                     "checksum": False,
@@ -188,7 +188,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": data2["Message"][0]["id"],
+                        "message_id": data2["mail.message"][0]["id"],
                         "body": "test",
                         "attachment_ids": [self.attachments[1].id],
                     },
@@ -199,7 +199,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res5.status_code, 200)
         data3 = res5.json()["result"]
         self.assertEqual(
-            data3["Attachment"],
+            data3["ir.attachment"],
             [
                 {
                     "checksum": False,
@@ -463,7 +463,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 "body": "A great message",
             }
         })
-        self.assertIn("A great message", data["Message"][0]["body"])
+        self.assertIn("A great message", data["mail.message"][0]["body"])
 
         # 2. attach a file
         response = self.url_open(

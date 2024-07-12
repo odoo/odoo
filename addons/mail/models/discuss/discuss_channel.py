@@ -281,13 +281,13 @@ class Channel(models.Model):
                 if value != old_vals[channel][key]:
                     diff[key] = value
             if diff:
-                notifications.append([channel, "mail.record/insert", {
-                    "Thread": {
-                        "id": channel.id,
-                        "model": "discuss.channel",
-                        **diff
-                    }
-                }])
+                notifications.append(
+                    (
+                        channel,
+                        "mail.record/insert",
+                        Store("discuss.channel", {"id": channel.id, **diff}).get_result(),
+                    )
+                )
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         self.env['bus.bus']._sendmany(notifications)
@@ -315,12 +315,15 @@ class Channel(models.Model):
         notifications = []
         for channel in self:
             for group in channel.group_ids:
-                notifications.append((group, 'mail.record/insert', {
-                    'Thread': {
-                        **channel._channel_basic_info(),
-                        "is_pinned": True,
-                    }
-                }))
+                notifications.append(
+                    (
+                        group,
+                        "mail.record/insert",
+                        Store(
+                            "discuss.channel", {**channel._channel_basic_info(), "is_pinned": True}
+                        ).get_result(),
+                    )
+                )
         self.env["bus.bus"]._sendmany(notifications)
 
     def _subscribe_users_automatically_get_members(self):
@@ -335,13 +338,10 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         self.message_unsubscribe(partner.ids)
-        custom_channel_info = {
-            "id": self.id,
-            "is_pinned": False,
-            "isLocallyPinned": False,
-            "model": "discuss.channel",
-        }
-        custom_store = Store("Thread", custom_channel_info)
+        custom_store = Store(
+            "discuss.channel",
+            {"id": self.id, "is_pinned": False, "isLocallyPinned": False},
+        )
         member = self.env["discuss.channel.member"].search(
             [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
         )
@@ -356,14 +356,18 @@ class Channel(models.Model):
         )
         # send custom store after message_post to avoid is_pinned reset to True
         self.env["bus.bus"]._sendone(partner, "discuss.channel/leave", custom_store.get_result())
-        channel_info = {
-            "channelMembers": [("DELETE", {"id": member.id})],
-            "id": self.id,
-            "memberCount": self.member_count,
-            "model": "discuss.channel",
-        }
-        store = Store("Thread", channel_info)
-        self.env["bus.bus"]._sendone(self, "mail.record/insert", store.get_result())
+        self.env["bus.bus"]._sendone(
+            self,
+            "mail.record/insert",
+            Store(
+                "discuss.channel",
+                {
+                    "channelMembers": [("DELETE", {"id": member.id})],
+                    "id": self.id,
+                    "memberCount": self.member_count,
+                },
+            ).get_result(),
+        )
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
@@ -395,14 +399,21 @@ class Channel(models.Model):
                 # notify invited members through the bus
                 user = member.partner_id.user_ids[0] if member.partner_id.user_ids else self.env['res.users']
                 if user:
-                    notifications.append((member.partner_id, 'discuss.channel/joined', {
-                        'channel': {
-                            **member.channel_id._channel_basic_info(),
-                            "is_pinned": True,
-                        },
-                        'invited_by_user_id': self.env.user.id,
-                        'open_chat_window': open_chat_window,
-                    }))
+                    notifications.append(
+                        (
+                            member.partner_id,
+                            "discuss.channel/joined",
+                            {
+                                "channel": {
+                                    **member.channel_id._channel_basic_info(),
+                                    "model": "discuss.channel",
+                                    "is_pinned": True,
+                                },
+                                "invited_by_user_id": self.env.user.id,
+                                "open_chat_window": open_chat_window,
+                            },
+                        )
+                    )
                 if post_joined_message:
                     # notify existing members with a new message in the channel
                     if member.partner_id == self.env.user.partner_id:
@@ -416,35 +427,48 @@ class Channel(models.Model):
                         message_type="notification", subtype_xmlid="mail.mt_comment")
                 guest = member.guest_id
                 if guest:
-                    notifications.append((guest, 'discuss.channel/joined', {
-                        'channel': member.channel_id._channel_basic_info(),
-                    }))
+                    notifications.append(
+                        (
+                            guest,
+                            "discuss.channel/joined",
+                            {
+                                "channel": {
+                                    **member.channel_id._channel_basic_info(),
+                                    "model": "discuss.channel",
+                                },
+                            },
+                        )
+                    )
             if new_members:
-                store = Store(
-                    "Thread",
-                    {
-                        "id": channel.id,
-                        "memberCount": channel.member_count,
-                        "model": "discuss.channel",
-                    },
+                notifications.append(
+                    (
+                        channel,
+                        "mail.record/insert",
+                        Store(
+                            "discuss.channel",
+                            {"id": channel.id, "memberCount": channel.member_count},
+                        )
+                        .add(new_members)
+                        .get_result(),
+                    )
                 )
-                store.add(new_members)
-                notifications.append((channel, "mail.record/insert", store.get_result()))
             if existing_members and (current_partner or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                user_store = Store(
-                    "Thread",
-                    {
-                        "id": channel.id,
-                        "memberCount": channel.member_count,
-                        "model": "discuss.channel",
-                    },
-                )
-                user_store.add(existing_members)
                 target = current_partner or current_guest
-                notifications.append((target, "mail.record/insert", user_store.get_result()))
+                notifications.append(
+                    (
+                        target,
+                        "mail.record/insert",
+                        Store(
+                            "discuss.channel",
+                            {"id": channel.id, "memberCount": channel.member_count},
+                        )
+                        .add(existing_members)
+                        .get_result(),
+                    )
+                )
         if invite_to_rtc_call:
             for channel in self:
                 current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
@@ -477,36 +501,43 @@ class Channel(models.Model):
         for member in members:
             member.rtc_inviting_session_id = False
             target = member.partner_id or member.guest_id
-            store = Store(
-                "Thread",
-                {
-                    "id": self.id,
-                    "model": "discuss.channel",
-                    "rtcInvitingSession": False,
-                }
+            notifications.append(
+                (
+                    target,
+                    "mail.record/insert",
+                    Store(
+                        "discuss.channel", {"id": self.id, "rtcInvitingSession": False}
+                    ).get_result(),
+                )
             )
-            notifications.append((target, "mail.record/insert", store.get_result()))
         if members:
-            store = Store(
-                "Thread",
-                {
-                    "id": self.id,
-                    "model": "discuss.channel",
-                    "invitedMembers": [("DELETE", [{"id": member.id} for member in members])],
-                },
+            notifications.append(
+                (
+                    self,
+                    "mail.record/insert",
+                    Store(
+                        "discuss.channel",
+                        {
+                            "id": self.id,
+                            "invitedMembers": [
+                                ("DELETE", [{"id": member.id} for member in members])
+                            ],
+                        },
+                    )
+                    .add(
+                        members,
+                        fields={
+                            "id": True,
+                            "channel": {},
+                            "persona": {
+                                "partner": {"id": True, "name": True, "im_status": True},
+                                "guest": {"id": True, "name": True, "im_status": True},
+                            },
+                        },
+                    )
+                    .get_result(),
+                )
             )
-            store.add(
-                members,
-                fields={
-                    "id": True,
-                    "channel": {},
-                    "persona": {
-                        "partner": {"id": True, "name": True, "im_status": True},
-                        "guest": {"id": True, "name": True, "im_status": True},
-                    },
-                },
-            )
-            notifications.append((self, "mail.record/insert", store.get_result()))
         self.env["bus.bus"]._sendmany(notifications)
 
     # ------------------------------------------------------------
@@ -639,7 +670,7 @@ class Channel(models.Model):
             (
                 (self, "members"),
                 "mail.record/insert",
-                {"Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}},
+                Store("discuss.channel", {"id": self.id, "is_pinned": True}).get_result(),
             ),
             (self, "discuss.channel/new_message", payload),
         ]
@@ -788,12 +819,17 @@ class Channel(models.Model):
                             (fields.Datetime.now() if pinned else None, message_to_update.id))
         message_to_update.invalidate_recordset(['pinned_at'])
 
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Message': {
-                'id': message_id,
-                'pinned_at': fields.Datetime.to_string(message_to_update.pinned_at),
-            }
-        })
+        self.env["bus.bus"]._sendone(
+            self,
+            "mail.record/insert",
+            Store(
+                "mail.message",
+                {
+                    "id": message_id,
+                    "pinned_at": fields.Datetime.to_string(message_to_update.pinned_at),
+                },
+            ).get_result(),
+        )
         if pinned:
             notification_text = '''
                 <div data-oe-type="pin" class="o_mail_notification">
@@ -881,7 +917,6 @@ class Channel(models.Model):
             'create_uid': self.create_uid.id,
             'authorizedGroupFullName': self.group_public_id.full_name,
             'allow_public_upload': self.allow_public_upload,
-            'model': "discuss.channel",
             'last_interest_dt': fields.Datetime.to_string(self.last_interest_dt),
         }
 
@@ -975,7 +1010,7 @@ class Channel(models.Model):
                 # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
                 ("ADD", [{"id": session.id} for session in channel.sudo().rtc_session_ids])
             ]
-            store.add("Thread", info)
+            store.add("discuss.channel", info)
 
     # User methods
     @api.model
@@ -1097,13 +1132,11 @@ class Channel(models.Model):
         self.ensure_one()
         member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
-        self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
-            'Thread': {
-                'custom_channel_name': name,
-                'id': self.id,
-                'model': "discuss.channel",
-            }
-        })
+        self.env["bus.bus"]._sendone(
+            member.partner_id,
+            "mail.record/insert",
+            Store("discuss.channel", {"custom_channel_name": name, "id": self.id}).get_result(),
+        )
 
     def channel_rename(self, name):
         self.ensure_one()
@@ -1216,16 +1249,11 @@ class Channel(models.Model):
         count = self.env['discuss.channel.member'].search_count(
             domain=[('channel_id', '=', self.id)],
         )
-        store = Store(unknown_members)
-        store.add(
-            "Thread",
-            {
-                "id": self.id,
-                "model": "discuss.channel",
-                "memberCount": count,
-            },
+        return (
+            Store(unknown_members)
+            .add("discuss.channel", {"id": self.id, "memberCount": count})
+            .get_result()
         )
-        return store.get_result()
 
     # ------------------------------------------------------------
     # COMMANDS
