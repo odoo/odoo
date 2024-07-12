@@ -347,10 +347,10 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
         self.assertEqual(self.pol_product_order.qty_to_invoice, 5.0, "The refund should make it so the quantity to invoice is the ordered quantity")
         self.assertEqual(self.pol_product_order.qty_invoiced, 0.0, "The qty invoiced should be zero since the refund cancels the previously invoiced amount")
-        self.assertEqual(len(self.pol_product_order.account_move_line_ids), 2, "The product line is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
+        self.assertEqual(len(self.pol_product_order.invoice_lines), 2, "The product line is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
         self.assertEqual(pol_downpayment.qty_invoiced, 1.0, "The qty invoiced should remain 1 since the refund was only for the ordered product, not the downpayment")
         self.assertEqual(pol_downpayment.qty_to_invoice, -1.0, "Downpayment was invoiced separately and should still count as invoiced after refund of the product line. Since the ordered qty is 0 for down payments, this means -1 is remaining to invoice.")
-        self.assertEqual(len(pol_downpayment.account_move_line_ids), 3, "The down payment line is invoiced, so it should be linked to 3 invoice lines (downpayment invoice, partial invoice and refund)")
+        self.assertEqual(len(pol_downpayment.invoice_lines), 3, "The down payment line is invoiced, so it should be linked to 3 invoice lines (downpayment invoice, partial invoice and refund)")
 
     def test_tax_and_account_breakdown(self):
         """
