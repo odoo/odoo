@@ -1,13 +1,12 @@
+import logging
 import datetime
-import string
 import re
+
 import stdnum
+from stdnum import luhn
 from stdnum.eu.vat import check_vies
 from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
 from stdnum.util import clean
-from stdnum import luhn
-
-import logging
 
 from odoo import api, models, fields
 from odoo.tools import _, zeep, LazyTranslate

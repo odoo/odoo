@@ -2,32 +2,67 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import chardet
 import codecs
 import collections
-import csv
 import contextlib
-import difflib
-import unicodedata
-
-import chardet
+import csv
 import datetime
+import difflib
 import io
 import itertools
 import logging
-import psycopg2
 import operator
 import os
 import re
-import requests
+import unicodedata
+from collections import defaultdict
 
+import psycopg2
+import requests
 from PIL import Image
 
-from collections import defaultdict
+try:
+    import xlrd
+except ImportError:
+    xlrd = None
+else:
+    try:
+        from xlrd import xlsx
+    except ImportError:
+        xlsx = None
+    else:
+        from lxml import etree
+        # xlrd.xlsx supports defusedxml, defusedxml's etree interface is broken
+        # (missing ElementTree and thus ElementTree.iter) which causes a fallback to
+        # Element.getiterator(), triggering a warning before 3.9 and an error from 3.9.
+        #
+        # Historically we had defusedxml installed because zeep had a hard dep on
+        # it. They have dropped it as of 4.1.0 which we now require (since 18.0),
+        # but keep this patch for now as Odoo might get updated in a legacy env
+        # which still has defused.
+        #
+        # Directly instruct xlsx to use lxml as we have a hard dependency on that.
+        xlsx.ET = etree
+        xlsx.ET_has_iterparse = True
+        xlsx.Element_has_iter = True
+
+try:
+    from . import odf_ods_reader
+except ImportError:
+    odf_ods_reader = None
+
+try:
+    from openpyxl import load_workbook
+except ImportError:
+    load_workbook = None
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
+
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -43,41 +78,6 @@ BOM_MAP = {
     'utf-32le': codecs.BOM_UTF32_LE,
     'utf-32be': codecs.BOM_UTF32_BE,
 }
-
-try:
-    import xlrd
-    try:
-        from xlrd import xlsx
-    except ImportError:
-        xlsx = None
-except ImportError:
-    xlrd = xlsx = None
-
-if xlsx:
-    from lxml import etree
-    # xlrd.xlsx supports defusedxml, defusedxml's etree interface is broken
-    # (missing ElementTree and thus ElementTree.iter) which causes a fallback to
-    # Element.getiterator(), triggering a warning before 3.9 and an error from 3.9.
-    #
-    # We have defusedxml installed because zeep has a hard dep on defused and
-    # doesn't want to drop it (mvantellingen/python-zeep#1014).
-    #
-    # Ignore the check and set the relevant flags directly using lxml as we have a
-    # hard dependency on it.
-    xlsx.ET = etree
-    xlsx.ET_has_iterparse = True
-    xlsx.Element_has_iter = True
-
-try:
-    from . import odf_ods_reader
-except ImportError:
-    odf_ods_reader = None
-
-try:
-    from openpyxl import load_workbook
-except ImportError:
-    load_workbook = None
-
 
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),

@@ -10,14 +10,13 @@ import re
 import textwrap
 import uuid
 
+from rjsmin import jsmin as rjsmin
 try:
     import sass as libsass
 except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
-
-from rjsmin import jsmin as rjsmin
 
 from odoo import release
 from odoo.api import SUPERUSER_ID
