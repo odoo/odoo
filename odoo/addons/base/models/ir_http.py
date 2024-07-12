@@ -290,6 +290,7 @@ class IrHttp(models.AbstractModel):
             "direction": lang_data.direction,
             "date_format": lang_data.date_format,
             "time_format": lang_data.time_format,
+            "short_time_format": lang_data.short_time_format,
             "grouping": lang_data.grouping,
             "decimal_point": lang_data.decimal_point,
             "thousands_sep": lang_data.thousands_sep,
