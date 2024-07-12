@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.tools import SQL, Query
+from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
 
@@ -16,6 +16,10 @@ class AnalyticMixin(models.AbstractModel):
     analytic_precision = fields.Integer(
         store=False,
         default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
+    distribution_analytic_account_ids = fields.Many2many(
+        comodel_name='account.analytic.account',
+        compute='_compute_distribution_analytic_account_ids',
     )
 
     def init(self):
@@ -40,6 +44,14 @@ class AnalyticMixin(models.AbstractModel):
             r"""regexp_split_to_array(jsonb_path_query_array(%s, '$.keyvalue()."key"')::text, '\D+')""",
             self._field_to_sql(table or self._table, 'analytic_distribution'),
         )
+
+    @api.depends('analytic_distribution')
+    def _compute_distribution_analytic_account_ids(self):
+        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',')}
+        existing_accounts_ids = set(self.env['account.analytic.account'].browse(all_ids).exists().ids)
+        for rec in self:
+            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
+            rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
         # Don't use this override when account_report_analytic_groupby is truly in the context
@@ -118,7 +130,7 @@ class AnalyticMixin(models.AbstractModel):
     def mapped(self, func):
         # Get the related analytic accounts as a recordset instead of the distribution
         if func == 'analytic_distribution' and self.env.context.get('distribution_ids'):
-            return self.env['account.analytic.account'].browse(sorted({_id for record in self for _id in record._get_analytic_account_ids()}))
+            return self.distribution_analytic_account_ids
         return super().mapped(func)
 
     def filtered_domain(self, domain):
@@ -161,8 +173,3 @@ class AnalyticMixin(models.AbstractModel):
             vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
-
-    def _get_analytic_account_ids(self) -> list[int]:
-        """ Get the analytic account ids from the analytic_distribution dict """
-        self.ensure_one()
-        return [int(account_id) for ids in (self.analytic_distribution or {}) for account_id in ids.split(',')]
