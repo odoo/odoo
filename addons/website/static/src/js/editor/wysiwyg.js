@@ -70,7 +70,8 @@ Wysiwyg.include({
      */
     start: async function () {
         // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
-        this.el.addEventListener("click", this._onPageClick.bind(this), { capture: true });
+        this.__onPageClick = this._onPageClick.bind(this);
+        this.el.addEventListener("click", this.__onPageClick, { capture: true });
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
         // Dropdown menu initialization: handle dropdown openings by hand
@@ -211,7 +212,7 @@ Wysiwyg.include({
      */
     destroy: function () {
         this._restoreMegaMenus();
-        this.el.removeEventListener("click", this._onPageClick.bind(this), { capture: true });
+        this.el.removeEventListener("click", this.__onPageClick, { capture: true });
         this._super.apply(this, arguments);
     },
 
