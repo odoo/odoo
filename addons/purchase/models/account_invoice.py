@@ -65,7 +65,7 @@ class AccountMove(models.Model):
         po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
         for line in po_lines.filtered(lambda l: not l.display_type):
             self.invoice_line_ids += self.env['account.move.line'].new(
-                line._prepare_invoice_line(self)
+                line._prepare_account_move_line(self)
             )
 
         # Compute invoice_origin.
@@ -480,6 +480,3 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['purchase_line_id'] = self.purchase_line_id.id
-
-    def _get_order_lines(self):
-        return self.purchase_line_id or super()._get_order_lines()
