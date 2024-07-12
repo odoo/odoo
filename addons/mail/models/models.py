@@ -178,6 +178,8 @@ class BaseModel(models.AbstractModel):
         """ Find tracking sequence of a given field, given their name. Current
         parameter 'tracking' should be an integer, but attributes with True
         are still supported; old naming 'track_sequence' also. """
+        if fname not in self._fields:
+            return 100
         sequence = getattr(
             self._fields[fname], 'tracking',
             getattr(self._fields[fname], 'track_sequence', 100)
