@@ -100,7 +100,11 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
             Dialog.confirm("Open session"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             TextInputPopup.inputText("044123456"),
-            Dialog.confirm(),
+            // pressing enter should confirm the text input popup
+            {
+                trigger: ".modal textarea",
+                run: "press Enter",
+            },
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
             ProductScreen.clickPartnerButton(),

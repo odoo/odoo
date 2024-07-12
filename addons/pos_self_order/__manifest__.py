@@ -73,6 +73,7 @@
             "point_of_sale/static/src/app/models/related_models.js",
             "point_of_sale/static/src/app/models/data_service.js",
             "point_of_sale/static/src/app/models/**/*",
+            "pos_restaurant/static/src/app/models/restaurant_table.js"
         ],
         # Assets tests
         "pos_self_order.assets_tests": [
