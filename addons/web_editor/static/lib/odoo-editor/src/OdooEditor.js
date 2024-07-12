@@ -1448,6 +1448,17 @@ export class OdooEditor extends EventTarget {
         const endTrCells = endTr && [...endTr.cells];
         const startTable = closestElement(start, 'table');
         const endTable = closestElement(end, 'table');
+        let startTd = closestElement(start, 'td');
+        const endTd = closestElement(end, 'td');
+        const endTableLeaf = lastLeaf(endTable);
+        // Delete <br> if selection ends in an last empty <td> tag of <tr>.
+        // eg. `<td>]<br></td>` or `<td>abc]<br></td>`.
+        if (endTable &&
+            endTableLeaf.nodeName === 'BR' &&
+            (endTableLeaf === lastLeaf(end) || end.nextElementSibling === endTableLeaf)
+        ) {
+            endTableLeaf.remove();
+        }
         const shouldRemoveStartTr =
             startTable && firstLeaf(startTable) === firstLeaf(start) &&
             (!startTable.contains(end) || lastLeaf(startTable) === lastLeaf(end));
@@ -1456,11 +1467,6 @@ export class OdooEditor extends EventTarget {
             (!endTr.contains(start) || (firstLeaf(startTable) === firstLeaf(start)));
         const startBlock = closestBlock(start);
         const endBlock = closestBlock(end);
-        // Delete <br> if selection ends in an last empty <td> tag of <tr>.
-        // eg. `<td>]<br></td>`
-        if (shouldRemoveEndTr && end.nodeName === 'TD' && isEmptyBlock(end)) {
-            end.firstChild.remove();
-        }
         // Do not join blocks in the following cases:
         // 1. start and end share a common ancestor block with the range
         // 2. selection spans multiple TDs
@@ -1486,9 +1492,6 @@ export class OdooEditor extends EventTarget {
             ...boundariesOut(start).slice(0, 2),
             ...boundariesOut(end).slice(2, 4),
             { allowReenter: false, label: 'deleteRange' });
-
-        let startTd = closestElement(start, 'td');
-        const endTd = closestElement(end, 'td');
 
         // Let the DOM split and delete the range.
         const contents = range.extractContents();
@@ -2644,16 +2647,6 @@ export class OdooEditor extends EventTarget {
                     // null and the string can be found within ev.dataTranser.
                     insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
                     selection.collapseToEnd();
-                }
-                // Firefox does not remove trailing <br> on insertText in an
-                // empty line.
-                const focusNode = selection.focusNode;
-                if (
-                    focusNode.nextSibling &&
-                    focusNode.nextSibling.nodeName === 'BR' &&
-                    lastLeaf(focusNode.parentElement) === focusNode.nextSibling
-                ) {
-                    focusNode.nextSibling.remove();
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
