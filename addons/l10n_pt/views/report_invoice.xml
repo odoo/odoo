@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--If the customer has no VAT, we must show 'Consumidor final'-->
+    <template id="l10n_pt_partner_vat">
+        <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id.vat">
+            <t t-esc="'Consumidor final'"/>
+        </div>
+    </template>
+
+<!--    Add tax exemption reason-->
+    <template id="l10n_pt_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='payment_communication']" position="before">
+            <t t-set="pt_tax_exemption_reasons" t-value="o._l10n_pt_get_vat_exemptions_reasons()"/>
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and pt_tax_exemption_reasons">
+                <div><strong>Motivos de isenção de IVA:</strong></div>
+                <t t-foreach="pt_tax_exemption_reasons" t-as="reason">
+                    <div><t t-esc="reason"/></div>
+                </t>
+                <br/>
+            </t>
+        </xpath>
+
+<!--    If the customer has no VAT, we must show 'Consumidor final'-->
+        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="after">
+            <t t-call="l10n_pt.l10n_pt_partner_vat"/>
+        </xpath>
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+            <t t-call="l10n_pt.l10n_pt_partner_vat"/>
+        </xpath>
+        <xpath expr="//div[@id='partner_vat_no_shipping']" position="after">
+            <t t-call="l10n_pt.l10n_pt_partner_vat"/>
+        </xpath>
+
+<!--    QR Code-->
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_qr_code_str">
+                <div>
+                    ATCUD: <t t-esc="o.l10n_pt_atcud"/>
+                </div>
+                <img style="margin: 0.25cm;"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_qr_code_str, 150, 150)"
+                />
+            </t>
+        </xpath>
+
+<!--        Add accumulated amount column-->
+        <xpath expr="//th[@name='th_subtotal']" position="after">
+            <th t-if="o.company_id.account_fiscal_country_id.code == 'PT' and len(o.invoice_line_ids) &gt; 5 and report_type == 'pdf'" name="th_subtotal_accumulated" class="text-end">
+                <span>Accumulated</span>
+            </th>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="after">
+            <td t-if="o.company_id.account_fiscal_country_id.code == 'PT' and len(o.invoice_line_ids) &gt; 5 and report_type == 'pdf'" name="th_subtotal_accumulated_tax" class="text-end">
+                <span class="text-nowrap"
+                      t-esc="current_subtotal"
+                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                />
+            </td>
+        </xpath>
+
+<!--        Disable the accumulated amount resetting happening after a line section-->
+        <xpath expr="//tr[hasclass('is-subtotal')]" position="replace">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT'"/>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//t[@id='reset_current_subtotal']" position="replace">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT'"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+</odoo>

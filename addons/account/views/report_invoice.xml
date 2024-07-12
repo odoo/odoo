@@ -156,7 +156,7 @@
                                                 <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
-                                            <t t-set="current_subtotal" t-value="0"/>
+                                            <t id="reset_current_subtotal" t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">

@@ -968,18 +968,16 @@ class ResCompany(models.Model):
                     })
                     continue
 
-                current_hash_version = 1
+                current_versioning_index = 0
+                versioning_list = self._get_hash_versioning_list()
                 for move in moves:
                     prefix_result = prefix2result[move.sequence_prefix]
                     if prefix_result['corrupted_move']:
                         continue
                     previous_move = prefix_result['last_move'] if not move.secure_sequence_number else last_move
                     previous_hash = previous_move.inalterable_hash or ""
-                    computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                    while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
-                        current_hash_version += 1
-                        computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                    if move.inalterable_hash != computed_hash:
+                    verified, current_versioning_index = self._verify_hashed_move(move, previous_hash, versioning_list, current_versioning_index)
+                    if not verified:
                         prefix_result['corrupted_move'] = move
                         continue
                     if not prefix_result['first_move']:
@@ -1019,6 +1017,16 @@ class ResCompany(models.Model):
             'results': results,
             'printing_date': format_date(self.env, fields.Date.context_today(self)),
         }
+
+    def _get_hash_versioning_list(self):
+        return list(range(1, MAX_HASH_VERSION + 1))
+
+    def _verify_hashed_move(self, move, previous_hash, versioning_list, current_versioning_index):
+        computed_hash = move.with_context(hash_version=versioning_list[current_versioning_index])._calculate_hashes(previous_hash)[move.id]
+        while move.inalterable_hash != computed_hash and versioning_list[current_versioning_index] < len(versioning_list):
+            current_versioning_index += 1
+            computed_hash = move.with_context(hash_version=versioning_list[current_versioning_index])._calculate_hashes(previous_hash)[move.id]
+        return move.inalterable_hash == computed_hash, current_versioning_index
 
     @api.model
     def _with_locked_records(self, records, allow_raising=True):

@@ -32,3 +32,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'chart_311',
             },
         }
+
+    @template('pt', 'account.journal')
+    def _get_pt_account_account_journal(self):
+        return {
+            'sale': {
+                'refund_sequence': True,
+                'restrict_mode_hash_table': True,
+            },
+        }

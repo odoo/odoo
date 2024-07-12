@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.portugal.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='quick_edit_mode']" position="after">
+                <block title="Portuguese Localization" id="portugal_localization" invisible="country_code != 'PT'">
+                    <setting string="Tax Authorities">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <div class="d-flex mt4 align-items-center">
+                                    <button
+                                        name="%(l10n_pt.action_open_l10n_pt_at_series_series_list_view)d"
+                                        icon="oi-arrow-right" type="action"
+                                        string="View Autoridade Tributária (AT) Series" class="btn-link p-1"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Training Mode">
+                        <field name="l10n_pt_training_mode"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
