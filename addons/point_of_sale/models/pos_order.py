@@ -1699,6 +1699,9 @@ class PosOrderLine(models.Model):
                 line.margin = line.price_subtotal - line.total_cost
                 line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
 
+    def _get_additional_base_line_values(self):
+        return {}
+
     def _prepare_base_line_for_taxes_computation(self):
         self.ensure_one()
         commercial_partner = self.order_id.partner_id.commercial_partner_id
@@ -1735,6 +1738,7 @@ class PosOrderLine(models.Model):
                 account_id=account,
                 is_refund=is_refund_line,
                 sign=1 if is_refund_order else -1,
+                **self._get_additional_base_line_values(),
             ),
             'uom_id': line.product_uom_id,
             'name': product_name,
