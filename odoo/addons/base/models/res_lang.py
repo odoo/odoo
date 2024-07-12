@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 DEFAULT_DATE_FORMAT = '%m/%d/%Y'
 DEFAULT_TIME_FORMAT = '%H:%M:%S'
+DEFAULT_SHORT_TIME_FORMAT = '%H:%M'
 
 
 class LangData(frozendict):
@@ -63,6 +64,7 @@ class Lang(models.Model):
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
     time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
+    short_time_format = fields.Char(string='Short Time Format', required=True, default=DEFAULT_SHORT_TIME_FORMAT, help="Time Format without seconds")
     week_start = fields.Selection([('1', 'Monday'),
                                    ('2', 'Tuesday'),
                                    ('3', 'Wednesday'),
@@ -246,11 +248,11 @@ class Lang(models.Model):
         """ Return fields to cache for the active languages
         Please promise all these fields don't depend on other models and context
         and are not translated.
-        Waning: Don't add method names of ``dict`` to CACHED_FIELDS for sake of the
+        Warning: Don't add method names of ``dict`` to CACHED_FIELDS for sake of the
         implementation of LangData
         """
         return OrderedSet(['id', 'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format',
-                           'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
+                           'time_format', 'short_time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
 
     def _get_data(self, **kwargs: Any) -> LangData:
         """ Get the language data for the given field value in kwargs
