@@ -48,33 +48,17 @@
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
-                    <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id"/>
-                    <field name="state"/>
-                    <field name="location_id"/>
-                    <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
-                                    </div>
-                                    <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
-                                </div>
-                                <div class="row">
-                                    <div class="col-8 text-muted">
-                                        <span><t t-esc="record.product_id.value"/></span>
-                                    </div>
-                                    <div class="col-4">
-                                        <span class="float-end text-end">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}" readonly="1"/>
-                                        </span>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card">
+                            <div class="d-flex fw-bold mb-1">
+                                <field name="name" class="fs-5"/>
+                                <field name="product_qty" class="ms-auto me-1 fs-6"/>
+                                <field name="product_uom_id" class="small"/>
+                            </div>
+                            <div class="d-flex text-muted">
+                                <field name="product_id"/>
+                                <field name="state" class="ms-auto" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}" readonly="1"/>
                             </div>
                         </t>
                     </templates>
