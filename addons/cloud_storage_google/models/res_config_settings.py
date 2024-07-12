@@ -5,11 +5,7 @@ import json
 import requests
 from datetime import datetime, timezone
 
-try:
-    from google.oauth2 import service_account
-    from google.auth.transport.requests import Request
-except ImportError:
-    service_account = Request = None
+from google.auth.transport.requests import Request
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
