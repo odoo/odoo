@@ -1,38 +1,30 @@
-from unittest.mock import patch
-
-from odoo import fields
+from odoo import Command, fields
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.models import Model
 from odoo.tests import tagged
-from odoo.exceptions import UserError
 
+from odoo.addons.l10n_pt.tests.common import TestL10nPtCommon
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
-class TestL10nPtPosCommon(TestPoSCommon):
-    def setUp(self):
-        super().setUp()
-        self.company_pt = self.company_data['company']
-        self.company_pt.vat = '999999990'
-        self.company_pt.write({
-            'country_id': self.env.ref('base.pt').id,
-            'account_fiscal_country_id': self.env.ref('base.pt').id,
-            'vat': 'PT123456789',
-        })
+class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.config = self.basic_config
-        self.config.l10n_pt_pos_at_series_id = self.env['l10n_pt.at.series'].create({
+        cls.env['l10n_pt.at.series.line'].create({
+            'at_series_id': cls.series_2024.id,
             'type': 'pos_order',
-            'prefix': 'POS-TEST',
-            'at_code': 'AT-POS-TEST',
+            'prefix': 'POS',
+            'at_code': 'AT-TESTPOS',
         })
-
-        self.product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)
-
-        def _patched_l10n_pt_pos_verify_config(*args, **kwargs):
-            pass
-
-        with patch('odoo.addons.l10n_pt_pos.models.pos_config.PosConfig._l10n_pt_pos_verify_config', new=_patched_l10n_pt_pos_verify_config):
-            self.open_new_session()
+        cls.config = cls.basic_config
+        cls.config.l10n_pt_pos_at_series_id = cls.series_2024.id
+        cls.config.payment_method_ids.write({
+            'l10n_pt_pos_payment_mechanism': 'TB',
+            'l10n_pt_pos_default_at_series_id': cls.series_2024.id,
+        })
+        cls.product1 = cls.create_product('Product 1', cls.categ_basic, lst_price=150, tax_ids=cls.tax_sale_0.ids)
 
     def _create_pos_order(self, date_order="2024-01-01", product=None, partner=False):
         product = product or self.product1
@@ -52,12 +44,13 @@ class TestL10nPtPosCommon(TestPoSCommon):
         return order
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtPosHash(TestL10nPtPosCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
+        self.open_new_session()
         order = self._create_pos_order()
         self.assertEqual(order.l10n_pt_pos_inalterable_hash, False)
-        order.l10n_pt_pos_compute_missing_hashes(order.company_id.id)  # Called when printing the receipt
+        order.l10n_pt_pos_compute_missing_hashes(order.company_id.id, order.config_id.id)  # Called when printing the receipt
 
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:.*"
 
@@ -69,20 +62,24 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
             order.l10n_pt_hashed_on = fields.Datetime.now()
         with self.assertRaisesRegex(UserError, f"{expected_error_msg}Order Ref."):
             order.name = "New name"
+        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Document Number."):
+            order.l10n_pt_document_number = "New number/0001"
 
         # The following field is not part of the hash so it can be modified
-        order.note = 'new note'
+        order.general_note = 'new note'
 
     def test_l10n_pt_pos_hash_integrity_report(self):
         """Test the hash integrity report"""
+        self.open_new_session()
         order1 = self._create_pos_order("2024-01-01")
         self._create_pos_order("2024-01-02")
         order3 = self._create_pos_order("2024-01-03")
         order4 = self._create_pos_order("2024-01-04")
         self.assertEqual(order1.l10n_pt_pos_inalterable_hash, False)
-        order1.l10n_pt_pos_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt in JS
+        order1.l10n_pt_pos_compute_missing_hashes(order1.company_id.id, order1.config_id.id)  # Called when printing the receipt in JS
 
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertEqual(integrity_check['msg_cover'], 'Orders are correctly hashed')
         self.assertEqual(integrity_check['first_date'], order1.date_order)
@@ -91,23 +88,25 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         # Let's change one of the fields used by the hash. It should be detected by the integrity report.
         # We need to bypass the write method of pos.order to do so.
         Model.write(order3, {'date_order': fields.Date.from_string('2024-01-07')})
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order3.id} ({order3.name}).')
+        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order3.id} ({order3.l10n_pt_document_number}).')
 
         # Let's try with the l10n_pt_pos_inalterable_hash field itself
         Model.write(order3, {'date_order': fields.Date.from_string("2024-01-03")})  # Revert the previous change
         Model.write(order4, {'l10n_pt_pos_inalterable_hash': 'fake_hash'})
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order4.id} ({order4.name}).')
+        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order4.id} ({order4.l10n_pt_document_number}).')
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nPtPosMiscRequirements(TestL10nPtPosCommon):
     def test_l10n_pt_pos_partner(self):
         """Test misc requirements for partner"""
-
+        self.open_new_session()
         # Cannot change tax number of an existing client with already issued documents.
         # However, missing tax number can only be entered if the field is empty
         # (or filled with generic client tax 999999990)
@@ -124,31 +123,27 @@ class TestL10nPtPosMiscRequirements(TestL10nPtPosCommon):
         with self.assertRaisesRegex(UserError, "You cannot change the VAT number of a partner that already has issued documents"):
             partner_a.vat = "PT987654321"
 
-        # Do not allow change the name of client (if it already has issued docs) who has no tax number.
-        # Limitation ends when client has a tax number.
-
-        partner_b = self.env['res.partner'].create({
-            'name': 'Partner B',
-            'company_id': self.company_pt.id,
-        })
-        with self.assertRaisesRegex(UserError, "You cannot change the name of a partner without a VAT number"):
-            partner_b.name = "Partner B2"
-
-        partner_b.vat = "PT123456789"
-        partner_b.name = "Partner B2"
-
     def test_l10n_pt_pos_product(self):
         """Test that we do not allow change ProductDescription if already issued docs"""
-
-        product = self.env['product.product'].create({
-            'name': 'Product A',
-            'list_price': 150,
-            'taxes_id': [],
-        })
+        self.open_new_session()
+        product = self.product1
         product.name = "Product A2"  # OK
 
-        self._create_pos_order(product=product)
+        self._create_pos_order()
 
-        with self.assertRaisesRegex(UserError, "You cannot modify the name of a product that has been used in a stock picking."):
+        with self.assertRaisesRegex(UserError, "You cannot modify the name of a product that has been used"):
             # Stock picking is triggered before POS order
             product.name = "Product A3"
+
+    def test_l10n_pt_pos_payment_method(self):
+        """Test that we do not allow change ProductDescription if already issued docs"""
+        pos_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Payment method - No mechanism',
+            'receivable_account_id': self.company_data['default_account_receivable'].id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        # Remove the series added in compute method
+        pos_payment_method.l10n_pt_pos_default_at_series_id = None
+        self.config.write({'payment_method_ids': [Command.link(pos_payment_method.id)]})
+        with self.assertRaisesRegex(RedirectWarning, "a payment mechanism. Payment methods with a bank journal"):
+            self.open_new_session()
