@@ -9,6 +9,7 @@ from urllib import parse
 
 from odoo import api, fields, models
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.tools.sql import column_exists, create_column
 
 TIMEOUT = 10
 
@@ -39,6 +40,16 @@ class ResPartner(models.Model):
         copy=False,
     )  # field to compute the label to show for partner endpoint
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
+
+    def _auto_init(self):
+        """Create columns `account_peppol_is_endpoint_valid` and `account_peppol_validity_last_check`
+        to avoid having them computed by the ORM on installation.
+        """
+        if not column_exists(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid'):
+            create_column(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid', 'boolean')
+        if not column_exists(self.env.cr, 'res_partner', 'account_peppol_validity_last_check'):
+            create_column(self.env.cr, 'res_partner', 'account_peppol_validity_last_check', 'timestamp')
+        return super()._auto_init()
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
