@@ -202,7 +202,7 @@ class SaleOrderLine(models.Model):
         comodel_name='account.analytic.line', inverse_name='so_line',
         string="Analytic lines")
 
-    account_move_line_ids = fields.Many2many(
+    invoice_lines = fields.Many2many(
         comodel_name='account.move.line',
         relation='sale_order_line_invoice_rel', column1='order_line_id', column2='invoice_line_id',
         string="Invoice Lines",
@@ -707,7 +707,7 @@ class SaleOrderLine(models.Model):
 
         return result
 
-    @api.depends('account_move_line_ids.move_id.state', 'account_move_line_ids.quantity')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
@@ -783,8 +783,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.product_id.id != self.company_id.sale_discount_product_id.id
 
-    @api.depends('account_move_line_ids', 'account_move_line_ids.price_total', 'account_move_line_ids.move_id.state',
-                 'account_move_line_ids.move_id.move_type')
+    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
         """ Compute the untaxed amount already invoiced from the sale order line, taking the refund attached
             the so line into account. This amount is computed as
@@ -1026,7 +1025,7 @@ class SaleOrderLine(models.Model):
         return self.filtered(
             lambda line:
                 line.state == 'sale'
-                and (line.account_move_line_ids or not line.is_downpayment)
+                and (line.invoice_lines or not line.is_downpayment)
                 and not line.display_type
         )
 
@@ -1094,7 +1093,7 @@ class SaleOrderLine(models.Model):
         })
         self._set_analytic_distribution(res, **optional_values)
         if self.is_downpayment:
-            res['account_id'] = self.account_move_line_ids.filtered('is_downpayment').account_id[:1].id
+            res['account_id'] = self.invoice_lines.filtered('is_downpayment').account_id[:1].id
         if optional_values:
             res.update(optional_values)
         if self.display_type:

@@ -52,7 +52,7 @@ class StockMove(models.Model):
             received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom, rounding_method='HALF-UP')
         if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
-            invoiced_layer = line.sudo().account_move_line_ids.stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             receipt_value = 0
             if move_layer:
@@ -63,7 +63,7 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             total_invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.sudo().account_move_line_ids:
+            for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
                 # Adjust unit price to account for discounts before adding taxes.
@@ -253,7 +253,7 @@ class StockMove(models.Model):
     def _get_all_related_aml(self):
         # The back and for between account_move and account_move_line is necessary to catch the
         # additional lines from a cogs correction
-        return super()._get_all_related_aml() | self.purchase_line_id.account_move_line_ids.move_id.line_ids.filtered(
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids.filtered(
             lambda aml: aml.product_id == self.purchase_line_id.product_id)
 
     def _get_all_related_sm(self, product):

@@ -644,7 +644,7 @@ class ProjectProject(models.Model):
             ['id:recordset'],
         )[0][0]
         revenue_items_from_invoices = self._get_revenues_items_from_invoices(
-            excluded_move_line_ids=sale_lines.account_move_line_ids.ids,
+            excluded_move_line_ids=sale_lines.invoice_lines.ids,
             with_action=with_action
         )
         profitability_items['revenues']['data'] += revenue_items_from_invoices['data']

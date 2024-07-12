@@ -13,7 +13,7 @@ class SaleOrderLine(models.Model):
         store=True,
     )
 
-    @api.depends('account_move_line_ids.move_id.state', 'account_move_line_ids.quantity')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced_posted(self):
         """
         This method is almost identical to '_compute_qty_invoiced()'. The only difference lies in the fact that
