@@ -3,7 +3,9 @@
     <t t-name="point_of_sale.Orderline">
         <t t-set="line" t-value="props.line" />
         <li class="orderline p-2 d-flex align-items-center lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
-            <img class="" t-attf-style="width: 4rem; border-radius: 1rem;" t-if="line.imageSrc" t-att-src="line.imageSrc"/>
+            <div t-if="line.imageSrc" class="o_line_container d-flex align-items-center justify-content-center">
+                <img t-attf-style="border-radius: 1rem;" t-att-src="line.imageSrc"/>
+            </div>
             <div class=" d-flex flex-column w-100">
                 <div class="d-flex">
                     <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1">
