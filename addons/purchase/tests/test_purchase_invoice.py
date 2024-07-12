@@ -477,7 +477,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po.button_confirm()
         po.order_line.qty_received = 1
         po.action_create_invoice()
-        self.assertRecordValues(po.account_move_ids.invoice_line_ids,
+        self.assertRecordValues(po.invoice_ids.invoice_line_ids,
                                 [{'analytic_distribution': analytic_distribution_model.analytic_distribution}])
 
     def test_sequence_invoice_lines_from_multiple_purchases(self):
@@ -579,7 +579,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         line.qty_received = 10
         purchase_order.action_create_invoice()
 
-        invoice = purchase_order.account_move_ids
+        invoice = purchase_order.invoice_ids
         invoice.invoice_date = invoice.date
         invoice.action_post()
 
@@ -715,7 +715,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             [], invoice.partner_id.id, invoice.amount_total)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertEqual(invoice.amount_total, po.amount_total)
 
     def test_total_match_via_po_reference(self):
@@ -725,7 +725,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertEqual(invoice.amount_total, po.amount_total)
 
     def test_subset_total_match_from_ocr(self):
@@ -736,7 +736,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
         additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertTrue(additional_unmatch_po_line.id in invoice.line_ids.purchase_line_id.ids)
         self.assertTrue(invoice.line_ids.filtered(lambda l: l.purchase_line_id == additional_unmatch_po_line).quantity == 0)
 
@@ -749,7 +749,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 2)
         for line in invoice_lines:
@@ -765,7 +765,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 2)
         for line in po.order_line:
@@ -780,7 +780,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 1)
         for line in invoice_lines:
@@ -795,7 +795,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 1)
         for line in invoice_lines:
@@ -810,7 +810,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
         self.assertEqual(len(invoice_lines), 2)
         for line in invoice_lines:
@@ -827,7 +827,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
 
-        self.assertTrue(invoice.id in po.account_move_ids.ids)
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
 
     def test_no_match_same_reference(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
@@ -836,7 +836,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id not in po.account_move_ids.ids)
+        self.assertTrue(invoice.id not in po.invoice_ids.ids)
 
     def test_no_match(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
@@ -845,7 +845,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice._find_and_set_purchase_orders(
             ['other_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
-        self.assertTrue(invoice.id not in po.account_move_ids.ids)
+        self.assertTrue(invoice.id not in po.invoice_ids.ids)
 
     def test_onchange_partner_currency(self):
         """
@@ -1022,7 +1022,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         # creating bill from PO
         po1.order_line.qty_received = 1
         po1.action_create_invoice()
-        invoice1 = po1.account_move_ids
+        invoice1 = po1.invoice_ids
         self.assertFalse(invoice1.invoice_user_id)
         # creating bill with Auto_complete feature
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))

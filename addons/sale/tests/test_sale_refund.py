@@ -65,7 +65,7 @@ class TestSaleRefund(TestSaleCommon):
         })
         payment.create_invoices()
 
-        cls.invoice = cls.sale_order.account_move_ids[0]
+        cls.invoice = cls.sale_order.invoice_ids[0]
 
     def test_refund_create(self):
         # Validate invoice
@@ -96,14 +96,14 @@ class TestSaleRefund(TestSaleCommon):
             'journal_id': self.invoice.journal_id.id,
         })
         credit_note_wizard.refund_moves()
-        invoice_refund = self.sale_order.account_move_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]  # the first invoice, its refund, and the new invoice
+        invoice_refund = self.sale_order.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]  # the first invoice, its refund, and the new invoice
 
         # Check invoice's type and number
         self.assertEqual(invoice_refund.move_type, 'out_refund', 'The last created invoiced should be a refund')
         self.assertEqual(invoice_refund.state, 'draft', 'Last Customer invoices should be in draft')
         self.assertEqual(self.sale_order.invoice_count, 2, "The SO should have 2 related invoices: the original, the new refund")
-        self.assertEqual(len(self.sale_order.account_move_ids.filtered(lambda inv: inv.move_type == 'out_refund')), 1, "The SO should be linked to only one refund")
-        self.assertEqual(len(self.sale_order.account_move_ids.filtered(lambda inv: inv.move_type == 'out_invoice')), 1, "The SO should be linked to only one customer invoices")
+        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_refund')), 1, "The SO should be linked to only one refund")
+        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_invoice')), 1, "The SO should be linked to only one customer invoices")
 
         # At this time, the invoice 1 is opend (validated) and its refund is in draft, so the amounts invoiced are not zero for
         # invoiced sale line. The amounts only take validated invoice/refund into account.
@@ -194,8 +194,8 @@ class TestSaleRefund(TestSaleCommon):
         self.assertEqual(invoice_refund.move_type, 'out_invoice', 'The last created invoiced should be a customer invoice')
         self.assertEqual(invoice_refund.state, 'draft', 'Last Customer invoices should be in draft')
         self.assertEqual(self.sale_order.invoice_count, 3, "The SO should have 3 related invoices: the original, the refund, and the new one")
-        self.assertEqual(len(self.sale_order.account_move_ids.filtered(lambda inv: inv.move_type == 'out_refund')), 1, "The SO should be linked to only one refund")
-        self.assertEqual(len(self.sale_order.account_move_ids.filtered(lambda inv: inv.move_type == 'out_invoice')), 2, "The SO should be linked to two customer invoices")
+        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_refund')), 1, "The SO should be linked to only one refund")
+        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_invoice')), 2, "The SO should be linked to two customer invoices")
 
         # At this time, the invoice 1 and its refund are confirmed, so the amounts invoiced are zero. The third invoice
         # (2nd customer inv) is in draft state.
@@ -293,7 +293,7 @@ class TestSaleRefund(TestSaleCommon):
         downpayment.create_invoices()
         # order_line[1] is the down payment section
         sol_downpayment = sale_order_refund.order_line[2]
-        dp_invoice = sale_order_refund.account_move_ids[0]
+        dp_invoice = sale_order_refund.invoice_ids[0]
         dp_invoice.action_post()
 
         self.assertRecordValues(sol_downpayment, [{
@@ -310,7 +310,7 @@ class TestSaleRefund(TestSaleCommon):
         payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
         payment.create_invoices()
 
-        so_invoice = max(sale_order_refund.account_move_ids)
+        so_invoice = max(sale_order_refund.invoice_ids)
         self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))),
                          len(sale_order_refund.order_line.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), 'All lines should be invoiced')
         self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
@@ -322,7 +322,7 @@ class TestSaleRefund(TestSaleCommon):
             'journal_id': so_invoice.journal_id.id,
         })
         credit_note_wizard.refund_moves()
-        invoice_refund = sale_order_refund.account_move_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
+        invoice_refund = sale_order_refund.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
         invoice_refund.action_post()
 
         self.assertEqual(sol_product.qty_to_invoice, 5.0, "As the refund still exists, the quantity to invoice is the ordered quantity")

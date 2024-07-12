@@ -76,7 +76,7 @@ class PurchaseTestTaxTotals(TestTaxTotals):
         po.order_line.qty_received = 1
         po.action_create_invoice()
 
-        invoice = po.account_move_ids
+        invoice = po.invoice_ids
         invoice.invoice_date = '2020-01-01'
         invoice.action_post()
 

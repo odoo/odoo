@@ -51,7 +51,7 @@ class PurchaseOrder(models.Model):
     notes = fields.Html('Terms and Conditions')
 
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
-    account_move_ids = fields.Many2many(compute="_compute_invoice", string='Bills', copy=False, store=True)
+    invoice_ids = fields.Many2many('account.move', compute="_compute_invoice", string='Bills', copy=False, store=True)
     invoice_status = fields.Selection(selection_add=[
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
@@ -228,7 +228,7 @@ class PurchaseOrder(models.Model):
     def _compute_invoice(self):
         for order in self:
             invoices = order.mapped('order_line.account_move_line_ids.move_id')
-            order.account_move_ids = invoices
+            order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
     @api.onchange('date_planned')
@@ -504,7 +504,7 @@ class PurchaseOrder(models.Model):
 
     def button_cancel(self):
         for order in self:
-            for inv in order.account_move_ids:
+            for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel the related vendor bills."))
 
@@ -645,8 +645,8 @@ class PurchaseOrder(models.Model):
         immediately.
         """
         if not invoices:
-            self.invalidate_model(['account_move_ids'])
-            invoices = self.account_move_ids
+            self.invalidate_model(['invoice_ids'])
+            invoices = self.invoice_ids
 
         result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         # choose the view_mode accordingly
