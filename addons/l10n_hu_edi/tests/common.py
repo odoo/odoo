@@ -169,7 +169,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'product_uom_qty': 1,
                     'price_unit': 10000.0,
-                    'tax_ids': [Command.set(self.tax_vat.ids)],
+                    'tax_id': [Command.set(self.tax_vat.ids)],
                 })
             ]
         })

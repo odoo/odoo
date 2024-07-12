@@ -26,7 +26,7 @@ class SaleTestTaxTotals(TestTaxTotals):
                 'product_id': self.so_product.id,
                 'price_unit': amount,
                 'product_uom_qty': 1,
-                'tax_ids': [(6, 0, taxes.ids)],
+                'tax_id': [(6, 0, taxes.ids)],
             })
         for amount, taxes in lines_data]
 
