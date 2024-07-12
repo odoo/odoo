@@ -49,7 +49,7 @@ export class ReceiptScreen extends Component {
     }
     changeMode(mode) {
         this.state.mode = mode;
-        this.state.input = this.currentOrder.partner_id?.email || "";
+        this.state.input = this.currentOrder.partner_id?.email || this.state.input || "";
     }
     get isValidInput() {
         return this.isValidEmail(this.state.input);
