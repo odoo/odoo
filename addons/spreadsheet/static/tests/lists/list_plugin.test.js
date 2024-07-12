@@ -110,7 +110,7 @@ test("Can remove a list with undo after editing a cell", async function () {
 
 test("List formulas are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithList({
-        columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon"],
+        columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon", "name"],
         linesNumber: 2,
     });
     await waitForDataLoaded(model);
@@ -122,6 +122,7 @@ test("List formulas are correctly formatted at evaluation", async function () {
     expect(getCell(model, "F2").format).toBe(undefined);
     expect(getCell(model, "G2").format).toBe(undefined);
     expect(getCell(model, "G3").format).toBe(undefined);
+    expect(getCell(model, "H2").format).toBe(undefined);
 
     expect(getEvaluatedCell(model, "A2").format).toBe("0");
     expect(getEvaluatedCell(model, "B2").format).toBe("#,##0.00");
@@ -131,6 +132,7 @@ test("List formulas are correctly formatted at evaluation", async function () {
     expect(getEvaluatedCell(model, "F2").format).toBe(undefined);
     expect(getEvaluatedCell(model, "G2").format).toBe("#,##0.00[$€]");
     expect(getEvaluatedCell(model, "G3").format).toBe("[$$]#,##0.00");
+    expect(getEvaluatedCell(model, "H2").format).toBe("@");
 });
 
 test("List formulas date formats are locale dependant", async function () {
