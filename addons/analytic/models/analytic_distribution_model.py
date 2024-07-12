@@ -6,17 +6,14 @@ from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
-class NonMatchingDistribution(Exception):
-    pass
-
-
 class AccountAnalyticDistributionModel(models.Model):
     _name = 'account.analytic.distribution.model'
     _inherit = 'analytic.mixin'
     _description = 'Analytic Distribution Model'
     _rec_name = 'create_date'
-    _order = 'id desc'
+    _order = 'sequence, id desc'
 
+    sequence = fields.Integer(default=10)
     partner_id = fields.Many2one(
         'res.partner',
         string='Partner',
@@ -60,49 +57,36 @@ class AccountAnalyticDistributionModel(models.Model):
 
     @api.model
     def _get_distribution(self, vals):
-        """ Returns the distribution model that has the most fields that corresponds to the vals given
+        """ Returns the combined distribution from all matching models based on the vals dict provided
             This method should be called to prefill analytic distribution field on several models """
-        domain = []
-        for fname, value in vals.items():
-            domain += self._create_domain(fname, value) or []
-        best_score = 0
+        applicable_models = self._get_applicable_models(vals)
+
         res = {}
-        fnames = set(self._get_fields_to_check())
-        for rec in self.search(domain):
-            try:
-                score = sum(rec._check_score(key, vals.get(key)) for key in fnames)
-                if score > best_score:
-                    res = rec.analytic_distribution
-                    best_score = score
-            except NonMatchingDistribution:
-                continue
+        applied_plans = self.env['account.analytic.plan']
+        for model in applicable_models:
+            # ignore model if it contains an account having a root plan that was already applied
+            if not applied_plans & model.distribution_analytic_account_ids.root_plan_id:
+                res |= model.analytic_distribution
+                applied_plans += model.distribution_analytic_account_ids.root_plan_id
         return res
 
-    def _get_fields_to_check(self):
-        return (
-                set(self.env['account.analytic.distribution.model']._fields)
-                - set(self.env['analytic.mixin']._fields)
-                - set(models.MAGIC_COLUMNS) - {'display_name', '__last_update'}
-        )
+    @api.model
+    def _get_default_search_domain_vals(self):
+        return {
+            'company_id': False,
+            'partner_id': False,
+            'partner_category_id': [],
+        }
 
-    def _check_score(self, key, value):
-        self.ensure_one()
-        if key == 'company_id':
-            if not self.company_id or value == self.company_id.id:
-                return 1 if self.company_id else 0.5
-            raise NonMatchingDistribution
-        if not self[key]:
-            return 0
-        if value and ((self[key].id in value) if isinstance(value, (list, tuple))
-                      else (value.startswith(self[key])) if key.endswith('_prefix')
-                      else (value == self[key].id)
-                      ):
-            return 1
-        raise NonMatchingDistribution
+    @api.model
+    def _get_applicable_models(self, vals):
+        vals = self._get_default_search_domain_vals() | vals
+        domain = []
+        for fname, value in vals.items():
+            domain += self._create_domain(fname, value)
+        return self.search(domain)
 
     def _create_domain(self, fname, value):
-        if not value:
-            return False
         if fname == 'partner_category_id':
             value += [False]
             return [(fname, 'in', value)]
