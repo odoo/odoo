@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_pt_picking_type_view_form" model="ir.ui.view">
+        <field name="name">stock.pt.config.form.view</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hardware']" position="after">
+                <field name="country_code" invisible="1"/>
+                <page string="Portugal" invisible="country_code != 'PT'">
+                    <label for="l10n_pt_stock_at_series_id" class="col-lg-3 o_light_label"/>
+                    <field name="l10n_pt_stock_at_series_id" domain="[('type', '=', 'stock_picking')]"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
