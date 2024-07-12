@@ -98,10 +98,10 @@ class EventRegistration(models.Model):
                 ret_vals[field] = utm_mixin_defaults[mixin_field]
         return ret_vals
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'partner_id.name')
     def _compute_name(self):
         for registration in self:
-            if not registration.name and registration.partner_id:
+            if registration.partner_id:
                 registration.name = registration._synchronize_partner_values(
                     registration.partner_id,
                     fnames={'name'},
