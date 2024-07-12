@@ -17,11 +17,68 @@ from odoo.exceptions import UserError, ValidationError
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'account.order.mixin']
+    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
+    @api.depends('order_line.price_total', 'currency_id')
+    def _amount_all(self):
+        for order in self:
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = self.env['account.tax']._compute_taxes(
+                    [
+                        line._convert_to_tax_base_line_dict()
+                        for line in order_lines
+                    ],
+                    order.company_id,
+                )
+                totals = tax_results['totals']
+                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+                amount_tax = sum(order_lines.mapped('price_tax'))
+
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
+            order.amount_total_cc = order.amount_total / order.currency_rate
+
+    @api.depends('state', 'order_line.qty_to_invoice')
+    def _get_invoiced(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            if order.state not in ('purchase', 'done'):
+                order.invoice_status = 'no'
+                continue
+
+            if any(
+                not float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                for line in order.order_line.filtered(lambda l: not l.display_type)
+            ):
+                order.invoice_status = 'to invoice'
+            elif (
+                all(
+                    float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                    for line in order.order_line.filtered(lambda l: not l.display_type)
+                )
+                and order.invoice_ids
+            ):
+                order.invoice_status = 'invoiced'
+            else:
+                order.invoice_status = 'no'
+
+    @api.depends('order_line.invoice_lines.move_id')
+    def _compute_invoice(self):
+        for order in self:
+            invoices = order.mapped('order_line.invoice_lines.move_id')
+            order.invoice_ids = invoices
+            order.invoice_count = len(invoices)
+
+    name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
     origin = fields.Char('Source Document', copy=False,
@@ -35,10 +92,12 @@ class PurchaseOrder(models.Model):
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
-    partner_id = fields.Many2one(string='Vendor', help="You can find a vendor by their Name, TIN, Email, or Internal Reference.")
+    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, change_default=True, tracking=True, check_company=True, help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', check_company=True, string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,
+        default=lambda self: self.env.company.currency_id.id)
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
@@ -47,27 +106,28 @@ class PurchaseOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
-    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines')
+    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
     notes = fields.Html('Terms and Conditions')
 
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
     invoice_ids = fields.Many2many('account.move', compute="_compute_invoice", string='Bills', copy=False, store=True)
-    invoice_status = fields.Selection(selection_add=[
+    invoice_status = fields.Selection([
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
         ('invoiced', 'Fully Billed'),
-    ], string='Billing Status', readonly=True, copy=False, default='no')
+    ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
         string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
         help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
-    amount_untaxed = fields.Monetary(readonly=True, tracking=True)
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_compute_amounts", currency_field="company_currency_id")
-    amount_to_invoice = fields.Monetary("Amount to be billed")  # Only override the string
-    amount_invoiced = fields.Monetary("Amount already billed")  # Only override the string
+    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -77,12 +137,14 @@ class PurchaseOrder(models.Model):
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
@@ -172,64 +234,6 @@ class PurchaseOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
-
-    @api.depends('currency_rate')
-    def _compute_amounts(self):
-        super()._compute_amounts()
-        for order in self:
-            order.amount_total_cc = order.amount_total / order.currency_rate
-
-    def _compute_amount_to_invoice(self):
-        super()._compute_amount_to_invoice()
-        for order in self:
-            # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
-            if order.invoice_status == 'invoiced':
-                order.amount_to_invoice = 0.0
-                continue
-            order.amount_to_invoice = order.amount_total
-            for account_move in order.account_move_ids:
-                if account_move.state != 'posted':
-                    continue
-                amount_total = sum(account_move.line_ids.filtered(lambda x: order == x.purchase_order_id).mapped('price_total'))
-                invoice_amount_currency = account_move.currency_id._convert(
-                    amount_total * account_move.direction_sign * order._get_order_direction(),
-                    order.currency_id,
-                    account_move.company_id,
-                    account_move.date,
-                )
-                order.amount_to_invoice -= invoice_amount_currency
-
-    @api.depends('state', 'order_line.qty_to_invoice')
-    def _compute_invoice_status(self):
-        super()._compute_invoice_status()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        for order in self:
-            if order.state not in ('purchase', 'done'):
-                order.invoice_status = 'no'
-                continue
-
-            if any(
-                not float_is_zero(line.qty_to_invoice, precision_digits=precision) and not line.is_downpayment
-                for line in order.order_line.filtered(lambda l: not l.display_type)
-            ):
-                order.invoice_status = 'to invoice'
-            elif (
-                all(
-                    float_is_zero(line.qty_to_invoice, precision_digits=precision)
-                    for line in order.order_line.filtered(lambda l: not l.display_type)
-                )
-                and order.order_line.invoice_lines.filtered(lambda aml: not aml.is_downpayment)
-            ):
-                order.invoice_status = 'invoiced'
-            else:
-                order.invoice_status = 'no'
-
-    @api.depends('order_line.invoice_lines.move_id')
-    def _compute_invoice(self):
-        for order in self:
-            invoices = order.mapped('order_line.invoice_lines.move_id')
-            order.invoice_ids = invoices
-            order.invoice_count = len(invoices)
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -560,24 +564,42 @@ class PurchaseOrder(models.Model):
                 # supplier info should be added regardless of the user access rights
                 line.product_id.product_tmpl_id.sudo().write(vals)
 
-    def action_create_invoice(self, skip_dialog_check=False):
+    def action_create_invoice(self):
         """Create the invoice associated to the PO.
         """
-
-        if self.env.user.has_group('purchase.group_down_payment') and not skip_dialog_check:
-            return {
-                'name': _('Create bills'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'purchase.advance.payment.wizard',
-                'target': 'new',
-            }
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         # 1) Prepare invoice vals and clean-up the section lines
-        invoice_vals_list = self._generate_invoice_values()
+        invoice_vals_list = []
+        sequence = 10
+        for order in self:
+            if order.invoice_status != 'to invoice':
+                continue
+
+            order = order.with_company(order.company_id)
+            pending_section = None
+            # Invoice values.
+            invoice_vals = order._prepare_invoice()
+            # Invoice line values (keep only necessary sections).
+            for line in order.order_line:
+                if line.display_type == 'line_section':
+                    pending_section = line
+                    continue
+                if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                    if pending_section:
+                        line_vals = pending_section._prepare_account_move_line()
+                        line_vals.update({'sequence': sequence})
+                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                        sequence += 1
+                        pending_section = None
+                    line_vals = line._prepare_account_move_line()
+                    line_vals.update({'sequence': sequence})
+                    invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                    sequence += 1
+            invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
-            raise UserError(_('There are no invoiceable lines. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
+            raise UserError(_('There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation
         new_invoice_vals_list = []
@@ -613,9 +635,6 @@ class PurchaseOrder(models.Model):
         # is actually negative or not
         moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
 
-        # If coming from the down payment wizard we just return the raw moves
-        if skip_dialog_check:
-            return moves
         return self.action_view_invoice(moves)
 
     def _prepare_invoice(self):
@@ -627,16 +646,20 @@ class PurchaseOrder(models.Model):
         partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
 
-        invoice_vals = super()._prepare_invoice()
-        invoice_vals.update({
+        invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
             'narration': self.notes,
+            'currency_id': self.currency_id.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
             'partner_bank_id': partner_bank_id.id,
-        })
+            'invoice_origin': self.name,
+            'invoice_payment_term_id': self.payment_term_id.id,
+            'invoice_line_ids': [],
+            'company_id': self.company_id.id,
+        }
         return invoice_vals
 
     def action_view_invoice(self, invoices=False):
@@ -1067,15 +1090,3 @@ class PurchaseOrder(models.Model):
 
     def _get_edi_builders(self):
         return []
-
-    def _create_new_order_line(self, values):
-        return self.env['purchase.order.line'].create(values)
-
-    def _is_locked(self):
-        return self.state == 'done'
-
-    def _create_invoices(self, grouped=False, final=False, date=None):
-        return self.action_create_invoice(True)
-
-    def _get_order_direction(self):
-        return 1
