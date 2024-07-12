@@ -330,20 +330,21 @@ async function discuss_channel_messages(request) {
     };
 }
 
-registerRoute("/discuss/channel/mute", discuss_channel_mute);
+registerRoute("/discuss/settings/mute", discuss_settings_mute);
 /** @type {RouteCallback} */
-async function discuss_channel_mute(request) {
+async function discuss_settings_mute(request) {
     /** @type {import("mock_models").BusBus} */
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResUsersSettings} */
+    const ResUsersSettings = this.env["res.users.settings"];
     /** @type {import("mock_models").DiscussChannelMember} */
     const DiscussChannelMember = this.env["discuss.channel.member"];
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
     const { channel_id, minutes } = await parseRequestParams(request);
-    const member = DiscussChannel._find_or_create_member_for_self(channel_id);
     let mute_until_dt;
     if (minutes === -1) {
         mute_until_dt = serializeDateTime(DateTime.fromISO("9999-12-31T23:59:59"));
@@ -352,14 +353,20 @@ async function discuss_channel_mute(request) {
     } else {
         mute_until_dt = false;
     }
-    DiscussChannelMember.write([member.id], { mute_until_dt });
-    const channel_data = {
-        id: member.channel_id,
-        model: "discuss.channel",
-        mute_until_dt,
-    };
-    const [partner] = ResPartner.read(this.env.user.partner_id);
-    BusBus._sendone(partner, "mail.record/insert", { Thread: channel_data });
+    if (channel_id) {
+        const member = DiscussChannel._find_or_create_member_for_self(channel_id);
+        DiscussChannelMember.write([member.id], { mute_until_dt });
+        const channel_data = {
+            id: member.channel_id,
+            model: "discuss.channel",
+            mute_until_dt,
+        };
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "mail.record/insert", { Thread: channel_data });
+    } else {
+        const settings = ResUsersSettings._find_or_create_for_user(this.env.user.id);
+        ResUsersSettings.set_res_users_settings(settings.id, { mute_until_dt });
+    }
     return "dummy";
 }
 
