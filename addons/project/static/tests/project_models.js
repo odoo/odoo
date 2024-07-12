@@ -5,6 +5,7 @@ export class ProjectProject extends models.Model {
     _name = "project.project";
 
     name = fields.Char();
+    is_favorite = fields.Boolean();
 
     _records = [
         { id: 1, name: "Project 1" },
