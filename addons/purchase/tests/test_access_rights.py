@@ -63,7 +63,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
         purchase_order.order_line.qty_received = 4
         purchase_order.action_create_invoice()
-        invoice = purchase_order.account_move_ids
+        invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
             invoice.action_post()
 
@@ -88,7 +88,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
         purchase_order_user2.order_line.qty_received = 4
         purchase_order_user2.action_create_invoice()
-        vendor_bill_user2 = purchase_order_user2.account_move_ids
+        vendor_bill_user2 = purchase_order_user2.invoice_ids
 
         # open purchase_order_user2 and vendor_bill_user2 with `self.purchase_user`
         purchase_order_user1 = Form(purchase_order_user2.with_user(self.purchase_user))

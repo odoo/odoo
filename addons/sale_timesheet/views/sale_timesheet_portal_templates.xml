@@ -82,7 +82,7 @@
                     <span t-else="" t-field="task.sale_order_id"></span>
                 </div>
                 <div t-if="invoices_accessible"><strong>Invoices:</strong>
-                    <span t-foreach="task.sale_order_id.account_move_ids" t-as="invoice_line">
+                    <span t-foreach="task.sale_order_id.invoice_ids" t-as="invoice_line">
                         <t t-if="invoice_line.id in invoices_accessible">
                             <a t-attf-href="/my/invoices/{{ invoice_line.id }}">
                                 <i t-if="invoice_line.state == 'draft'">Draft Invoice</i>

@@ -40,7 +40,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
             )
         tx_sudo = self._get_tx(processing_values['reference'])
         # Note: strangely, the check
-        # self.assertEqual(tx_sudo.account_move_ids, invoice)
+        # self.assertEqual(tx_sudo.invoice_ids, invoice)
         # doesn't work, and cache invalidation doesn't work either.
         self.invoice.invalidate_recordset(['transaction_ids'])
         self.assertEqual(self.invoice.transaction_ids, tx_sudo)
