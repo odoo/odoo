@@ -53,10 +53,11 @@
                 </div>
             </div>
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
+                <t t-set="event_search_placeholder">Search a talk ...</t>
                 <t t-call="website_event.events_search_box">
                     <t t-set="_searches" t-value="searches"/>
                     <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
-                    <t t-set="_placeholder" t-value="'Search a talk ...'"/>
+                    <t t-set="_placeholder" t-value="event_search_placeholder"/>
                 </t>
                 <button class="btn btn-light position-relative ms-2 d-lg-none"
                     data-bs-toggle="offcanvas"
@@ -126,14 +127,14 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" t-foreach="tag_category.tag_ids" t-as="tag">
                                         <li class="list-group-item border-0 px-0">
-                                                <a t-att-href="'/event/%s/track?%s' % (
-                                                        slug(event),
-                                                        keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
-                                                    )"
-                                                    t-if="tag.color"
-                                                    t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
-                                                    <t t-out="tag.name"/>
-                                                </a>
+                                            <span t-if="tag.color"
+                                                t-att-data-post="'/event/%s/track?%s' % (
+                                                    slug(event),
+                                                    keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
+                                                )"
+                                                t-attf-class="post_link cursot-pointer d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
+                                                <t t-out="tag.name"/>
+                                            </span>
                                         </li>
                                     </t>
                                 </ul>
@@ -160,14 +161,14 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="tag_category.tag_ids" t-as="tag">
-                        <a t-att-href="'/event/%s/track?%s' % (
+                        <span t-att-data-post="'/event/%s/track?%s' % (
                                 slug(event),
-                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
+                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
                             )"
                             t-if="tag.color"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                            t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                             <t t-out="tag.name"/>
-                        </a>
+                        </span>
                     </t>
                 </div>
             </div>
@@ -438,10 +439,10 @@
             <span class="align-items-baseline border d-inline-flex rounded">
                 <i class="fa fa-tag mx-2 text-muted"/>
                 <t t-out="tag.display_name"/>
-                <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids)))"
-                    class="btn border-0 py-1">
+                <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
+                    class="post_link cursor-pointer btn border-0 py-1">
                     &#215;
-                </a>
+                </span>
             </span>
         </t>
     </div>
@@ -452,19 +453,19 @@
 <!-- ============================================================ -->
 
 <template id="track_tag_badge_link" name="Track: Tag Badge Link">
-    <a t-if="search_tags"
-        t-att-href="'/event/%s/track?%s'% (
+    <span t-if="search_tags"
+        t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
+            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
         )"
-        t-att-class="'badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_badge_color_0')"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_badge_color_0')"
         t-out="tag.name"/>
-    <a t-else=""
-        t-att-href="'/event/%s/track?%s'% (
+    <span t-else=""
+        t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str(tag.ids))
+            keep_query('*', tags=str(tag.ids), prevent_redirect=True)
         )"
-        t-att-class="'badge rounded-pill text-decoration-none o_badge o_badge_clickable o_badge_color_%s' % (tag.color)"
+        t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_badge_color_%s' % (tag.color)"
         t-out="tag.name"/>
 </template>
 
