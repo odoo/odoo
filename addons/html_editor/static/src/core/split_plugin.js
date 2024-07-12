@@ -3,7 +3,7 @@ import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
 import { isUnbreakable, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
-import { closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex } from "../utils/position";
 
 export class SplitPlugin extends Plugin {
@@ -137,13 +137,13 @@ export class SplitPlugin extends Plugin {
         /** @type {HTMLElement} **/
         const before = element.cloneNode();
         const after = /** @type {HTMLElement} **/ (element.cloneNode());
+        element.before(before);
+        element.after(after);
         let index = 0;
-        for (const child of [...element.childNodes]) {
+        for (const child of childNodes(element)) {
             index < offset ? before.appendChild(child) : after.appendChild(child);
             index++;
         }
-        element.before(before);
-        element.after(after);
         element.remove();
         return [before, after];
     }

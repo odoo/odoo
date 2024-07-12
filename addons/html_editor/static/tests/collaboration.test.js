@@ -22,7 +22,7 @@ import {
     renderTextualSelection,
 } from "./_helpers/collaboration";
 import { getContent } from "./_helpers/selection";
-import { click } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { onMounted, onWillDestroy } from "@odoo/owl";
@@ -195,6 +195,25 @@ describe("collaborative makeSavePoint", () => {
         renderTextualSelection(peerInfos);
         expect(peerInfos.c1.editor.editable.innerHTML).toBe(`<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`);
         expect(peerInfos.c2.editor.editable.innerHTML).toBe(`<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`);
+    });
+    test("Ensure splitElement steps reversibility in the context of makeSavePoint", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: `<p>a[c1}{c1]</p><p>b[c2}{c2]</p>`,
+        });
+        const e1 = peerInfos.c1.editor;
+        const e2 = peerInfos.c2.editor;
+        const savepoint = e2.shared.makeSavePoint();
+        manuallyDispatchProgrammaticEvent(e1.editable, "beforeinput", {
+            inputType: "insertParagraph",
+        });
+        mergePeersSteps(peerInfos);
+        insert(e1, "z");
+        mergePeersSteps(peerInfos);
+        savepoint();
+        mergePeersSteps(peerInfos);
+        expect(getContent(e1.editable)).toBe("<p>a</p><p>z[]</p><p>b</p>");
+        expect(getContent(e2.editable)).toBe("<p>a</p><p>z</p><p>b[]</p>");
     });
 });
 describe("history addExternalStep", () => {
