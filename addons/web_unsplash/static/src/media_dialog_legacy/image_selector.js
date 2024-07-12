@@ -1,58 +1,11 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
-import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
+import { MediaDialog, TABS } from "@web_editor/components/media_dialog/media_dialog";
+import { ImageSelector } from "@web_editor/components/media_dialog/image_selector";
 import { rpc } from "@web/core/network/rpc";
-import { useService } from '@web/core/utils/hooks';
-import {
-    uploadService,
-    AUTOCLOSE_DELAY,
-} from "@html_editor/main/media/upload_progress_toast/upload_service";
-
-import { useState, Component } from "@odoo/owl";
-
-class UnsplashCredentials extends Component {
-    static template = "web_unsplash.UnsplashCredentials";
-    static props = {
-        submitCredentials: Function,
-        hasCredentialsError: Boolean,
-    };
-    setup() {
-        this.state = useState({
-            key: '',
-            appId: '',
-            hasKeyError: this.props.hasCredentialsError,
-            hasAppIdError: this.props.hasCredentialsError,
-        });
-    }
-
-    submitCredentials() {
-        if (this.state.key === '') {
-            this.state.hasKeyError = true;
-        } else if (this.state.appId === '') {
-            this.state.hasAppIdError = true;
-        } else {
-            this.props.submitCredentials(this.state.key, this.state.appId);
-        }
-    }
-}
-
-export class UnsplashError extends Component {
-    static template = "web_unsplash.UnsplashError";
-    static components = {
-        UnsplashCredentials,
-    };
-    static props = {
-        title: String,
-        subtitle: String,
-        showCredentials: Boolean,
-        submitCredentials: {type: Function, optional: true},
-        hasCredentialsError: {type: Boolean, optional: true},
-    };
-}
+import { useService } from "@web/core/utils/hooks";
+import { UnsplashError } from "../unsplash_error/unsplash_error";
 
 patch(ImageSelector.prototype, {
     setup() {
@@ -239,7 +192,7 @@ patch(MediaDialog.prototype, {
     setup() {
         super.setup();
 
-        this.uploadService = useService('upload');
+        this.unsplashService = useService('unsplash');
     },
 
     async save() {
@@ -247,7 +200,7 @@ patch(MediaDialog.prototype, {
         if (selectedImages) {
             const unsplashRecords = selectedImages.filter(media => media.mediaType === 'unsplashRecord');
             if (unsplashRecords.length) {
-                await this.uploadService.uploadUnsplashRecords(unsplashRecords, { resModel: this.props.resModel, resId: this.props.resId }, (attachments) => {
+                await this.unsplashService.uploadUnsplashRecords(unsplashRecords, { resModel: this.props.resModel, resId: this.props.resId }, (attachments) => {
                     this.selectedMedia[TABS.IMAGES.id] = this.selectedMedia[TABS.IMAGES.id].filter(media => media.mediaType !== 'unsplashRecord');
                     this.selectedMedia[TABS.IMAGES.id] = this.selectedMedia[TABS.IMAGES.id].concat(attachments.map(attachment => ({...attachment, mediaType: 'attachment'})));
                 });
@@ -255,68 +208,4 @@ patch(MediaDialog.prototype, {
         }
         return super.save(...arguments);
     },
-});
-
-patch(uploadService, {
-    start(env) {
-        const service = super.start(...arguments);
-        return {
-            ...service,
-            async uploadUnsplashRecords(records, { resModel, resId }, onUploaded) {
-                service.incrementId();
-                const file = service.addFile({
-                    id: service.fileId,
-                    name:
-                        records.length > 1
-                            ? _t("Uploading %(count)s '%(query)s' images.", {
-                                  count: records.length,
-                                  query: records[0].query,
-                              })
-                            : _t("Uploading '%s' image.", records[0].query),
-                });
-
-                try {
-                    const urls = {};
-                    for (const record of records) {
-                        const _1920Url = new URL(record.urls.regular);
-                        _1920Url.searchParams.set('w', '1920');
-                        urls[record.id] = {
-                            url: _1920Url.href,
-                            download_url: record.links.download_location,
-                            description: record.alt_description,
-                        };
-                    }
-
-                    const xhr = new XMLHttpRequest();
-                    xhr.upload.addEventListener('progress', ev => {
-                        const rpcComplete = ev.loaded / ev.total * 100;
-                        file.progress = rpcComplete;
-                    });
-                    xhr.upload.addEventListener('load', function () {
-                        // Don't show yet success as backend code only starts now
-                        file.progress = 100;
-                    });
-                    const attachments = await rpc('/web_unsplash/attachment/add', {
-                        'res_id': resId,
-                        'res_model': resModel,
-                        'unsplashurls': urls,
-                        'query': records[0].query,
-                    }, {xhr});
-
-                    if (attachments.error) {
-                        file.hasError = true;
-                        file.errorMessage = attachments.error;
-                    } else {
-                        file.uploaded = true;
-                        await onUploaded(attachments);
-                    }
-                    setTimeout(() => service.deleteFile(file.id), AUTOCLOSE_DELAY);
-                } catch (error) {
-                    file.hasError = true;
-                    setTimeout(() => service.deleteFile(file.id), AUTOCLOSE_DELAY);
-                    throw error;
-                }
-            }
-        };
-    }
 });
