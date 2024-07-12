@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <div t-if="props.data.isCountryPortugal" class="pos-receipt-center-align">
+                <t t-if="props.data.l10nPtTrainingMode">
+                    Documento emitido para fins de Formação
+                </t>
+                <t t-else="">
+                    <t t-if="!props.data.l10nPtPosInalterableHashShort">
+                        <div>
+                            Este documento não serve de fatura
+                        </div>
+                        <div>
+                            Emitido por programa certificado n.º <t t-out="props.data.l10nPtCertificationNumber"/>/AT
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <img id="pos_pt_qrcode" t-att-src="props.data.l10nPtPosQrCodeStr" class="pos-receipt-logo"/>
+                        <div>
+                            ATCUD: <t t-esc="props.data.l10nPtPosAtcud"/>
+                        </div>
+                        <div>
+                            <t t-out="props.data.l10nPtPosInalterableHashShort"/> - Processado por programa certificado n.º <t t-out="props.data.l10nPtCertificationNumber"/>/AT
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
