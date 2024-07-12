@@ -532,7 +532,7 @@ class IrActionsReport(models.Model):
         report = ReportSudo.search([('report_name', '=', report_ref)], limit=1)
         if report:
             return report
-        report = self.env.ref(report_ref)
+        report = self.env.ref(report_ref, raise_if_not_found=False)
         if report:
             if report._name != "ir.actions.report":
                 raise ValueError("Fetching report %r: type %s, expected ir.actions.report" % (report_ref, report._name))
