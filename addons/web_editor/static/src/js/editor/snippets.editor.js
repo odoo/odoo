@@ -116,7 +116,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !isUnremovable(this.$target[0]);
-        this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
+        this.updateDisplayOverlayOptions();
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -555,6 +555,10 @@ var SnippetEditor = publicWidget.Widget.extend({
             this.$el.toggleClass('o_we_overlay_sticky', show);
             if (!this.displayOverlayOptions) {
                 this.$el.find('.o_overlay_options_wrap').addClass('o_we_hidden_overlay_options');
+            } else {
+                this.$el[0]
+                    .querySelector(".o_overlay_options_wrap")
+                    .classList.remove("o_we_hidden_overlay_options");
             }
         }
 
@@ -636,6 +640,16 @@ var SnippetEditor = publicWidget.Widget.extend({
         if (this.$el && !this.scrollingTimeout) {
             this.$el.toggleClass('o_overlay_hidden', (!show || this.$target[0].matches('.o_animating:not(.o_animate_on_scroll)')) && this.isShown());
         }
+    },
+    /**
+     * Updates the displayOverlayOptions attribute.
+     */
+    updateDisplayOverlayOptions() {
+        const isTargetSingleSnippetInColumn = this.$target[0].dataset.snippet
+            && this.$target[0].closest(".row.o_grid_mode")
+            && this.$target[0].parentNode.classList.contains("o_grid_item")
+            && this.$target[0].parentNode.children.length == 1;
+        this.displayOverlayOptions = (this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable) && !isTargetSingleSnippetInColumn;
     },
     /**
      * Updates the UI of all the options according to the status of their
@@ -3536,6 +3550,7 @@ class SnippetsMenu extends Component {
                     this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_ongoing_insertion');
                 }
                 this.dragState.restore();
+                this._updateEditorsDisplayOverlayOptions();
                 this._onDropZoneStop();
             },
         });
@@ -4030,6 +4045,7 @@ class SnippetsMenu extends Component {
         // Update the "Invisible Elements" panel as the order of invisible
         // snippets could have changed on the page.
         await this._updateInvisibleDOM();
+        this._updateEditorsDisplayOverlayOptions();
     }
     /**
      * Transforms an event coming from a touch screen into a mouse event.
@@ -4354,6 +4370,7 @@ class SnippetsMenu extends Component {
     _onSnippetRemoved() {
         this._disableUndroppableSnippets();
         this._updateInvisibleDOM();
+        this._updateEditorsDisplayOverlayOptions();
     }
     /**
      * @see _snippetOptionUpdate
@@ -4704,6 +4721,16 @@ class SnippetsMenu extends Component {
             this.$body[0],
             "dragAndDropCreateSnippet"
         );
+    }
+    /**
+     * Updates the display overlay options of the active editors.
+     *
+     * @private
+     */
+    _updateEditorsDisplayOverlayOptions() {
+        for (const snippetEditor of this.snippetEditors) {
+            snippetEditor.updateDisplayOverlayOptions();
+        }
     }
     /**
      * Allows other modules to react to drop zones being enabled
