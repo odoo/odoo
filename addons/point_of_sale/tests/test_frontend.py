@@ -1362,10 +1362,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.desk_pad.write({"lst_price": 2.5})
         self.whiteboard_pen.write({"lst_price": 1.5})
 
-        combo_items = [self.env["product.combo.item"].create({"product_id": product.id, "extra_price": 0})
-                       for product in (self.desk_organizer, self.desk_pad, self.whiteboard_pen)]
-        combos = [self.env["product.combo"].create({"name": combo_item.product_id.name, "combo_item_ids": [(6, 0, [combo_item.id])]})
-                  for combo_item in combo_items]
+        combos = self.env["product.combo"].create([
+            {
+                "name": product.name,
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": product.id, "extra_price": 0
+                    })
+                ]
+            }
+            for product in (self.desk_organizer, self.desk_pad, self.whiteboard_pen)
+        ])
 
         self.env["product.product"].create(
             {

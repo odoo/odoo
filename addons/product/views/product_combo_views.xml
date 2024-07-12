@@ -16,12 +16,27 @@
                             class="text-break"
                         />
                     </h1>
+                    <field
+                        name="company_id"
+                        groups="base.group_multi_company"
+                        optional="hide"
+                        options="{'no_create': True}"
+                    />
                 </div>
                 <field name="combo_item_ids">
                     <tree editable="bottom">
+                        <field name="currency_id" column_invisible="True"/>
                         <field name="product_id"/>
-                        <field name="lst_price"/>
-                        <field name="extra_price"/>
+                        <field
+                            name="lst_price"
+                            widget="monetary"
+                            options="{'field_digits': True}"
+                        />
+                        <field
+                            name="extra_price"
+                            widget="monetary"
+                            options="{'field_digits': True}"
+                        />
                     </tree>
                 </field>
             </form>
@@ -33,9 +48,10 @@
         <field name="model">product.combo</field>
         <field name="arch" type="xml">
             <tree string="Combo Choices">
+                <field name="currency_id" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="base_price"/>
+                <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
                 <field name="combo_item_count"/>
             </tree>
         </field>
