@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_pt" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.inherit.pt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- Add warning about missing AT Series for a picking's operation type -->
+            <xpath expr="//sheet" position="before">
+                <div name="warning_at_series"
+                     class="alert alert-warning oe_edit_only"
+                     role="alert"
+                     invisible="country_code != 'PT' or not l10n_pt_show_no_at_series_warning or l10n_pt_document_number">
+                  The selected Operation Type (<field name="picking_type_id" readonly="1"/>)
+                  does not have an AT Series associated to it. This stock picking will not be hashed.
+                </div>
+            </xpath>
+            <!-- Buttons -->
+            <xpath expr="//button[@name='do_print_picking']" position="after">
+                <button name="action_open_reprint_wizard"
+                        string="Print"
+                        invisible="state != 'done' or country_code != 'PT'"
+                        type="object"
+                        groups="base.group_user"
+                        data-hotkey="o"/>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="invisible">country_code == 'PT'</attribute>
+            </xpath>
+            <!-- PT Fields -->
+            <xpath expr="//div[hasclass('o_row')]" position="after">
+                <label for="l10n_pt_start_transport_date"/>
+                <div class="o_row">
+                    <field name="l10n_pt_start_transport_date"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='other_infos']" position="after">
+                <group name="other_infos_portugal" string="Portugal" invisible="country_code != 'PT'">
+                    <field name="l10n_pt_document_number"/>
+                    <field name="l10n_pt_stock_inalterable_hash" groups="base.group_no_one"/>
+                    <field name="l10n_pt_stock_atcud"
+                           help="Unique document code formed by the AT series validation code and the number of the
+                           document in the series. Only assigned once the document is secured."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_l10n_pt_stock" model="ir.ui.view">
+        <field name="name">stock.picking.tree.view.inherit.pt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+               <field name="l10n_pt_document_number" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_pt_stock_report_hash_integrity" model="ir.actions.report">
+        <field name="name">Portuguese stock hash integrity result PDF</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_pt_stock.report_hash_integrity</field>
+        <field name="report_file">l10n_pt_stock.report_hash_integrity</field>
+    </record>
+
+    <record model="ir.actions.server" id="action_l10n_pt_stock_check_hash_integrity">
+        <field name="name">Portuguese Stock Inalterability Check</field>
+        <field name="model_id" ref="l10n_pt_stock.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company._l10n_pt_stock_action_check_hash_integrity()
+        </field>
+    </record>
+</odoo>
