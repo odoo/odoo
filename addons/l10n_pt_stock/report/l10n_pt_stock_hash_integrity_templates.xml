@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_hash_integrity">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="company">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row" id="hash_header">
+                                <div class="col-12">
+                                    <br/>
+                                    <h2>Hash Integrity Result - <span t-out="data['printing_date']"/></h2>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <t t-foreach="data['results']" t-as="result">
+                                        <h4><span t-out="result['picking_type_prefix']"/> (<span t-out="result['picking_type_at_code']"/>)</h4>
+                                        <t t-if="result['status'] != 'verified'">
+                                            <div><span t-out="result['msg_cover']"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div>
+                                                <span t-out="result['msg_cover']"/>
+                                                from <b><span t-out="result['first_name']"/></b> (<span t-out="result['first_date']"/>)
+                                                to <b><span t-out="result['last_name']"/></b> (<span t-out="result['last_date']"/>)
+                                                <br/>
+                                                <b>First hash: </b><code><span t-out="result['first_hash']"/></code><br/>
+                                                <b>Last hash: </b><code><span t-out="result['last_hash']"/></code><br/>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
