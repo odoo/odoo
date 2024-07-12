@@ -274,6 +274,14 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
+
+            // Check that the product form is shown.
+            Chrome.clickMenuButton(),
+            Chrome.clickMenuDropdownOption("Create Product"),
+            Dialog.is({ title: "New Product" }),
+            Dialog.cancel(),
+
+            // Check margin on a product.
             ProductScreen.clickInfoProduct("product_a"),
             {
                 trigger: ".section-financials :contains('Margin')",
