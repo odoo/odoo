@@ -105,7 +105,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
 
     QUnit.test("List formulas are correctly formatted at evaluation", async function (assert) {
         const { model } = await createSpreadsheetWithList({
-            columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon"],
+            columns: ["foo", "probability", "bar", "date", "create_date", "product_id", "pognon", "name"],
             linesNumber: 2,
         });
         await waitForDataSourcesLoaded(model);
@@ -117,6 +117,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getCell(model, "F2").format, undefined);
         assert.strictEqual(getCell(model, "G2").format, undefined);
         assert.strictEqual(getCell(model, "G3").format, undefined);
+        assert.strictEqual(getCell(model, "H2").format, undefined);
 
         assert.strictEqual(getEvaluatedCell(model, "A2").format, "0");
         assert.strictEqual(getEvaluatedCell(model, "B2").format, "#,##0.00");
@@ -126,6 +127,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "F2").format, undefined);
         assert.strictEqual(getEvaluatedCell(model, "G2").format, "#,##0.00[$€]");
         assert.strictEqual(getEvaluatedCell(model, "G3").format, "[$$]#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "H2").format, "@");
     });
 
     QUnit.test("List formulas date formats are locale dependant", async function (assert) {
