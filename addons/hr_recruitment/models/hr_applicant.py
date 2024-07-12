@@ -354,7 +354,7 @@ class Applicant(models.Model):
                 if not applicant.partner_name:
                     raise UserError(_('You must define a Contact Name for this applicant.'))
                 applicant.partner_id = self.env['res.partner'].find_or_create(applicant.email_from)
-            if applicant.partner_name and not applicant.partner_id.name:
+            if applicant.partner_name and applicant.partner_id.name == applicant.email_from:
                 applicant.partner_id.name = applicant.partner_name
             if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
                 # change email on a partner will trigger other heavy code, so avoid to change the email when
