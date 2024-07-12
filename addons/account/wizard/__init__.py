@@ -12,4 +12,3 @@ from . import base_document_layout
 from . import account_payment_register
 from . import accrued_orders
 from . import base_partner_merge
-from . import account_advance_payment
