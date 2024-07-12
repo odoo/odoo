@@ -19,9 +19,6 @@
             <field name="service_tracking" position="attributes">
                 <attribute name="invisible" add="not sale_ok" separator="or"/>
             </field>
-            <group name="tags" position="inside">
-                <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
-            </group>
             <group name="description" position="after">
                 <t groups="sales_team.group_sale_salesman">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
@@ -33,6 +30,9 @@
                                required="sale_line_warn != 'no-message'"/>
                     </group>
                 </t>
+                <group name="expense_info" string="Expense" invisible="not visible_expense_policy">
+                    <field name="expense_policy" widget="radio"/>
+                </group>
             </group>
         </field>
     </record>
