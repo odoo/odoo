@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_l10n_pt_at_series_series_form" model="ir.ui.view">
+        <field name="name">at.series.form</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="arch" type="xml">
+            <form string="Autoridade Tributária (AT) Series">
+                <sheet>
+                    <group>
+                        <field name='type'/>
+                        <field name='prefix'/>
+                        <field name='at_code'/>
+                        <field name='date_end'/>
+                        <field name='active'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_pt_at_series_series_tree" model="ir.ui.view">
+        <field name="name">at.series.tree</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="arch" type="xml">
+            <tree string="Autoridade Tributária (AT) Series" editable="bottom">
+                <field name='type'/>
+                <field name='prefix'/>
+                <field name='at_code'/>
+                <field name='date_end'/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_open_l10n_pt_at_series_series_list_view" model="ir.actions.act_window">
+        <field name="name">Autoridade Tributária (AT) Series</field>
+        <field name="res_model">l10n_pt.at.series</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="l10n_pt.view_l10n_pt_at_series_series_tree"/>
+    </record>
+
+</odoo>
