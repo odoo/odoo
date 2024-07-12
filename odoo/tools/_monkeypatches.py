@@ -3,10 +3,10 @@ import os
 import logging
 from odoo import MIN_PY_VERSION
 from shutil import copyfileobj
-from stdnum import util
 from types import CodeType
-from zeep import CachingClient
-from zeep.transports import Transport
+from werkzeug.datastructures import FileStorage
+from werkzeug.routing import Rule
+from werkzeug.wrappers import Request, Response
 
 _logger = logging.getLogger(__name__)
 
@@ -17,9 +17,19 @@ except ImportError:
     _logger.warning("num2words is not available, Arabic number to words conversion will not work")
     num2words = None
 
-from werkzeug.datastructures import FileStorage
-from werkzeug.routing import Rule
-from werkzeug.wrappers import Request, Response
+try:
+    from stdnum import util
+except ImportError as e:
+    util = None
+    _logger.warning("Failed to import stdnum library: %s", e)
+
+try:
+    from zeep import CachingClient
+    from zeep.transports import Transport
+except ImportError as e:
+    CachingClient = None
+    Transport = None
+    _logger.warning("Failed to import zeep library: %s", e)
 
 from .json import scriptsafe
 
@@ -99,4 +109,5 @@ def new_get_soap_client(wsdlurl, timeout=30):
     return _soap_clients[(wsdlurl, timeout)]
 
 
-util.get_soap_client = new_get_soap_client
+if util:
+    util.get_soap_client = new_get_soap_client
