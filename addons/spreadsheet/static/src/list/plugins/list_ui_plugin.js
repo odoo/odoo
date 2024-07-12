@@ -275,6 +275,9 @@ export class ListUIPlugin extends OdooUIPlugin {
                 return locale.dateFormat;
             case "datetime":
                 return locale.dateFormat + " " + locale.timeFormat;
+            case "char":
+            case "text":
+                return "@";
             default:
                 return undefined;
         }
