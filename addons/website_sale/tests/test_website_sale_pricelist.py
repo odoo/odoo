@@ -232,7 +232,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 'product_uom_qty': 1,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price,
-                'tax_ids': False,
+                'tax_id': False,
             })],
         })
         sol = so.order_line
@@ -271,7 +271,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 'product_uom_qty': 5,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price,
-                'tax_ids': False,
+                'tax_id': False,
             })]
         })
         sol = so.order_line

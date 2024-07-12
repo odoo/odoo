@@ -288,13 +288,13 @@ class AdvancePaymentWizard(models.AbstractModel):
         downpayment_line_map = {}
         for tax_id, analytic_distribution, price_subtotal, account in down_payment_values:
             grouping_key = frozendict({
-                'tax_ids': tuple(sorted(tax_id.ids)),
+                self._taxes_field_name(): tuple(sorted(tax_id.ids)),
                 'analytic_distribution': analytic_distribution,
                 'account_id': account,
             })
             downpayment_line_map.setdefault(grouping_key, {
                 **base_downpayment_lines_values,
-                'tax_ids': grouping_key['tax_ids'],
+                self._taxes_field_name(): grouping_key[self._taxes_field_name()],
                 'analytic_distribution': grouping_key['analytic_distribution'],
                 'product_uom_qty': 0.0,
                 'price_unit': 0.0,

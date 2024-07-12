@@ -69,7 +69,7 @@
                                 <td id="product">
                                     <span t-field="line.name"/>
                                 </td>
-                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
+                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
                                 <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>

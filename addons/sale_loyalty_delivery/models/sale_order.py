@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
             'order_id': self.id,
             'is_reward_line': True,
             'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=0) + 1,
-            'tax_ids': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],
+            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],
         }]
 
     def _get_reward_line_values(self, reward, coupon, **kwargs):

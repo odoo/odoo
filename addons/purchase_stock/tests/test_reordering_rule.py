@@ -1124,4 +1124,4 @@ class TestReorderingRule(TransactionCase):
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(len(po_line), 1, 'There should be only one PO line')
         self.assertEqual(po_line.product_qty, 10, 'The PO line quantity should be 10')
-        self.assertTrue(po_line.tax_ids)
+        self.assertTrue(po_line.taxes_id)

@@ -219,7 +219,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
-            'tax_ids': [(6, 0, taxes_ids)],
+            'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
