@@ -94,6 +94,7 @@ export class ExpenseLinesWidget extends X2ManyField {
 export const expenseLinesWidget = {
     ...x2ManyField,
     component: ExpenseLinesWidget,
+    additionalClasses: ["o_field_many2many"],
 };
 
 registry.category("fields").add("expense_lines_widget", expenseLinesWidget);
