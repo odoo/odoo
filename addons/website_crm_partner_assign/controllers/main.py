@@ -242,7 +242,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         if grade:
             country_domain += [('grade_id', '=', grade.id)]
         countries = partner_obj.sudo().read_group(
-            country_domain, ["id", "country_id"],
+            country_domain + [('country_id', '!=', False)],
+            ["id", "country_id"],
             groupby="country_id", orderby="country_id")
 
         # Fallback: Show all partners when country has no associates.
