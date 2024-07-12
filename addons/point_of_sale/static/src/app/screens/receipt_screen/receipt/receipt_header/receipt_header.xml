@@ -6,17 +6,19 @@
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
                 <!-- contact address -->
-                <div t-if="order.company.partner_id?.[1]" t-esc="order.company.partner_id[1]" />
-                <t t-if="order.company.phone">
-                    <div>Tel:<t t-esc="order.company.phone" /></div>
-                </t>
-                <t t-if="order.company.vat">
-                    <div><t t-esc="order.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="order.company.vat" /></div>
-                </t>
-                <div t-if="order.company.email" t-esc="order.company.email" />
-                <div t-if="order.company.website" t-esc="order.company.website" />
-                <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
-                <div t-if="order?.getCashierName() and order.preset_id?.identification === 'name'" class="cashier">
+                <div id="pos-receipt-contact-company-info">
+                    <div t-if="order.company.partner_id?.[1]" t-esc="order.company.partner_id[1]" />
+                    <t t-if="order.company.phone">
+                        <div>Tel:<t t-esc="order.company.phone" /></div>
+                    </t>
+                    <t t-if="order.company.vat">
+                        <div><t t-esc="order.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="order.company.vat" /></div>
+                    </t>
+                    <div t-if="order.company.email" t-esc="order.company.email" />
+                    <div t-if="order.company.website" t-esc="order.company.website" />
+                    <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
+                    <div t-if="order?.getCashierName() and order.preset_id?.identification === 'name'" class="cashier">
+                </div>
                     <div>--------------------------------</div>
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
                 </div>
