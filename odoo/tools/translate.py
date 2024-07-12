@@ -33,6 +33,7 @@ from lxml import etree, html
 from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
+import odoo
 from odoo.exceptions import UserError
 from .config import config
 from .i18n import format_list
@@ -462,13 +463,8 @@ def _get_cr(frame):
             return local_env.cr
         if (cr := getattr(local_self, 'cr', None)) is not None:
             return cr
-    try:
-        from odoo.http import request  # noqa: PLC0415
-        request_env = request.env
-        if request_env is not None and (cr := request_env.cr) is not None:
-            return cr
-    except RuntimeError:
-        pass
+    if (req := odoo.http.request) and (env := req.env):
+        return env.cr
     return None
 
 
@@ -502,13 +498,8 @@ def _get_lang(frame, default_lang='') -> str:
         # we found the env, in case we fail, just log in debug
         log_level = logging.DEBUG
     # get from request?
-    try:
-        from odoo.http import request  # noqa: PLC0415
-        request_env = request.env
-        if request_env and (lang := request_env.lang):
-            return lang
-    except RuntimeError:
-        pass
+    if (req := odoo.http.request) and (env := req.env) and (lang := env.lang):
+        return lang
     # Last resort: attempt to guess the language of the user
     # Pitfall: some operations are performed in sudo mode, and we
     #          don't know the original uid, so the language may
