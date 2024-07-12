@@ -10,12 +10,15 @@ import operator
 from collections import OrderedDict
 
 from werkzeug.exceptions import InternalServerError
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
 
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil
-from odoo.tools.misc import xlsxwriter
 
 
 _logger = logging.getLogger(__name__)
