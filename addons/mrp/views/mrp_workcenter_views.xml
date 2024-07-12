@@ -57,17 +57,9 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong><field name="name"/></strong>
-                                    </div>
-                                    <div class="col-12" t-if="record.code.raw_value">
-                                        <span><field name="code"/></span>
-                                    </div>
-                                </div>
-                            </div>
+                        <t t-name="kanban-card">
+                            <field name="name" class="fw-bolder"/>
+                            <field t-if="record.code.raw_value" name="code"/>
                         </t>
                     </templates>
                 </kanban>
@@ -461,23 +453,17 @@
         <field name="model">mrp.workcenter.productivity.loss</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="name"/>
-                <field name="manual"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_global_click">
-                            <div>
-                                <strong>Reason: </strong><field name="name"/>
-                            </div>
-                            <div>
-                                <strong>Effectiveness Category: </strong><field name="loss_type"/>
-                            </div>
-                            <div>
-                                <strong>Is a Blocking Reason? </strong>
-                                <span class="float-end" title="Is a Blocking Reason?">
-                                    <field name="manual" widget="boolean"/>
-                                </span>
-                            </div>
+                    <t t-name="kanban-card">
+                        <div>
+                            <strong>Reason: </strong><field name="name"/>
+                        </div>
+                        <div>
+                            <strong>Effectiveness Category: </strong><field name="loss_type"/>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Is a Blocking Reason? </strong>
+                            <field name="manual" class="ms-auto" widget="boolean"/>
                         </div>
                     </t>
                 </templates>

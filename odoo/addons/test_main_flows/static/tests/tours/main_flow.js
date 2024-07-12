@@ -992,7 +992,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: '.o_kanban_record .o_kanban_record_title:contains("the_flow.product"):first',
+    trigger: '.o_kanban_record:contains("the_flow.product"):first',
     content: _t('Select the generated manufacturing order'),
     tooltipPosition: 'bottom',
     run: "click",
