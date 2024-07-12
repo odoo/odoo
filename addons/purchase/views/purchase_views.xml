@@ -257,7 +257,7 @@
                                     <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
-                                    <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
                                     <field name="discount" string="Disc.%" readonly="qty_invoiced != 0 or is_downpayment" optional="hide"/>
                                     <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
                                     <field name="price_total"
@@ -292,7 +292,7 @@
                                                 <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
                                                 <field name="discount"/>
-                                                <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
                                                 <field name="date_planned" required="not display_type"/>
@@ -326,7 +326,7 @@
                                      <field name="price_unit"/>
                                      <field name="discount"/>
                                      <field name="display_type"/>
-                                     <field name="tax_ids"/>
+                                     <field name="taxes_id"/>
                                      <field name="tax_calculation_rounding_method"/>
                                      <templates>
                                          <t t-name="kanban-box">
@@ -776,8 +776,8 @@
                                 <field name="price_unit"/>
                             </group>
                             <group>
-                                <field name="tax_ids" widget="many2many_tags"
-                                       domain="[('type_tax_use', '=', 'purchase')]"/>
+                                <field name="taxes_id" widget="many2many_tags"
+                                    domain="[('type_tax_use', '=', 'purchase')]"/>
                                 <field name="date_planned" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"

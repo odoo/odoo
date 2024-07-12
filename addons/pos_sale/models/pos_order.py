@@ -66,7 +66,7 @@ class PosOrder(models.Model):
                     'product_id': line.product_id.id,
                     'price_unit': line.price_unit,
                     'product_uom_qty': 0,
-                    'tax_ids': [(6, 0, line.tax_ids.ids)],
+                    'tax_id': [(6, 0, line.tax_ids.ids)],
                     'is_downpayment': True,
                     'discount': line.discount,
                     'sequence': sale_lines and sale_lines[-1].sequence + 2 or 10,
@@ -92,7 +92,7 @@ class PosOrder(models.Model):
                 so_line_stock_move_ids = so_line.move_ids.group_id.stock_move_ids
                 for stock_move in so_line.move_ids:
                     picking = stock_move.picking_id
-                    if picking.state not in ['waiting', 'confirmed', 'assigned']:
+                    if not picking.state in ['waiting', 'confirmed', 'assigned']:
                         continue
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:

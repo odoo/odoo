@@ -350,7 +350,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })
@@ -397,7 +397,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })
@@ -438,11 +438,11 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
                 Command.create({
                     'product_id': self.product_B.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })
@@ -491,11 +491,11 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
                 Command.create({
                     'product_id': self.product_B.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })
@@ -522,7 +522,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })
@@ -570,7 +570,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_A.id,
-                    'tax_ids': False,
+                    'tax_id': False,
                 }),
             ]
         })

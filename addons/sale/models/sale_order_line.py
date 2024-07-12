@@ -123,7 +123,7 @@ class SaleOrderLine(models.Model):
     )
 
     # Pricing fields
-    tax_ids = fields.Many2many(
+    tax_id = fields.Many2many(
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True)
 
@@ -416,7 +416,7 @@ class SaleOrderLine(models.Model):
                     taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
                 if not line.product_id or not taxes:
                     # Nothing to map
-                    line.tax_ids = False
+                    line.tax_id = False
                     continue
                 fiscal_position = line.order_id.fiscal_position_id
                 cache_key = (fiscal_position.id, company.id, tuple(taxes.ids))
@@ -427,7 +427,7 @@ class SaleOrderLine(models.Model):
                     result = fiscal_position.map_tax(taxes)
                     cached_taxes[cache_key] = result
                 # If company_id is set, always filter taxes by the company
-                line.tax_ids = result
+                line.tax_id = result
 
     def _get_custom_compute_tax_cache_key(self):
         """Hook method to be able to set/get cached taxes while computing them"""
@@ -590,7 +590,7 @@ class SaleOrderLine(models.Model):
             partner=self.order_id.partner_id,
             currency=self.order_id.currency_id,
             product=self.product_id,
-            taxes=self.tax_ids,
+            taxes=self.tax_id,
             price_unit=self.price_unit,
             quantity=self.product_uom_qty,
             discount=self.discount,
@@ -824,11 +824,11 @@ class SaleOrderLine(models.Model):
                 uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
                 price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 price_subtotal = price_reduce * uom_qty_to_consider
-                if len(line.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
+                if len(line.tax_id.filtered(lambda tax: tax.price_include)) > 0:
                     # As included taxes are not excluded from the computed subtotal, `compute_all()` method
                     # has to be called to retrieve the subtotal without them.
                     # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
-                    price_subtotal = line.tax_ids.compute_all(
+                    price_subtotal = line.tax_id.compute_all(
                         price_reduce,
                         currency=line.currency_id,
                         quantity=uom_qty_to_consider,
@@ -988,7 +988,7 @@ class SaleOrderLine(models.Model):
         """
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
-            'tax_ids', 'analytic_distribution'
+            'tax_id', 'analytic_distribution'
         ]
 
     def _update_line_quantity(self, values):
@@ -1088,7 +1088,7 @@ class SaleOrderLine(models.Model):
             'sequence': self.sequence,
             'name': line_name,
             'price_unit': self.price_unit,
-            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_ids': [Command.set(self.tax_id.ids)],
             'sale_line_ids': [Command.link(self.id)],
         })
         self._set_analytic_distribution(res, **optional_values)

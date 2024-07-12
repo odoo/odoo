@@ -163,12 +163,12 @@ class SaleOrder(models.Model):
             if not declaration_of_intent_tax:
                 continue
             declaration_tax_lines = order.order_line.filtered(
-                lambda line: declaration_of_intent_tax in line.tax_ids
+                lambda line: declaration_of_intent_tax in line.tax_id
             )
             if declaration_tax_lines and not order.l10n_it_edi_doi_id:
                 errors.append(_('Given the tax %s is applied, there should be a Declaration of Intent selected.',
                                 declaration_of_intent_tax.name))
-            if any(line.tax_ids != declaration_of_intent_tax for line in declaration_tax_lines):
+            if any(line.tax_id != declaration_of_intent_tax for line in declaration_tax_lines):
                 errors.append(_('A line using tax %s should not contain any other taxes',
                                 declaration_of_intent_tax.name))
         if errors:
@@ -240,7 +240,7 @@ class SaleOrder(models.Model):
             order_lines = order.order_line.filtered(
                 # The declaration tax cannot be used with other taxes on a single line
                 # (checked in `action_confirm`)
-                lambda line: line.tax_ids.ids == tax.ids
+                lambda line: line.tax_id.ids == tax.ids
             )
             order_not_yet_invoiced = 0
             for line in order_lines:
