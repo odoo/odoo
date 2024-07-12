@@ -4,16 +4,66 @@
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests.common import tagged, users
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tagged('event_track_internals')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTrackData(TestEventOnlineCommon):
+
+    def test_prepare_calendar_values(self):
+        '''Ensure time slots are generated properly for website agenda.'''
+        today = fields.Datetime.from_string("2025-01-10 10:00:00")
+        self.event_0.write({
+            'date_begin': today + timedelta(days=1),
+            'date_end': today + timedelta(days=15),
+            'website_menu': True,
+            'track_ids': [
+                (0, 0, {
+                    'name': 'Portfolio Status & Strategy',
+                    'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                    'date': today + timedelta(days=1),
+                    'duration': 70,
+                }),
+                (0, 0, {
+                    'name': 'Future Strategy',
+                    'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                    'date': today + timedelta(days=1),
+                    'duration': 1,
+                }),
+            ],
+        })
+        with MockRequest(self.env):
+            track_data = EventTrackController()._prepare_calendar_values(self.event_0)
+            tracks = self.event_0.track_ids
+            track_start_day = track_end_day = tracks[0].date
+            for track in tracks:
+                track_date = track.date
+                if track_date < track_start_day:
+                    track_start_day = track_date
+                track_end_time = track_date + timedelta(hours=track.duration)
+                if track_end_time > track_end_day:
+                    track_end_day = track_end_time
+
+            all_timeslot = track_data['time_slots']
+            local_tz = ZoneInfo(self.event_0.date_tz or 'UTC')
+            expected_start_datetime = datetime(2025, 1, 11, 11, 0, 0).replace(tzinfo=local_tz)
+            expected_end_datetime = datetime(2025, 1, 14, 9, 0, 0).replace(tzinfo=local_tz)
+
+            # Check expected track counts for each day
+            expected_tracks_by_days = {datetime(2025, 1, 11).date(): 2, datetime(2025, 1, 12).date(): 1, datetime(2025, 1, 13).date(): 1, datetime(2025, 1, 14).date(): 1}
+            self.assertEqual(track_data['tracks_by_days'], expected_tracks_by_days, 'Track counts for each day')
+            # Compare tracks start datetime
+            self.assertEqual(next(iter(all_timeslot[track_start_day.date()].keys())), expected_start_datetime, 'Track start datetime')
+            # Compare tracks end datetime
+            self.assertEqual(list(all_timeslot[track_end_day.date()].keys())[-1], expected_end_datetime, 'Track end datetime')
 
     @users('user_eventmanager')
     def test_track_duration(self):
