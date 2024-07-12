@@ -56,11 +56,11 @@
                             </a>
                             <div class="dropdown-menu">
                                 <t t-foreach="category.tag_ids" t-as="tag">
-                                    <a t-if="tag.color"
-                                        t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
-                                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                    <span t-if="tag.color"
+                                        t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)"
+                                        t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                                         <t t-out="tag.name"/>
-                                    </a>
+                                    </span>
                                 </t>
                             </div>
                         </div>
@@ -104,13 +104,13 @@
                                         <ul class="list-group list-group-flush">
                                             <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
                                                 <li t-if="tag.color" class="list-group-item border-0 px-0">
-                                                    <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
-                                                        class="text-reset" t-att-title="tag.name">
+                                                    <span t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)"
+                                                        class="post_link text-reset cursor-pointer" t-att-title="tag.name">
                                                         <div class="form-check">
                                                             <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
                                                             <label class="form-check-label" t-attf-for="#{tag.color}" t-out="tag.name"/>
                                                         </div>
-                                                    </a>
+                                                    </span>
                                                 </li>
                                             </t>
                                         </ul>
@@ -131,9 +131,10 @@
         <t t-foreach="search_tags" t-as="tag">
             <span t-attf-class="d-inline-flex align-items-baseline rounded border ps-2 #{'o_badge_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
-                <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1 px-2 text-reset opacity-75-hover">
+                <span t-att-data-post="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True)"
+                    class="post_link cursor-pointer btn border-0 py-1 px-2 text-reset opacity-75-hover">
                     <i class="oi oi-close" role="img"/>
-                </a>
+                </span>
             </span>
         </t>
     </div>
