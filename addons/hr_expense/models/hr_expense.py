@@ -706,8 +706,7 @@ class HrExpense(models.Model):
                 ('state', '=', 'draft'),
                 ('sheet_id', '=', False),
                 ('employee_id', '=', self.env.user.employee_id.id),
-                ('is_editable', '=', True),
-            ])
+            ]).filtered(lambda expense: expense.is_editable)
 
         if not expenses:
             raise UserError(_('You have no expense to report'))
