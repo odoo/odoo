@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <!-- Add the Portuguese document number next to the order date -->
+        <xpath expr="//div[@id='order-date']" position="before">
+            <t t-if="order.isPortugueseCompany() and order.l10nPtPosIdentifier">
+                <div>
+                    Document Number: <t t-out="order.l10nPtPosIdentifier"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
