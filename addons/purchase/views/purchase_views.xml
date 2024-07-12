@@ -229,7 +229,6 @@
                                     <field name="product_uom" column_invisible="True" groups="!uom.group_uom"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="invoice_lines" column_invisible="True"/>
-                                    <field name="is_downpayment" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field
                                         name="product_id"
@@ -238,15 +237,15 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
-                                    <field name="date_planned" optional="hide" required="not display_type" force_save="1" readonly="is_downpayment"/>
+                                    <field name="date_planned" optional="hide" required="not display_type" force_save="1"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            optional="hide"
                                            groups="analytic.group_analytic_accounting"
                                            options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"/>
-                                    <field name="product_qty" readonly="is_downpayment"/>
+                                    <field name="product_qty"/>
                                     <field name="qty_received_manual" column_invisible="True"/>
                                     <field name="qty_received_method" column_invisible="True"/>
-                                    <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
+                                    <field name="qty_received" string="Received" column_invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'" optional="show"/>
                                     <field name="qty_invoiced" string="Billed" column_invisible="parent.state not in ('purchase', 'done')" optional="show"/>
                                     <field name="product_uom" string="UoM" groups="uom.group_uom"
                                         readonly="state in ('purchase', 'done', 'cancel')"
@@ -257,13 +256,12 @@
                                     <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
-                                    <field name="discount" string="Disc.%" readonly="qty_invoiced != 0 or is_downpayment" optional="hide"/>
-                                    <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
+                                    <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="hide"/>
+                                    <field name="price_subtotal" string="Tax excl."/>
                                     <field name="price_total"
                                            string="Tax incl."
                                            column_invisible="parent.tax_calculation_rounding_method == 'round_globally'"
-                                           invisible="is_downpayment"
                                            optional="hide"/>
                                 </tree>
                                 <form string="Purchase Order Line">

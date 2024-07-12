@@ -1758,7 +1758,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         down_payment = self.env['sale.advance.payment.inv'].create({
             'advance_payment_method': 'percentage',
             'amount': 100,
-            'order_ids': so.ids,
+            'sale_order_ids': so.ids,
         })
         down_payment.create_invoices()
         # Invoice the delivered part from the down payment

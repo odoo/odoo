@@ -9,6 +9,7 @@ from odoo.tools import float_compare, float_is_zero
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    is_downpayment = fields.Boolean()
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
@@ -226,6 +227,3 @@ class AccountMoveLine(models.Model):
     def _get_downpayment_lines(self):
         # OVERRIDE
         return self.sale_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())
-
-    def _get_order_lines(self):
-        return self.sale_line_ids or super()._get_order_lines()
