@@ -1128,24 +1128,30 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const isDirty = this._isDirty();
         let callback = () => {
             this.leaveEditMode({ forceLeave: true });
-            const canPublish = this.websiteService.currentWebsite.metadata.canPublish;
-            if (
-                isDirty &&
-                (!canPublish ||
-                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished))
-            ) {
+            if (isDirty) {
                 const {
                     mainObject: { id, model },
                 } = this.websiteService.currentWebsite.metadata;
+                const canPublish = this.websiteService.currentWebsite.metadata.canPublish;
                 rpc("/website/get_seo_data", {
                     res_id: id,
                     res_model: model,
                 }).then(
-                    (seo_data) =>
-                        checkAndNotifySEO(seo_data, OptimizeSEODialog, {
-                            notification: this.notificationService,
-                            dialog: this.dialogs,
-                        }),
+                    async (seo_data) => {
+                        if (canPublish) {
+                            const record = await this.orm.read(model, [id], ["is_published"]);
+                            record[0].is_published &&
+                                checkAndNotifySEO(seo_data, OptimizeSEODialog, {
+                                    notification: this.notificationService,
+                                    dialog: this.dialogs,
+                                });
+                        } else {
+                            checkAndNotifySEO(seo_data, OptimizeSEODialog, {
+                                notification: this.notificationService,
+                                dialog: this.dialogs,
+                            });
+                        }
+                    },
                     (error) => {
                         throw error;
                     }
