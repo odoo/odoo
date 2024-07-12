@@ -1,0 +1,82 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="html_editor.linkPopover">
+        <div class="o-we-linkpopover d-flex bg-white overflow-auto shadow">
+            <div t-if="state.editing" class="m-1 container-fluid d-flex vertical-center" t-ref="editing-wrapper">
+                <div class="col m-1" data-prevent-closing-overlay="true">
+                    <div class="input-group">
+                        <input class="o_we_label_link m-1" t-model="state.label" placeholder="Type your link label"/>
+                        <input class="o_we_href_input_link m-1" t-model="state.url" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                    </div>
+                    <div class="input-group" t-on-change="onChangeClasses">
+                        <select name="link_type" class="form-select" t-on-change="(ev)=>this.state.type = ev.target.value">
+                            <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                <t t-if="colorData.type !== 'custom'">
+                                    <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview dropdown-item">
+                                        <span t-esc="colorData.label"/>
+                                    </option>
+                                </t>
+                            </t>
+                        </select>
+                        <div t-if="state.type !== 'custom' and state.type !==  ''" class="input-group md-3">
+                                <select name="link_style_size" class="form-select link-style" t-on-change="(ev)=>this.state.buttonSize = ev.target.value">
+                                    <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
+                                        <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
+                                            <span t-esc="buttonSizesData.label"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <select name="link_style_shape" class="form-select link-style" t-on-change="(ev)=>this.state.buttonStyle = ev.target.value">
+                                    <t t-foreach="this.buttonStylesData" t-as="buttonStylesData" t-key="buttonStylesData.style">
+                                        <option t-att-value="buttonStylesData.style" t-att-selected="state.buttonStyle === buttonStylesData.style">
+                                            <span t-esc="buttonStylesData.label"/>
+                                        </option>
+                                    </t>
+                                </select>
+                        </div>
+                        <div>
+                            <button class="o_we_apply_link btn btn-primary m-1" t-on-click="onClickApply">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col o_link_dialog_preview">
+                    <div class="text-center">
+                        <label>Preview</label>
+                        <div style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                            <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{state.classes}}">
+                                <t t-esc="state.label or state.url"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" class="d-flex">
+                <span class="me-2 o_we_preview_favicon">
+                    <i t-if="!state.previewImg" t-attf-class="fa {{state.faIcon}}"></i>
+                    <img t-if="state.previewImg" t-attf-src="{{state.imgSrc}}" class="align-baseline"></img>
+                </span>
+                <div class="w-100">
+                    <div class="d-flex">
+                        <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" title="Open in a new tab">
+                            <t t-esc="state.urlTitle"/>
+                        </a>
+                        <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                            <i class="fa fa-clone"></i>
+                        </a>
+                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                            <i class="fa fa-chain-broken"></i>
+                        </a>
+                    </div>
+                    <a t-if="state.showFullUrl" href="#" target="_blank" t-attf-href="{{state.url}}" t-attf-class="o_we_full_url mt-1 text-muted o_we_webkit_box" title="Open in a new tab">
+                        <t t-esc="state.url || 'No URL specified'"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,29 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.Toolbar">
+        <div class="o-we-toolbar bg-white d-flex align-items-center m-0"  t-att-class="props.class">
+            <t t-foreach="this.getFilteredButtonGroups()" t-as="buttonGroup" t-key="buttonGroup.id">
+                <span class="o-we-toolbar-vertical-seperator"></span>
+                <div class="btn-group" t-att-name="buttonGroup.id">
+                    <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
+                        <t t-if="state.buttonsAvailableState[button.id]">
+                            <t t-if="button.Component">
+                                <t t-component="button.Component" t-props="button.props" dispatch.bind="props.toolbar.dispatch" getSelection.bind="props.toolbar.getSelection"/>
+                            </t>
+                            <button t-else=""
+                                class="btn btn-light"
+                                t-attf-class="btn btn-light
+                                    {{button.icon ? 'fa fa-fw ps-1 pe-3 mx-1 ' + button.icon : 'px-1'}}
+                                    {{ state.buttonsActiveState[button.id] ? 'active': ''}}
+                                    {{ state.buttonsDisabledState[button.id] ? 'disabled': ''}}"
+                                t-att-title="button.name"
+                                t-att-name="button.id"
+                                t-on-click="() => button.action(this.props.toolbar.dispatch)">
+                                    <t t-esc="button.text"/>
+                                </button>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -758,9 +758,10 @@ export const htmlField = {
             hasReadonlyModifiers: dynamicInfo.readonly,
         };
     },
+    additionalClasses: ["o_field_html"],
 };
 
-registry.category("fields").add("html", htmlField, { force: true });
+registry.category("fields").add("html_legacy", htmlField, { force: true });
 
 // Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {

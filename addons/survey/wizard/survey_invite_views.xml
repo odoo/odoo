@@ -52,7 +52,8 @@
                         </group>
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor border border-1 m-3 p-0 flex-fill"
-                            options="{'style-inline': true, 'height': 380}"
+                            widget="html_mail"
+                            options="{'height': 380}"
                             invisible="not send_email"
                             readonly="not can_edit_body" force_save="1"/>
                         <group invisible="not send_email">
