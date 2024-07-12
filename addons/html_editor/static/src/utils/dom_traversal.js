@@ -42,6 +42,15 @@ export function findUpTo(node, limitAncestor, predicate) {
     return null;
 }
 
+export function findFurthest(node, limitAncestor, predicate) {
+    const nodes = [];
+    while (node !== limitAncestor) {
+        nodes.push(node);
+        node = node.parentNode;
+    }
+    return nodes.findLast(predicate);
+}
+
 /**
  * Returns the closest HTMLElement of the provided Node. If the predicate is a
  * string, returns the closest HTMLElement that match the predicate selector. If
