@@ -48,10 +48,10 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
                         Please find attached your badge for
                         <t t-if="is_online">
-                            <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                            <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
                         </t>
                         <t t-else="">
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>.
@@ -97,9 +97,16 @@
                                 <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div><t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t></div>
-                                <div><strong>From</strong> <t t-out="object.event_id.date_begin_located or ''">May 4, 2021, 7:00:00 AM</t></div>
-                                <div><strong>To</strong> <t t-out="object.event_id.date_end_located or ''">May 6, 2021, 5:00:00 PM</t></div>
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
                                 <div style="font-size:12px;color:#9e9e9e"><i>(<t t-out="object.event_id.date_tz or ''">Europe/Brussels</t>)</i></div>
                             </td>
                             <td style="vertical-align:top;">
@@ -260,13 +267,13 @@
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-out="object.name or 'Guest'"/>
                     </span>
-                </td><td valign="middle" align="right">
-                    <div style="margin-bottom: 5px;">
+                    <div style="margin-bottom: 5px;margin-top: 18px;">
                         <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}&amp;responsive_html=1"
                             target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
                             View Ticket
                         </a>
                     </div>
+                </td><td valign="middle" align="right">
                     <t t-if="object.barcode"> 
                         <div style="margin-bottom: 5px;">
                             <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" width="100" height="100" alt="QR Code"/>
@@ -288,10 +295,10 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
                         We are happy to confirm your registration to the event
                         <t t-if="is_online">
-                            <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                            <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;font-weight:bold;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
                         </t>
                         <t t-else="">
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
@@ -348,9 +355,16 @@
                                 <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div><t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t></div>
-                                <div><strong>From</strong> <t t-out="object.event_id.date_begin_located or ''">May 4, 2021, 7:00:00 AM</t></div>
-                                <div><strong>To</strong> <t t-out="object.event_id.date_end_located or ''">May 6, 2021, 5:00:00 PM</t></div>
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
                                 <div style="font-size:12px;color:#9e9e9e"><i>(<t t-out="object.event_id.date_tz or ''">Europe/Brussels</t>)</i></div>
                             </td>
                             <td style="vertical-align:top;">
@@ -530,10 +544,10 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
                         We are excited to remind you that the event
                         <t t-if="is_online">
-                            <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                            <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
                         </t>
                         <t t-else="">
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
@@ -580,8 +594,16 @@
                                 <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div><strong>From</strong> <t t-out="object.event_id.date_begin_located or ''">May 4, 2021, 7:00:00 AM</t></div>
-                                <div><strong>To</strong> <t t-out="object.event_id.date_end_located or ''">May 6, 2021, 5:00:00 PM</t></div>
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
                                 <div style="font-size:12px;color:#9e9e9e"><i><t t-out="object.event_id.date_tz or ''">Europe/Brussels</t></i></div>
                             </td>
                             <td style="vertical-align:top;">
