@@ -9,7 +9,7 @@ import werkzeug
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools import clean_context, is_html_empty
 
 
 class Survey(models.Model):
@@ -324,7 +324,7 @@ class Survey(models.Model):
     def write(self, vals):
         result = super(Survey, self).write(vals)
         if 'certification_give_badge' in vals:
-            return self.sudo()._handle_certification_badges(vals)
+            return self.sudo().with_context(clean_context(self._context))._handle_certification_badges(vals)
         return result
 
     def copy_data(self, default=None):
