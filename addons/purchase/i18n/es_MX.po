@@ -572,7 +572,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr "Se puede establecer una advertencia por producto o cliente. (Compras)"
+msgstr "Puede establecer una advertencia en un producto o cliente (Compra)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -602,9 +602,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"De acuerdo con la configuración del proyecto, la cantidad recibida se puede calcular automáticamente con el mecanismo:\n"
-"- Manual: la cantidad se establece manualmente en la línea\n"
-"- Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
+"La cantidad recibida se puede calcular en automático con el mecanismo según la configuración del producto:\n"
+"- Manual: la cantidad se establece de forma manual en la línea\n"
+"- Movimientos de inventario: la cantidad corresponde a las recolecciones confirmadas\n"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -707,8 +707,8 @@ msgstr "Todas las solicitudes de cotización en espera"
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
-"Permita que se envíe un correo electrónico automáticamente para recordarle a"
-" su proveedor la fecha de recolección."
+"Permita el envío automático de correos electrónicos para recordarle la fecha"
+" de recepción a su proveedor"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -805,14 +805,14 @@ msgstr "Completar automáticamente"
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_payment__purchase_vendor_bill_id
 msgid "Auto-complete from a past bill / purchase order."
-msgstr "Autocompletar con una factura anterior / orden de compra."
+msgstr "Autocompletar con una factura u orden de compra anterior."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_payment__purchase_id
 msgid "Auto-complete from a past purchase order."
-msgstr "Autocompletar con una orden de compra."
+msgstr "Autocompletar con una orden de compra anterior."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -926,9 +926,8 @@ msgid ""
 "Calls for tenders are when you want to generate requests for quotations with"
 " several vendors for a given set of products to compare offers."
 msgstr ""
-"Las licitaciones se realizan cuando quiere enviar solicitudes de cotización "
-"a varios proveedores para un grupo específico de productos y así comparar "
-"ofertas."
+"Las licitaciones son útiles cuando quiere enviar solicitudes de cotización a"
+" varios proveedores para ciertos productos y comparar las ofertas."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1197,8 +1196,8 @@ msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
 msgstr ""
-"Fecha de entrega prometida por el proveedor. Esta fecha se utiliza para "
-"determinar la llegada prevista de los productos."
+"Fecha de entrega prometida por el proveedor. Se utiliza para determinar la "
+"llegada esperada de los productos."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1315,7 +1314,7 @@ msgstr "Icono de Font Awesome ej. fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr "Valores prohibidos en una línea de orden de compra no computable"
+msgstr "Valores prohibidos en una línea de orden de compra no contable"
 
 #. module: purchase
 #. odoo-python
@@ -1338,7 +1337,7 @@ msgstr "Actividades futuras"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "Requerir 2 niveles de aprobación para confirmar una orden de compra"
+msgstr "Solicite 2 niveles de aprobación para confirmar una orden de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1409,8 +1408,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"Si está habilitado, activa la coincidencia en 3-vías en las facturas del "
-"proveedor: los artículos deben recibirse para pagar la factura."
+"Si está habilitado, activa la conciliación de tres vías en las facturas del "
+"proveedor y deberá recibir los artículos para poder pagar la factura."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1419,12 +1418,13 @@ msgid ""
 "a grid entry."
 msgstr ""
 "Si está instalado, las variantes del producto se agregarán a las órdenes de "
-"compra a través de una entrada de cuadrícula."
+"compra a través de una tabla."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
 msgid "If true, the packaging can be used for purchase orders"
-msgstr "Si es verdad, el embalaje se puede usar para órdenes de compra"
+msgstr ""
+"Si está seleccionada, el embalaje se puede usar en las órdenes de compra"
 
 #. module: purchase
 #. odoo-python
@@ -1621,10 +1621,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"Margen de error para los plazos de entrega de proveedores. Cuando el sistema"
-" genera órdenes de compra para la adquisición de productos, se programarán "
-"muchos días anteriores para hacer frente a los retrasos inesperados de los "
-"proveedores."
+"Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
+"genera órdenes de compra para adquirir productos, se programarán con estos "
+"días de anticipación en caso de que haya demoras inesperadas."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1634,8 +1633,8 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
-"genera órdenes de compra para abastecer productos, se programarán muchos "
-"días antes para hacer frente a las demoras inesperadas de los proveedores."
+"genera órdenes de compra para reordenar productos, se programarán con estos "
+"días de anticipación en caso de que haya demoras inesperadas."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1668,13 +1667,13 @@ msgstr "Importe mínimo"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr "Cantidad mínima para la que se requiere doble validación"
+msgstr "Importe mínimo que necesita doble validación"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
 msgstr ""
-"Faltan campos obligatorios en una línea de la orden de compra computable."
+"Faltan campos obligatorios en una línea de la orden de compra contable."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1871,8 +1870,8 @@ msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
 msgstr ""
-"Una vez que obtenga el precio del proveedor, puede completar la orden de "
-"compra con el precio correcto."
+"Cuando obtenga el precio del proveedor podrá completar la orden de compra "
+"con el precio correcto."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2073,7 +2072,7 @@ msgstr "Productos"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr "Ofrecer un mecanismo de doble validación para compras"
+msgstr "Proporcione un mecanismo de doble validación para las compras"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
@@ -2256,12 +2255,12 @@ msgstr "Órdenes de compra que han sido facturadas."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Órdenes de compra que incluyen líneas no facturadas."
+msgstr "Órdenes de compra que incluyen líneas sin facturar."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "Comprar productos por múltiplo de unidad # por paquete"
+msgstr "Compre productos por múltiplos de unidad por paquete"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2418,7 +2417,7 @@ msgstr "Solicitudes de cotización y compras"
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
 msgstr ""
-"Precisión decimal entre la moneda de la empresa y la de la orden de compra"
+"La proporción entre la moneda de la orden de compra y la de la empresa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2570,8 +2569,8 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
-"Las solicitudes de cotización son documentos que se enviarán a sus proveedores para solicitar precios de diferentes productos que considere comprar.\n"
-"                Una vez que se haya llegado a un acuerdo con el proveedor, se confirmarán y se convertirán en órdenes de compra."
+"Las solicitudes de cotización son documentos que se enviarán a sus proveedores para solicitar el precio de los productos que planea comprar.\n"
+"                Una vez que haya llegado a un acuerdo con el proveedor, estas se confirmarán y se convertirán en órdenes de compra."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2598,7 +2597,7 @@ msgstr "Buscar orden de compra"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr "Buscar referencia de documento"
+msgstr "Buscar documento de referencia"
 
 #. module: purchase
 #. odoo-javascript
@@ -2649,10 +2648,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
-"mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
+"La opción \"Advertencia\" enviará una notificación a los usuarios y la "
+"opción \"Mensaje de bloqueo\" enviará una excepción con el mensaje y "
+"bloqueará el flujo. Debe escribir el mensaje en el siguiente campo."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2700,8 +2698,8 @@ msgstr ""
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
-"Se le envía a los proveedores antes de la fecha de llegada prevista, según "
-"la configuración de la orden de compra."
+"Se le envía a los proveedores antes de la fecha de entrega prevista según "
+"los ajustes de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2879,9 +2877,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"La solicitud de cotización es el primer paso del flujo de compras. Una vez \n"
-"que la solicitud se convierta en una orden de compra, usted será capaz de controlar la entrega\n"
-"de los productos y la factura de proveedor."
+"La solicitud de cotización es el primer paso del flujo de compras. Después\n"
+"                    de convertirla en una orden de compra, podrá controlar la recepción\n"
+"                    de los productos y la factura del proveedor."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2891,7 +2889,7 @@ msgstr "Actualmente no hay órdenes de compra para su cuenta."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "There are currently no requests for quotation for your account."
-msgstr "Actualmente no hay solicitudes de cotización para su cuenta"
+msgstr "Actualmente no hay solicitudes de cotización para su cuenta."
 
 #. module: purchase
 #. odoo-python
@@ -2910,8 +2908,8 @@ msgid ""
 "This analysis allows you to easily check and analyse your company purchase history and performance.\n"
 "                You can track your negotiation performance, the delivery performance of your vendors, etc"
 msgstr ""
-"Este análisis le permite revisar y analizar facilmente el historial de compras y el rendimiento de su empresa.\n"
-"                Puede rastrear el rendimiento de su negociación, de la entrega de sus proveedores, etc"
+"Este análisis le permite revisar y analizar el historial de compras y el rendimiento de su empresa con facilidad.\n"
+"                Puede rastrear el rendimiento de sus negociaciones, de la entrega de sus proveedores, etc."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -2930,8 +2928,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"Este valor predeterminado se aplica a cualquier producto nuevo creado. Esto "
-"se puede cambiar en el formulario de detalles del producto."
+"Este valor predeterminado se aplica a los productos nuevos que cree, pero "
+"puede cambiarlo en el formulario de detalles correspondiente."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2980,7 +2978,7 @@ msgstr "Consejo: ¿Cómo mantener bajo control los recibos atrasados?"
 #: model:digest.tip,name:purchase.digest_tip_purchase_1
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
 msgid "Tip: Never miss a purchase order"
-msgstr "Consejo: Nunca pierda una orden de compra"
+msgstr "Consejo: nunca pierda una orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -3216,10 +3214,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
-"Las facturas de proveedor se pueden pregenerar tomando en cuenta la orden de\n"
-"compra o entregas. Esto le permite controlar las facturas\n"
-"que recibe de su proveedor de acuerdo con el documento\n"
-"borrador en Odoo."
+"Las facturas de proveedor se pueden pregenerar con órdenes\n"
+"                    de compra o recibos. Esto le permite controlar las facturas\n"
+"                    que recibe de su proveedor de acuerdo con los borradores\n"
+"                    en Odoo."
 
 #. module: purchase
 #. odoo-python

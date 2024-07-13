@@ -9875,6 +9875,14 @@ msgstr "Nemůžete změnit typ produktu, který byl již použit."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "Nelze vytvořit odložený bod objednávky, který se nespouští ručně."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9912,6 +9920,18 @@ msgstr "Můžete zadat pouze kladné množství."
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Můžete zpracovat pouze 1.0 %s produktů s jednoznačným sériovým číslem."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Doplňovací body můžete odložit pouze ručně. Pokud nechcete, aby byly "
+"spouštěny, měli byste raději archivovat doplňovací body 'automatického "
+"spouštění'."
 
 #. module: stock
 #. odoo-python

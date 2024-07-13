@@ -2357,8 +2357,8 @@ msgid ""
 "            consumptions, inventories, etc."
 msgstr ""
 "Defina sus ubicaciones para reflejar la estructura de su almacén y de su\n"
-"            organización. Odoo es capaz de gestionar ubicaciones físicas\n"
-"            (almacenes, estanterías, contenedores, etc.), ubicaciones de partners (clientes,\n"
+"            organización. Odoo puede gestionar ubicaciones físicas\n"
+"            (almacenes, estantes, contenedores, etc.), ubicaciones de contactos (clientes,\n"
 "            proveedores) y ubicaciones virtuales que se utilizan como contraparte en\n"
 "            operaciones de existencias como las órdenes de fabricación,\n"
 "            consumos, inventarios, etc."
@@ -3595,15 +3595,14 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
-"Si se selecciona esta casilla, Odoo mostrará de forma automática el reporte "
-"de recepción (si hay movimientos a lo que asignar) al asignar."
+"Si selecciona esta casilla, Odoo mostrará de forma automática el reporte de "
+"recepción (si hay movimientos a lo que asignar) al asignar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid "If this checkbox is ticked, label will be print in this operation."
 msgstr ""
-"Si esta casilla está seleccionada, la etiqueta se imprimirá en esta "
-"operación."
+"Si selecciona esta casilla, la etiqueta se imprimirá en esta operación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -3613,10 +3612,10 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Si esta casilla se encuentra seleccionada, las líneas de recolección "
-"representarán operaciones detalladas de existencias. De lo contrario, las "
-"líneas de recolección representarán un agregado de operaciones de "
-"recolección detalladas."
+"Si selecciona esta casilla, las líneas de recolección representarán "
+"operaciones detalladas de existencias. De lo contrario, las líneas de "
+"recolección representarán un agregado de operaciones de recolección "
+"detalladas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -3638,10 +3637,10 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"Si esto se encuentra seleccionado, podrá elegir los números de serie/de "
-"lote. También puede decidir no poner lotes en este tipo de operación. Esto "
-"significa que creará existencias sin lote o no pondrá una restricción sobre "
-"el lote seleccionado."
+"Si esto se encuentra seleccionado, podrá elegir los números de serie o lote."
+" También puede decidir no incluir lotes en este tipo de operación, lo que "
+"creará existencias sin lote o no pondrá una restricción sobre el lote "
+"seleccionado."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -5334,7 +5333,7 @@ msgstr "Disponible"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Cantidad disponible"
+msgstr "Cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -5870,7 +5869,7 @@ msgstr "Parcialmente disponible"
 #: model:ir.model.fields,field_description:stock.field_procurement_group__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
@@ -6365,8 +6364,7 @@ msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
 msgstr ""
-"Los productos se reservarán primero para los traslados con las prioridades "
-"más altas."
+"Los productos se reservarán primero para los traslados con mayor prioridad."
 
 #. module: stock
 #. odoo-python
@@ -6433,7 +6431,7 @@ msgstr "Incluir en el paquete"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr "Empaquete productos (por ejemplo, partidas, cajas) y rastréelos"
+msgstr "Empaquete productos (por ejemplo, paquetes, cajas) y rastréelos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -6641,9 +6639,9 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "Cantidad de productos salientes planeados.\n"
-"En un contexto con una única ubicación de existencias, esto incluye artículos que salen de esta ubicación o cualquier ubicación secundaria.\n"
-"En un contexto con un solo almacén, esto incluye los artículos que salen de la ubicación de existencias de este almacén, o cualquier ubicación secundaria.\n"
-"De lo contrario, esto incluye artículos que salgan de cualquier ubicación de existencias con tipo 'interno'."
+"Si se trata de una sola ubicación de existencias, incluye los artículos que salen de esta ubicación o sus ubicaciones secundarias.\n"
+"Si se trata de un solo almacén, incluye los artículos que salen de la ubicación de existencias de este almacén o de sus ubicaciones secundarias.\n"
+"De lo contrario, incluye los artículos que salen de las ubicaciones de existencias de tipo \"interno\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -7434,10 +7432,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"advertencia\" se notificará a los usuarios con el "
-"mensaje, si selecciona \"mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
+"La opción \"Advertencia\" enviará una notificación a los usuarios y la "
+"opción \"Mensaje de bloqueo\" enviará una excepción con el mensaje y "
+"bloqueará el flujo. Debe escribir el mensaje en el siguiente campo."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8456,8 +8453,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
-"La ubicación principal que incluye esta ubicación. Ejemplo: La 'Zona de "
-"despacho' es la ubicación principal 'Puerta 1'."
+"La ubicación principal que incluye esta ubicación. Por ejemplo, \"Zona de "
+"despacho\" es la ubicación principal de \"Puerta 1\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -8756,10 +8753,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Esta recolección aparece ligada a otra operación. Más adelante, si recibe "
-"los artículos que está devolviendo ahora, asegúrese de <b>anular</b> la "
-"recolección devuelta para evitar que se apliquen de nuevo las reglas de "
-"logística (lo que crearía operaciones duplicadas)"
+"Parece que esta recolección está vinculada a otra operación. Más adelante, "
+"si recibe los artículos que está devolviendo ahora, asegúrese de "
+"<b>anular</b> la recolección devuelta para evitar que se vuelvan a aplicar "
+"las reglas de logística (que crearían operaciones duplicadas)."
 
 #. module: stock
 #. odoo-python
@@ -9415,7 +9412,7 @@ msgstr "Usado por"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr "Se utiliza para ordenar la vista de kanban de 'Todas la operaciones'"
+msgstr "Se utiliza para ordenar la vista de kanban de \"Todas las operaciones\""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
@@ -9827,8 +9824,8 @@ msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
 msgstr ""
-"Cuando se encuentra seleccionado, si el movimiento creado por esta regla se "
-"cancela, el siguiente movimiento también se cancelará."
+"Si está seleccionada, al cancelar el movimiento creado por esta regla "
+"también cancelará el siguiente."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -9982,6 +9979,15 @@ msgstr "No puede cambiar el tipo de un producto que ya se utilizó."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"No puede crear un punto de orden pospuesto que no se active de forma manual."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -10019,6 +10025,17 @@ msgstr "Solo puede ingresar cantidades positivas."
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Solo puede procesar 1.0 %s para productos con un número de serie único."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Solo puede posponer los puntos de orden manuales, archive los automáticos o "
+"'auto-trigger' si no desea que se activen."
 
 #. module: stock
 #. odoo-python
@@ -10110,9 +10127,9 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
-"No puede cambiar la unidad de medida de un producto que ya se utilizó en un "
-"movimientos de existencias. Si necesita cambiar la unidad de medida, puede "
-"archivar este producto y crear uno nuevo."
+"No puede cambiar la unidad de medida del producto porque ya se utilizó en "
+"movimientos de existencias. Si necesita cambiarla puede archivar este "
+"producto y crear uno nuevo."
 
 #. module: stock
 #. odoo-python
@@ -10389,8 +10406,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
-"Aún tiene alguna regla de reordenamiento activa en este producto. Archívelas"
-" o elimínelas primero."
+"Aún tiene reglas de reordenamiento activas en este producto, archívelas o "
+"elimínelas."
 
 #. module: stock
 #. odoo-python

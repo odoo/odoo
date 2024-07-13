@@ -13,7 +13,6 @@
 # Ivan Marijanović <ivanm101@yahoo.com>, 2022
 # 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
 # Marko Carević <marko.carevic@live.com>, 2022
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2022
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
@@ -30,8 +29,8 @@
 # etoimene, 2024
 # Luka Carević <luka@uvid.hr>, 2024
 # Alen Komljen, 2024
-# Gordana Bilas, 2024
 # Vladimir Vrgoč, 2024
+# Gordana Bilas, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Vladimir Vrgoč, 2024\n"
+"Last-Translator: Gordana Bilas, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8917,7 +8916,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "UoM"
-msgstr "UoM"
+msgstr "JM"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -9313,7 +9312,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "Kada svi proizvodi budu dostupni"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_selectable
@@ -9527,6 +9526,14 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9560,6 +9567,15 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
 
 #. module: stock
