@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Алексей <noosvet@gmail.com>, 2021
-# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
 # Андрей Гусев <gaussgss@gmail.com>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
@@ -16,6 +15,8 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # valmasone, 2023
 # Alena Vlasova, 2023
+# Wil Odoo, 2024
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,13 +24,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
+"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
+"\n"
+"Сотрудниками, которым не хватает дней на отсутствие, являются:\n"
+"%s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -67,24 +80,6 @@ msgstr "!important; font-size: 10px\" &gt;"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "%(leave_type)s are only valid between %(start)s and %(end)s"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "%(leave_type)s are only valid starting from %(date)s"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "%(leave_type)s are only valid until %(date)s"
-msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -1114,6 +1109,7 @@ msgid "Approve Allocations"
 msgstr "Согласовать отсутствия"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate
@@ -1124,6 +1120,7 @@ msgstr "Согласовать отсутствия"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__validate
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#, python-format
 msgid "Approved"
 msgstr "Одобрено"
 
@@ -1410,22 +1407,22 @@ msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
+#, python-format
 msgid "Confirmed"
 msgstr "Подтвержден"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#, python-format
+msgid "Confirmed and Approved"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid ""
-"Could not find an allocation of type %(leave_type)s for the requested time "
-"period."
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
@@ -1467,6 +1464,7 @@ msgstr "Создан"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__current_leave_state
 msgid "Current Time Off Status"
 msgstr "Текущий статус отгула"
 
@@ -2754,14 +2752,6 @@ msgstr "Только менеджер по отгулам может сброс�
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid ""
-"Only a Time off Approver can apply the second approval on allocation "
-"requests."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr "Только менеджер по отгулам может подтвердить свои запросы."
 
@@ -2787,6 +2777,12 @@ msgid ""
 "Only accrue for the time worked by the employee. This is the time when the "
 "employee did not take time off."
 msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операция не поддерживается"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -3128,6 +3124,14 @@ msgid "Sick Time Off"
 msgstr "Отпуск по болезни"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
@@ -3325,6 +3329,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
@@ -3332,18 +3337,6 @@ msgid ""
 msgstr ""
 "Количество оставшихся отгулов недостаточно для данного типа отгулов.\n"
 "Пожалуйста, проверьте также отгулы, ожидающие подтверждения."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid ""
-"\n"
-"The employees that lack allocation days are:\n"
-"%s"
-msgstr ""
-"\n"
-"Сотрудниками, которым не хватает дней на отсутствие, являются:\n"
-"%s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -4048,6 +4041,15 @@ msgid "You can not start an accrual in the past."
 msgstr "Вы не можете начать расчет в прошлом."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot archive an allocation which is in confirm or validate state."
+msgstr ""
+"Вы не можете архивировать распределение, находящееся в состоянии "
+"подтверждения или проверки."
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in %s state"
@@ -4062,18 +4064,18 @@ msgstr "Вы не можете удалить отгул, который отн�
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
-"Вы не можете удалить запрос на отсутствие, который находится в статусе %s."
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
 "Вы не можете удалить запрос на отсутствие, который имеет несколько "
 "подтвержденных отпусков."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "You cannot delete an allocation request which is in %s state."
+msgstr ""
+"Вы не можете удалить запрос на отсутствие, который находится в статусе %s."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4095,16 +4097,8 @@ msgstr "У вас нет прав на повторное утверждение
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid ""
-"You have several allocations for those type and period.\n"
-"Please split your request to fit in their number of days."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "You must be %s\\'s Manager to approve this leave"
-msgstr ""
+msgid "You must be %s's Manager to approve this leave"
+msgstr "Вы должны быть менеджером %s, чтобы одобрить этот отпуск"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4116,15 +4110,16 @@ msgstr ""
 "одобрить этот отпуск."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
-"You must be either %s's manager or time off manager to approve this time off"
+"You must either be a Time off Officer or Time off Manager to approve this "
+"leave"
 msgstr ""
+"Вы должны быть сотрудником отдела отгулов или менеджером отдела отгулов, "
+"чтобы одобрить этот отпуск"
 
 #. module: hr_holidays
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
 msgstr "Вы должны указать ставку больше 0 в уровнях плана расчета отпусков."
@@ -4173,11 +4168,6 @@ msgid "by Employee"
 msgstr "сотрудником"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report_employee_time_off
-msgid "by Employee and Time Off Type"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
 msgid "by Type"
 msgstr "по типу"
@@ -4198,6 +4188,7 @@ msgstr "дней"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -4220,6 +4211,7 @@ msgstr "например, Плановый отпуск (с 01.01.2000 по 14.0
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "hours"

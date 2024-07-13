@@ -2710,7 +2710,7 @@ msgstr "Aplicar solo si el país de entrega coincide."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr "Aplicar solo si el partner tiene RFC."
+msgstr "Aplicar solo si el contacto tiene un número fiscal."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -8419,9 +8419,9 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"La última vez que se emparejaron facturas y pagos de este partner. Se "
-"configura incluso si no hay ningún débito o crédito por conciliar o si pulsa"
-" el botón \"Hecho\"."
+"La última vez que se conciliaron facturas y pagos de este contacto. Se "
+"configura incluso si no hay ningún débito o crédito por conciliar o si hace "
+"clic en el botón \"Hecho\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8706,11 +8706,11 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manual: pague o cobre con cualquier método fuera de Odoo.\n"
-"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
+"Adquirente de pago: cada adquirente de pago tiene su propio método de pago. Solicite una transacción en/a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
 "Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
-"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
-"Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
-"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
+"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Necesita el módulo account_batch_payment.\n"
+"Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Necesita el módulo account_sepa.\n"
+"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias al mandato que le otorgará su contacto. Necesita el módulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9457,15 +9457,15 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
 msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
-"Odoo le ayuda a llevar con facilidad un seguimiento de todas las actividades"
-" relacionadas con un cliente."
+"Odoo le ayuda a rastrear con facilidad todas las actividades relacionadas "
+"con un cliente."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Odoo helps you easily track all activities related to a supplier."
 msgstr ""
-"Odoo le ayuda a llevar con facilidad un seguimiento de todas las actividades"
-" relacionadas con un proveedor."
+"Odoo le ayuda a rastrear con facilidad todas las actividades relacionadas "
+"con un proveedor."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__internal_group__off_balance
@@ -11967,10 +11967,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"Advertencia\" se notificará a los usuarios con el "
-"mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
+"La opción \"Advertencia\" enviará una notificación a los usuarios y la "
+"opción \"Mensaje de bloqueo\" enviará una excepción con el mensaje y "
+"bloqueará el flujo. Debe escribir el mensaje en el siguiente campo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__selection
@@ -14367,7 +14366,7 @@ msgstr "El reporte fiscal principal de esta línea"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr "No se puede eliminar el partner porque se utiliza en Contabilidad"
+msgstr "No es posible eliminar el contacto, se usa en Contabilidad"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14376,8 +14375,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"El partner tiene al menos un débito o crédito sin conciliar desde la última "
-"vez que se realizó el emparejamiento de facturas y pagos."
+"El contacto tiene al menos un débito o crédito sin conciliar desde la última"
+" vez que se realizó la conciliación de facturas y pagos."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14385,8 +14384,8 @@ msgstr ""
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
-"Los partners del diario de la empresa y el de la cuenta del banco "
-"relacionada no coinciden."
+"Los contactos del diario de la empresa y de la cuenta del banco relacionada "
+"no coinciden."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative

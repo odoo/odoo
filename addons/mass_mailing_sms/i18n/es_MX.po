@@ -23,6 +23,34 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"%s characters (including link trackers and opt-out link), fits in %s SMS "
+"(%s) "
+msgstr ""
+"%s caracteres (incluyendo los rastreadores de enlaces y el enlace para "
+"cancelar la suscripción), cabe en %s SMS (%s) "
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including link trackers), fits in %s SMS (%s) "
+msgstr ""
+"%s caracteres (incluyendo los rastreadores de enlaces), cabe en %s SMS (%s) "
+
+#. module: mass_mailing_sms
+#. openerp-web
+#: code:addons/mass_mailing_sms/static/src/js/fields_sms_widget.js:0
+#, python-format
+msgid "%s characters (including opt-out link), fits in %s SMS (%s) "
+msgstr ""
+"%s caracteres (incluyendo el enlace para cancelar la suscripción), cabe en "
+"%s SMS (%s) "
+
+#. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid ""
 "+32 495 85 85 77\n"
@@ -753,6 +781,12 @@ msgstr "Elección del SMS ganador"
 #, python-format
 msgid "STOP SMS : %s"
 msgstr "DETENER SMS:%s"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
+#, python-format
+msgid "STOP SMS : %(unsubscribe_url)s"
+msgstr "CANCELAR SMS: %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
