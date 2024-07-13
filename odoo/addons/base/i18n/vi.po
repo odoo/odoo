@@ -6201,7 +6201,7 @@ msgstr ""
 "==============================\n"
 "\n"
 "Phân hệ này cho phép bản quản lý chi tiêu phát sinh hàng ngày của nhân viên. Nó cho phép bạn truy cập vào kê khai chi phí của nhân viên và quyền hoàn thiện và xác nhận hoặc từ chối các kê khai này. Sau khi xác nhận, phân hệ này sẽ tạo một hoá đơn cho nhân viên.\n"
-"Nhân viên có thể mã hóa chi phí của họ và chu trình xác nhận sẽ tự động hạch toán chúng vào hệ thống kế toán sau khi quản lý xác nhận.\n"
+"Nhân viên có thể nhập chi phí của họ và chu trình xác nhận sẽ tự động hạch toán chúng vào hệ thống kế toán sau khi quản lý xác nhận.\n"
 "\n"
 "\n"
 "Toàn bộ chu trình này diễn ra như sau:\n"
@@ -10082,7 +10082,7 @@ msgstr ""
 "Phân hệ này triển khai một hệ thống bảng chấm công.\n"
 "==========================================================\n"
 "\n"
-"Mỗi nhân viên có thể mã hóa và theo dõi thời gian họ dành cho các dự án khác nhau.\n"
+"Mỗi nhân viên có thể nhập và theo dõi thời gian họ dành cho các dự án khác nhau.\n"
 "\n"
 "Nhiều báo cáo theo thời gian và giám sát nhân viên được cung cấp.\n"
 "\n"
@@ -10631,20 +10631,13 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
-"\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -24328,7 +24321,7 @@ msgstr "Tỷ giá tiền tệ trực tuyến"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr "Theo dõi Sự kiện Trực tiếp"
+msgstr "Nội dung Sự kiện Trực tiếp"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -25349,7 +25342,7 @@ msgstr "Microsoft Outlook"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_account
 msgid "Microsoft Users"
-msgstr "Microsoft Users"
+msgstr "Người dùng Microsoft"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
@@ -28388,7 +28381,7 @@ msgid ""
 "Odoo is currently processing a scheduled action.\n"
 "Module operations are not possible at this time, please try again later or contact your system administrator."
 msgstr ""
-"Odoo hiện đang xử lý một hoạt động đã lên lịch.\n"
+"Odoo hiện đang xử lý một hành động đã lên lịch.\n"
 "Không thể triển khai phân hệ vào lúc này, vui lòng thử lại sau hoặc liên hệ với quản trị viên hệ thống của bạn."
 
 #. module: base
@@ -30066,7 +30059,7 @@ msgstr "Cổng thông tin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_rating
 msgid "Portal Rating"
-msgstr "Cổng Xếp hạng"
+msgstr "Xếp hạng cổng thông tin"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -30948,17 +30941,17 @@ msgstr "Kiểm tra và Họp mặt trên tuyến cộng đồng"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
 msgid "Quiz on Live Event Tracks"
-msgstr "Kiểm tra Theo dõi Sự kiện Trực tiếp"
+msgstr "Câu đố trong Nội dung sự kiện trực tiếp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr "Quizzes on Tracks"
+msgstr "Câu đố trong phần nội dung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr "Quizzes on tracks"
+msgstr "Câu đố trong phần nội dung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -32304,7 +32297,7 @@ msgstr "Lên lịch bảng chấm công khi nghỉ phép"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__usage__ir_cron
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr "Hoạt động định kỳ"
+msgstr "Hành động đã lên lịch"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -32314,7 +32307,7 @@ msgstr "Hoạt động định kỳ"
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "Hoạt động định kỳ"
+msgstr "Hành động đã lên lịch"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
@@ -32598,8 +32591,8 @@ msgid ""
 "Send reminder push notifications to event attendees based on favorites "
 "tracks."
 msgstr ""
-"Gửi thông báo đẩy nhắc nhở đến những người tham dự sự kiện dựa trên công cụ "
-"theo dõi ưa thích."
+"Gửi thông báo đẩy nhắc nhở đến những người tham dự sự kiện dựa trên nội dung"
+" ưa thích."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -33390,7 +33383,7 @@ msgstr "Speedscope"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr "Nhà tài trợ, Chương trình, Tin tức sự kiện"
+msgstr "Nhà tài trợ, Nội dung, Chương trình, Tin tức sự kiện"
 
 #. module: base
 #: model:ir.module.module,description:base.module_spreadsheet
@@ -33921,7 +33914,7 @@ msgstr "Tham số bổ sung"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr "Hỗ trợ các bản nhạc trực tiếp: phát trực tuyến, tham gia, youtube"
+msgstr "Hỗ trợ nội dung trực tiếp: phát trực tuyến, tham gia, youtube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
@@ -35755,8 +35748,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
-"Phân hệ này giúp phân tích và tổ chức các hành động theo dõi sự kiện.\n"
-"Với mục đích đó, chế độ xem gantt được thêm vào các hành động theo dõi sự kiện."
+"Phân hệ này giúp phân tích và tổ chức nội dung sự kiện.\n"
+"Với mục đích đó, chế độ xem gantt được thêm vào nội dung sự kiện."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -36983,8 +36976,8 @@ msgid ""
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
 msgstr ""
-"Sử dụng trường này nếu bạn muốn thay thế cách thông thường để mã hóa một địa"
-" chỉ hoàn chỉnh. Lưu ý rằng trường address_format được sử dụng để sửa đổi "
+"Sử dụng trường này nếu bạn muốn thay thế cách thông thường để nhập một địa "
+"chỉ hoàn chỉnh. Lưu ý rằng trường address_format được sử dụng để sửa đổi "
 "cách hiển thị địa chỉ (ví dụ trong báo cáo), trong khi trường này được sử "
 "dụng để sửa đổi biểu mẫu nhập cho địa chỉ."
 

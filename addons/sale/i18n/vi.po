@@ -817,7 +817,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/> Xem chi tiết"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -850,6 +850,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"Sản "
+"phẩm này đã được lưu trữ\" invisible=\"state not in ['draft', 'sent'] or not"
+" is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -939,6 +942,7 @@ msgstr "<span>Hiển thị</span>"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: This quote contains archived product(s)</span>"
 msgstr ""
+"<span>Cảnh báo: Báo giá này chứa (các) sản phẩm đã được lưu trữ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1050,7 +1054,7 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Khả năng chọn loại kiện hàng trong đơn bán hàng và buộc số lượng là bội số "
+"Khả năng chọn kiểu đóng gói trong đơn bán hàng và buộc số lượng là bội số "
 "của số lượng hàng trên mỗi kiện."
 
 #. module: sale
@@ -1073,6 +1077,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Cần có công ty, vui lòng chọn một công ty trước khi thực hiện bất kỳ thay "
+"đổi nào khác với đơn bán hàng."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1191,7 +1197,7 @@ msgstr "Thêm một "
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.xml:0
 msgid "Add optional products"
-msgstr ""
+msgstr "Thêm sản phẩm tuỳ chọn"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1371,7 +1377,7 @@ msgstr "Giá trị thuộc tính"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "Giá trị thuộc tính"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
@@ -1418,7 +1424,7 @@ msgstr "Dựa vào mã chứng từ"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "Đánh bại đối thủ bằng các báo giá bắt mắt!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1438,6 +1444,8 @@ msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
+"Tăng doanh số bán hàng nhờ thanh toán hoặc chữ ký online, bán thêm và cổng "
+"thông tin khách hàng ưu việt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1457,7 +1465,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Build your first quotation right here!"
-msgstr ""
+msgstr "Tạo báo giá đầu tiên của bạn ngay tại đây!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1568,7 +1576,7 @@ msgstr "Danh mục"
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Bọc chân ghế"
 
 #. module: sale
 #. odoo-python
@@ -1585,7 +1593,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Check a sample. It's clean!"
-msgstr ""
+msgstr "Xem một mẫu. Rất rõ ràng!"
 
 #. module: sale
 #. odoo-javascript
@@ -1634,7 +1642,7 @@ msgstr "Công ty"
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Bố cục tài liệu công ty"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1700,7 +1708,7 @@ msgstr "Cấu hình"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure your product"
-msgstr ""
+msgstr "Cấu hình sản phẩm của bạn"
 
 #. module: sale
 #. odoo-javascript
@@ -2303,7 +2311,7 @@ msgstr "Email được gửi cho khách hàng sau khi có hoá đơn."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Nhập giá trị tùy chỉnh"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2459,7 +2467,7 @@ msgstr "Chiết khấu toàn bộ"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Hãy tiếp tục và gửi báo giá."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2486,7 +2494,7 @@ msgstr "Có bảng giá đang hoạt động"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Có sản phẩm được lưu trữ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
@@ -2807,7 +2815,7 @@ msgstr "Là người theo dõi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
-msgstr ""
+msgstr "Sản phẩm được lưu trữ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2822,7 +2830,7 @@ msgstr "Là chi phí"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Sản phẩm có thể cấu hình được không?"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
@@ -2902,7 +2910,7 @@ msgstr "Cho phép khách hàng đăng nhập để xem tài liệu của họ"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "Hãy tạo một báo giá đẹp mắt chỉ trong vài cú nhấp chuột."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3185,7 +3193,7 @@ msgstr "Số lượng đơn hàng cần xuất hóa đơn"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
-msgstr ""
+msgstr "Ghế văn phòng có thể làm hỏng sàn. Hãy bảo vệ sàn nhà."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3288,7 +3296,7 @@ msgstr "Hoạt động không được hỗ trợ"
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Sản phẩm tuỳ chọn"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
@@ -3297,6 +3305,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Sản phẩm tùy chọn được đề xuất bất cứ khi nào khách hàng nhấn *Thêm vào giỏ "
+"hàng* (chiến lược bán chéo, ví dụ: đối với máy tính: bảo hành, phần "
+"mềm,...)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -3353,7 +3364,7 @@ msgstr "Ngày đặt hàng: 365 ngày qua"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
 msgid "Order Invoice Status"
-msgstr ""
+msgstr "Trạng thái hóa đơn của đơn hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3929,7 +3940,7 @@ msgstr "Người nhận"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
-msgstr ""
+msgstr "Đề xuất khi 'Thêm vào giỏ hàng' hoặc báo giá"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3976,7 +3987,7 @@ msgstr "Đơn hàng liên quan"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove one"
-msgstr ""
+msgstr "Xóa một"
 
 #. module: sale
 #. odoo-javascript
@@ -4161,8 +4172,8 @@ msgstr "Phân tích bán hàng"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Phân tích bán hàng theo khách hàng"
+msgid "Sales Analysis Per Customers"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4350,7 +4361,7 @@ msgstr "Tìm kiếm đơn bán hàng"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Search a customer name, or create one on the fly."
-msgstr ""
+msgstr "Tìm kiếm tên khách hàng hoặc tạo mới nhanh chóng."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
@@ -4838,6 +4849,9 @@ msgid ""
 "%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Các sản phẩm sau không thể chỉ giới hạn cho công ty %(company)s vì chúng đã được sử dụng trong báo giá hoặc đơn bán hàng của công ty khác:\n"
+"%(used_products)s\n"
+"Bạn có thể lưu trữ những sản phẩm này và tạo lại chúng với hạn chế cho công ty, hoặc đặt là sản phẩm chia sẻ. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5002,7 +5016,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "This option or combination of options is not available"
-msgstr ""
+msgstr "Tùy chọn này hoặc sự kết hợp các tùy chọn không khả dụng"
 
 #. module: sale
 #. odoo-python
@@ -5328,6 +5342,7 @@ msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
 msgstr ""
+"Hiệu lực của đơn hàng, sau đó bạn sẽ không thể ký và thanh toán báo giá."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5513,7 +5528,7 @@ msgstr "Mã tham chiếu của bạn:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Trình duyệt của bạn không hỗ trợ khung nội tuyến."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5556,7 +5571,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "add the price of your product."
-msgstr ""
+msgstr "thêm giá sản phẩm của bạn."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
@@ -5593,7 +5608,7 @@ msgstr "cho đơn bán hàng này."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "hãy tiếp tục"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

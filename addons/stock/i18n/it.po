@@ -5627,7 +5627,7 @@ msgstr "Nessun'operazione trovata. Creiamo un trasferimento!"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Nessun prodotto trovato per cui generare numeri di serie o lotto."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -10999,6 +10999,19 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Impossibile eliminare uno scarto già completato."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Da questa vista, non è possibile confezionare nello stesso collo quantità "
+"provenienti da vari trasferimenti. Prova ad aggiungerli ad un prelievo "
+"raggruppato e confezionali lì."
 
 #. module: stock
 #. odoo-python

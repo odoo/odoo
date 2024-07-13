@@ -48,12 +48,12 @@ msgstr "%s nhận xét"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Delivery"
-msgstr ""
+msgstr "&amp; Giao hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your delivery address will be requested later)</i>"
-msgstr ""
+msgstr "&amp;nbsp;(<i>Địa chỉ giao hàng của bạn sẽ được yêu cầu sau)</i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -114,13 +114,13 @@ msgstr "<b>Nội dung: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<b>Deliver to pickup point: </b>"
-msgstr ""
+msgstr "<b>Giao đến điểm nhận hàng: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Delivery: </b>"
-msgstr ""
+msgstr "<b>Giao hàng: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -223,7 +223,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/>Thêm vào giỏ hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -309,12 +309,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Price</span>"
-msgstr ""
+msgstr "<span class=\"label\">Giá</span> "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Product</span>"
-msgstr ""
+msgstr "<span class=\"label\">Sản phẩm</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -328,6 +328,9 @@ msgid ""
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"                    Chọn để tính phí giao hàng\n"
+"                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -395,11 +398,17 @@ msgid ""
 "                </span>\n"
 "                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"Remove this location\" aria-label=\"Remove this location\"/>"
 msgstr ""
+"<span>\n"
+"                    <b name=\"o_pickup_location_name\"/>\n"
+"                    <br/>\n"
+"                    <i name=\"o_pickup_location_address\"/>\n"
+"                </span>\n"
+"                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"Gỡ vị trí này\" aria-label=\"Gỡ vị trí này\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span>Already have an account?</span>"
-msgstr ""
+msgstr "<span>Bạn đã có tài khoản?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -428,7 +437,7 @@ msgstr "<span>Video xem trước</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr ""
+msgstr "<strong>Không tìm thấy phương thức giao hàng nào phù hợp.</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
@@ -731,7 +740,7 @@ msgstr "Nút Thêm vào giỏ hàng"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Add to cart"
-msgstr ""
+msgstr "Thêm vào giỏ hàng"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
@@ -759,7 +768,7 @@ msgstr "Tất cả bảng giá"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
 msgid "All users"
-msgstr ""
+msgstr "Tất cả người dùng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -819,7 +828,7 @@ msgstr "Áp dụng"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 msgid "Are you sure you want to delete this ribbon?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn xóa ruy-băng này không?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -851,7 +860,7 @@ msgstr "Tự động gửi email thanh toán chưa hoàn tất"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Tuỳ chọn khả dụng:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -868,7 +877,7 @@ msgstr "Quay lại giỏ hàng"
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Back to delivery"
-msgstr ""
+msgstr "Quay lại giao hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -878,7 +887,7 @@ msgstr "Nền"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Background Color"
-msgstr ""
+msgstr "Màu nền"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
@@ -1268,7 +1277,7 @@ msgstr "Giá so sánh"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_components
 msgid "Components"
-msgstr "Thành phần"
+msgstr "Nguyên liệu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1360,7 +1369,7 @@ msgstr "URL nút Liên hệ với chúng tôi"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Continue Shopping"
-msgstr ""
+msgstr "Tiếp tục mua hàng"
 
 #. module: website_sale
 #. odoo-python
@@ -1569,17 +1578,17 @@ msgstr "Xác định danh mục mới"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
-msgstr ""
+msgstr "Xác định một ruy-băng mới"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Delete Ribbon"
-msgstr ""
+msgstr "Xoá ruy-băng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Deliver to the same address"
-msgstr ""
+msgstr "Giao đến cùng địa chỉ"
 
 #. module: website_sale
 #. odoo-python
@@ -1596,7 +1605,7 @@ msgstr "Số tiền giao hàng "
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Phương thức giao hàng"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
@@ -1607,7 +1616,7 @@ msgstr "Địa chỉ điểm giao hàng"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Delivery address"
-msgstr ""
+msgstr "Địa chỉ giao hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -1815,7 +1824,7 @@ msgstr "Phương thức vận chuyển Easypost"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__ecommerce_access
 #: model:ir.model.fields,field_description:website_sale.field_website__ecommerce_access
 msgid "Ecommerce Access"
-msgstr ""
+msgstr "Quyền truy cập Thương mại điện tử"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -1852,7 +1861,7 @@ msgstr "Mã nhúng"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Enforce a customer to be logged in to access 'Shop'"
-msgstr ""
+msgstr "Buộc khách hàng phải đăng nhập để truy cập 'Cửa hàng'"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2109,6 +2118,9 @@ msgid ""
 "field or make it selectable.Otherwise, the pricelist will not apply to any "
 "website."
 msgstr ""
+"Nếu bạn muốn bảng giá hiện trên một trang web, thì trường này phải được điền"
+" hoặc có thể chọn được. Nếu không, bảng giá sẽ không áp dụng cho bất kỳ "
+"trang web nào."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -2236,6 +2248,8 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
+"Có vẻ như đã có giao dịch cho đơn hàng của bạn, nên bạn không thể thay đổi "
+"phương thức giao hàng"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2338,7 +2352,7 @@ msgstr "Để khách hàng chọn điểm vận chuyển Mondial Relay"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__force_dialog
 msgid "Let the user decide (dialog)"
-msgstr ""
+msgstr "Để người dùng quyết định (hộp thoại)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2382,7 +2396,7 @@ msgstr "Danh sách"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
 msgid "Logged in users"
-msgstr ""
+msgstr "Người dùng đã đăng nhập"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2594,7 +2608,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "No shipping method is selected."
-msgstr ""
+msgstr "Chưa chọn phương thức vận chuyển nào."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2725,7 +2739,7 @@ msgstr "Tùy chọn cho: %s"
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Tùy chọn không khả dụng"
 
 #. module: website_sale
 #. odoo-python
@@ -2877,7 +2891,7 @@ msgstr "Vui lòng tiếp tục giỏ hàng hiện tại. "
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/checkout.js:0
 msgid "Please select a pick-up point"
-msgstr ""
+msgstr "Chọn điểm nhận hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2966,7 +2980,7 @@ msgstr "In"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Proceed to Checkout"
-msgstr ""
+msgstr "Tiến hành thanh toán"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -3093,13 +3107,13 @@ msgstr "Giá tham chiếu sản phẩm"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Product Ribbon"
-msgstr ""
+msgstr "Ruy-băng sản phẩm"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_ribbon_action
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Product Ribbons"
-msgstr ""
+msgstr "Ruy-băng sản phẩm"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -3395,7 +3409,7 @@ msgstr "Thay thế"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Giới hạn cho trang web nhất định"
 
 #. module: website_sale
 #. odoo-python
@@ -3421,7 +3435,7 @@ msgstr "Ruy-băng"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__name
 msgid "Ribbon Name"
-msgstr ""
+msgstr "Tên ruy-băng"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__right
@@ -3655,7 +3669,7 @@ msgstr "Sắp xếp mặc định cửa hàng"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop, products, cart and wishlist visibility"
-msgstr ""
+msgstr "Hiển thị cửa hàng, sản phẩm, giỏ hàng và danh sách yêu thích"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -3680,7 +3694,7 @@ msgstr "Hiển thị trên thương mại điện tử"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Show variants"
-msgstr ""
+msgstr "Hiện biến thể"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3751,7 +3765,7 @@ msgstr "Một số trường bắt buộc vẫn đang để trống."
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr ""
+msgstr "Rất tiếc, chúng tôi không thể vận chuyển đơn hàng của bạn."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3860,7 +3874,7 @@ msgstr "Văn bản"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
-msgstr ""
+msgstr "Màu chữ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
@@ -3905,6 +3919,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s)"
 " is different than the one you want to use (%(company)s)"
 msgstr ""
+"Công ty của trang web bạn đang cố gắng bán hàng (%(website_company)s) khác "
+"với công ty bạn muốn sử dụng (%(company)s)"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
@@ -4296,7 +4312,7 @@ msgstr "Trang web"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "Menu trang web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
@@ -4441,6 +4457,8 @@ msgid ""
 "You are editing your <b>billing and delivery</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your delivery address, create a"
 msgstr ""
+"Bạn đang chỉnh sửa địa chỉ<b>thanh toán và giao hàng</b> cùng lúc!<br/>\n"
+"                                            Nếu muốn thay đổi địa chỉ giao hàng, hãy tạo một"
 
 #. module: website_sale
 #. odoo-python
@@ -4504,7 +4522,7 @@ msgstr "Giỏ hàng của bạn đang trống!"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr ""
+msgstr "Giỏ hàng của bạn đang trống!"
 
 #. module: website_sale
 #. odoo-python
@@ -4578,7 +4596,7 @@ msgstr "Chế độ hiển thị bộ lọc thương mại điện tử"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Media"
-msgstr ""
+msgstr "Phương tiện Thương mại điện tử"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total

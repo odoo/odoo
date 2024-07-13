@@ -36,6 +36,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"（%(serial_number)s）存在于位置 %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -3234,7 +3236,7 @@ msgstr "收藏夹"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "喜好的用户"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -6582,7 +6584,7 @@ msgstr "补料"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "产品补货混入程序"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -10545,6 +10547,16 @@ msgstr "您无法更改计量单位，因为此产品已有库存变动。如果
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "不能删除已完成的报废。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

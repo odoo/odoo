@@ -185,7 +185,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s nhiệm vụ phụ đã đóng trong số %(totalCount)s"
 
 #. module: project
 #. odoo-python
@@ -704,13 +704,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "Một nhiệm vụ mới đã được tạo và không thuộc về bất kỳ dự án nào."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "Một nhiệm vụ mới đã được tạo trong dự án \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -750,7 +750,7 @@ msgstr "Chấp nhận email từ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
 msgid "Access Mode"
-msgstr "Access Mode"
+msgstr "Chế độ truy cập"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
@@ -859,7 +859,7 @@ msgstr "Thêm thông tin về nhiệm vụ này..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Add extra content to display in the email"
+msgstr "Thêm nội dung để hiển thị trong email"
 
 #. module: project
 #. odoo-javascript
@@ -1012,7 +1012,7 @@ msgstr "Phân tích tiến độ dự án và hiệu quả làm việc của nh�
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
-msgstr ""
+msgstr "Bất kỳ ai có liên kết này đều có thể truy cập dự án ở chế độ chỉ đọc."
 
 #. module: project
 #. odoo-javascript
@@ -1032,13 +1032,13 @@ msgstr "Kiến trúc"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "Lưu trữ tài khoản"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "Lưu trữ tài khoản"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -1304,7 +1304,7 @@ msgstr "Chặn nhiệm vụ"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Brainstorm"
-msgstr "Brainstorm"
+msgstr "Lên ý tưởng"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_00
@@ -1372,7 +1372,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "Chọn một trong các chế độ truy cập sau cho cộng tác viên của bạn:"
 
 #. module: project
 #. odoo-javascript
@@ -1686,8 +1686,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
-"Currently available to everyone viewing this document, click to restrict to "
-"internal employees."
+"Hiện tại tất cả mọi người có thể xem tài liệu này, nhấp để giới hạn chỉ cho "
+"nhân viên nội bộ."
 
 #. module: project
 #. odoo-javascript
@@ -1696,8 +1696,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
-"Currently restricted to internal employees, click to make it available to "
-"everyone viewing this document."
+"Hiện tại được giới hạn chỉ cho nhân viên nội bộ, nhấp để hiển thị tài liệu "
+"này cho tất cả mọi người."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
@@ -2064,7 +2064,7 @@ msgstr "Chỉnh sửa"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "Chỉnh sửa với quyền truy cập hạn chế"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2072,6 +2072,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"Chỉnh sửa với quyền truy cập hạn chế: cộng tác viên có thể xem và chỉnh sửa "
+"các nhiệm vụ mà họ theo dõi trong chế độ xem Kanban."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2079,6 +2081,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Chỉnh sửa: cộng tác viên có thể xem và chỉnh sửa tất cả nhiệm vụ trong chế "
+"độ xem Kanban. Ngoài ra, họ có thể chọn nhiệm vụ mà họ muốn theo dõi."
 
 #. module: project
 #. odoo-javascript
@@ -2213,7 +2217,7 @@ msgstr "Thu gọn trong kanban"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "Theo dõi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2272,7 +2276,7 @@ msgstr "Tần suất"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr ""
+msgstr "Tương lai"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2304,7 +2308,7 @@ msgstr "Đặt <b>tên</b> cho nhiệm vụ phụ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid "Grant Portal Access"
-msgstr "Grant Portal Access"
+msgstr "Cấp quyền truy cập cổng thông tin"
 
 #. module: project
 #. odoo-python
@@ -3321,7 +3325,7 @@ msgstr "Mỗi tháng một lần"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
+msgstr "Chỉ cho phép dùng hình ảnh jpeg, png, bmp và tiff làm tệp đính kèm."
 
 #. module: project
 #. odoo-javascript
@@ -3701,12 +3705,12 @@ msgstr "Chia sẻ dự án"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Project Sharing Collaborator Wizard"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr "Project Sharing Recurrence"
+msgstr "Thời gian định kỳ chia sẻ dự án"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3782,7 +3786,7 @@ msgstr "Mô tả dự án..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Dự án được chia sẻ với cộng tác viên của bạn."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3865,25 +3869,25 @@ msgstr "Thuộc tính"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "Liên kết công cộng"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Published"
-msgstr "Đã công bố"
+msgstr "Đã đăng"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 msgid "Published on"
-msgstr "Published on"
+msgstr "Đã đăng vào"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Publishing"
-msgstr "Xuất bản"
+msgstr "Đang đăng"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -3985,6 +3989,7 @@ msgstr "Chỉ đọc"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
 msgstr ""
+"Chỉ đọc: cộng tác viên có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3993,6 +3998,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Chỉ đọc: cộng tác viên có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng.\n"
+"Chỉnh sửa với quyền truy cập hạn chế: cộng tác viên có thể xem và chỉnh sửa các nhiệm vụ mà họ theo dõi trong chế độ xem Kanban.\n"
+"Chỉnh sửa: cộng tác viên có thể xem và chỉnh sửa tất cả nhiệm vụ trong chế độ xem Kanban. Ngoài ra, họ có thể chọn nhiệm vụ mà họ muốn theo dõi."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4062,7 +4070,7 @@ msgstr "Mô hình tài liệu liên quan"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_chatter/project_follower_list.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "Gỡ cộng tác viên"
 
 #. module: project
 #. odoo-javascript
@@ -4176,14 +4184,14 @@ msgstr "Mặt buồn"
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "Lưu nhiệm vụ để có thể dán hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to drag images in Description"
-msgstr ""
+msgstr "Lưu nhiệm vụ để có thể kéo hình ảnh vào phần mô tả"
 
 #. module: project
 #. odoo-javascript
@@ -4253,7 +4261,7 @@ msgstr "Tìm kiếm trong trạng thái"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "Tìm kiếm%(left)s Nhiệm vụ%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4393,6 +4401,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Một số tài khoản phân tích đã chọn đang liên kết với một dự án:\n"
+"%(accountList)s\n"
+"\n"
+"Việc lưu trữ những tài khoản này sẽ loại bỏ tùy chọn ghi nhận bảng chấm công cho các dự án tương ứng của chúng.\n"
+"\n"
+"Bạn có chắc muốn tiếp tục không?"
 
 #. module: project
 #. odoo-javascript
@@ -4901,7 +4915,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "Tìm kiếm không hỗ trợ toán tử %(operator)s hoặc giá trị %(value)s."
 
 #. module: project
 #. odoo-python
@@ -4927,7 +4941,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "Mô tả nhiệm vụ trống vào thời điểm đó."
 
 #. module: project
 #. odoo-python
@@ -5007,6 +5021,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Tài khoản phân tích này đang liên kết với các dự án sau:\n"
+"%(projectList)s\n"
+"\n"
+"Việc lưu trữ tài khoản này sẽ loại bỏ tùy chọn ghi nhận bảng chấm công cho các dự án này.\n"
+"\n"
+"Bạn có chắc muốn tiếp tục không?"
 
 #. module: project
 #. odoo-javascript
@@ -5015,6 +5035,9 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Người theo dõi này hiện đang là cộng tác viên của dự án. Việc gỡ họ sẽ thu "
+"hồi quyền truy cập cổng thông tin của họ vào dự án. Bạn có chắc chắn muốn "
+"tiếp tục không?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5301,7 +5324,7 @@ msgstr "Chưa phân công"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "Ngừng theo dõi"
 
 #. module: project
 #. odoo-python

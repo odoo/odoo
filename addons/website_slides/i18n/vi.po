@@ -731,6 +731,9 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
+"<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -738,6 +741,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success pull-right\"><i class=\"fa "
 "fa-check\"/> Completed</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success pull-right\"><i class=\"fa "
+"fa-check\"/> Đã hoàn thành</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -745,6 +750,8 @@ msgid ""
 "<span class=\"badge text-bg-info badge-arrow-right fw-normal "
 "m-1\">New</span>"
 msgstr ""
+"<span class=\"badge text-bg-info badge-arrow-right fw-normal "
+"m-1\">Mới</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -752,6 +759,8 @@ msgid ""
 "<span class=\"badge text-bg-light badge-hide border fw-normal m-1\">Add "
 "Quiz</span>"
 msgstr ""
+"<span class=\"badge text-bg-light badge-hide border fw-normal m-1\">Thêm bài"
+" kiểm tra</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -759,11 +768,13 @@ msgid ""
 "<span class=\"badge text-bg-success fw-normal "
 "m-1\"><span>Preview</span></span>"
 msgstr ""
+"<span class=\"badge text-bg-success fw-normal m-1\"><span>Xem "
+"trước</span></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"badge text-bg-success fw-normal m-1\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-success fw-normal m-1\">Xem trước</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -4583,6 +4594,9 @@ msgid ""
 "href=\"/web/signup?redirect=%(url)s\">create an account</a> to vote for this"
 " lesson"
 msgstr ""
+"Vui lòng <a href=\"/web/login?redirect=%(url)s\">đăng nhập</a> hoặc <a "
+"href=\"/web/signup?redirect=%(url)s\">tạo một tài khoản</a> để bình chọn bài"
+" học này"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4591,6 +4605,8 @@ msgid ""
 "Please <a href=\"/web/login?redirect=%(url)s\">login</a> to vote for this "
 "lesson"
 msgstr ""
+"Vui lòng <a href=\"/web/login?redirect=%(url)s\">đăng nhập</a> để bình chọn "
+"bài học này"
 
 #. module: website_slides
 #. odoo-python
@@ -4987,7 +5003,7 @@ msgstr "Có trách nhiệm đã được liên hệ."
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Giới hạn cho trang web nhất định"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5362,7 +5378,7 @@ msgstr "Chia sẻ lên Whatsapp"
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on X"
-msgstr ""
+msgstr "Chia sẻ trên X"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6196,7 +6212,7 @@ msgstr "Sử dụng Nhóm khóa học để phân loại và sắp xếp các kh
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Use template"
-msgstr ""
+msgstr "Sử dụng mẫu"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -6824,7 +6840,7 @@ msgstr "một khoá học"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr "lưu trữ"
+msgstr "đã đạt được"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -6927,7 +6943,7 @@ msgstr "VD: \"Loài động vật nào không thể bay?\""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "e.g. \"{{placeholder || \"another animal\"}}\""
-msgstr ""
+msgstr "VD: \"{{phần giữ chỗ || \"loài động vật khác\"}}\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add

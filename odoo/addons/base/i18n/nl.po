@@ -3,8 +3,10 @@
 # 	* base
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-15 14:12+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9052,6 +9054,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Dit is de module om grootboekrekeningen in Odoo te beheren voor Frankrijk.\n"
+"========================================================================\n"
+"\n"
+"Deze module is van toepassing voor bedrijven die zich bevinden op het Franse vasteland. Het is niet van toepassing voor\n"
+"bedrijven die geabseerd zijn in de DOM-TOMs (Guadeloupe, Martinique, Frans-Guyana, Réunion, Mayotte).\n"
+"\n"
+"Deze lokalisatiemodule maakt de BTW van het type 'BTW inbegrepen' aan voor inkopen\n"
+"(vereist wanneer je de module 'hr_expense' gebruikt). Het type\n"
+"'BTW inbegrepen', wordt niet beheerd door de fiscale posities aangeboden door deze\n"
+"module (te complex om beide scenario's 'Exclusief BTW' en 'Inclusief BTW'\n"
+"te beheren in de fiscale posities).\n"
+"\n"
+"Deze lokalisatiemodule gaat niet goed om met het scenario waarbij een bedrijf van het\n"
+"Franse vasteland diensten verkoopt aan een land gebaseerd in de DOMS. We zouden het kunnen beheren in de\n"
+"fiscale posities, maar het zou vereisen om een onderscheid te maken tussen BTW voor 'producten'\n"
+"en 'Diensten'. Dit is te 'zwaar' om standaard in te stellen\n"
+"in l10n_fr_account; bedrijven die diensten verkopen aan DOM gebaseerde bedrijven moeten de configuratie\n"
+"van hun BTW en fiscale posities handmatig updaten.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion en Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -10596,20 +10619,13 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_tr
 msgid ""
 "\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"Turkish charts of accounts\n"
+"========================================\n"
+"    * Defines the default chart of accounts\n"
+"    * Defines the default taxes\n"
+"    * Defines default tax report\n"
+"This was done in collaboration with Broadmax Partner in Turkey."
 msgstr ""
-"\n"
-"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -14153,6 +14169,7 @@ msgstr ""
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "All our contractual relations will be governed exclusively by  law."
 msgstr ""
+"Op al onze contractuele relaties is uitsluitend de wet van toepassing."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -16316,6 +16333,13 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in"
 " which the client is located."
 msgstr ""
+"Bepaalde landen passen in overeenstemming met hun interne wetgeving "
+"bronheffing toe op het bedrag van de facturen. Eventuele inhouding aan de "
+"bron wordt door de opdrachtgever aan de Belastingdienst betaald. Mijn "
+"Bedrijf kan in geen geval betrokken raken bij kosten die verband houden met "
+"de wetgeving van een land. Het bedrag van de factuur is dan ook integraal "
+"verschuldigd aan My Company en is exclusief eventuele kosten die verband "
+"houden met de wetgeving van het land waarin de opdrachtgever is gevestigd."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -16631,7 +16655,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "CodaBox-integratie om je CODA en SODA-bestanden op te halen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -20814,7 +20838,7 @@ msgstr "Frankrijk - Factur-X integratie met Chorus Pro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Localizations"
-msgstr ""
+msgstr "Frankrijk - lokalisaties"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll_account
@@ -22199,6 +22223,10 @@ msgid ""
 "payment date, My Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Indien een betaling meer dan zestig (60) dagen na de vervaldag nog "
+"openstaat, behoudt My Company zich het recht voor om een beroep te doen op "
+"een incassobureau. Alle juridische kosten zijn voor rekening van de "
+"opdrachtgever."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -22604,6 +22632,10 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Om ontvankelijk te zijn, moet My Company binnen de 8 dagen na de levering "
+"van de goederen of de levering van de diensten op de hoogte worden gebracht "
+"van elke claim door middel van een aangetekend schrijven naar haar "
+"maatschappelijke zetel."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -23185,7 +23217,7 @@ msgstr "Foutieve sleutel: Qweb weergave moet een sleutel bevatten"
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/models.py:0
 msgid "Invalid language code: %s"
-msgstr ""
+msgstr "Ongeldige taalcode: %s"
 
 #. module: base
 #. odoo-python
@@ -25373,6 +25405,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Minimaal aantal rekeningen om in Peru te kunnen werken.\n"
+"=================================================\n"
+"\n"
+"Het gebruik van dit grootboekschema moet verwijzen naar de officiële documentatie over MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Alle juridische verwijzingen zijn hier te vinden.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Overwegingen.\n"
+"===============\n"
+"\n"
+"Grootboekschema:\n"
+"-----------------\n"
+"\n"
+"De structuur van het grootboekschema wordt gedaan met behulp van rekeninggroepen, alle rekeningen met verplaatsing\n"
+"zijn beschikbaar als groepen, maar alleen de meest voorkomende zijn beschikbaar als werkelijke\n"
+"rekeningen, als je een nieuwe wilt maken, gebruik je de rekeninggroep als\n"
+"referentie.\n"
+"\n"
+"# TODO: Afbeelding die laat zien waar ik het over heb.\n"
+"\n"
+"Belastingen:\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTHERS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"We hebben op deze module 3 concepten in belastingen toegevoegd (noodzakelijk voor de EDI\n"
+"handtekening)\n"
+"\n"
+"# TODO: Beschrijving nieuwe velden.\n"
+"\n"
+"Producten:\n"
+"---------\n"
+"\n"
+"Code voor producten die in de EDI moeten worden gebruikt, zijn hier beschikbaar om te beslissen\n"
+"welke belastingen moeten worden gebruikt vanwege welke code na deze referentie en python-code:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25849,6 +25949,12 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"My Company verbindt zich ertoe haar best te doen om tijdige, conform de "
+"overeengekomen termijnen, performante diensten te leveren. Geen van haar "
+"verplichtingen kan echter worden beschouwd als een resultaatsverplichting. "
+"My Company kan in geen geval door de klant worden verplicht om als derde "
+"partij op te treden in het kader van een vordering tot schadevergoeding die "
+"door een eindconsument tegen de klant wordt ingediend."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -29002,6 +29108,12 @@ msgid ""
 " will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Onze facturen zijn betaalbaar binnen 21 werkdagen, tenzij op de factuur of "
+"de bestelling een andere betalingstermijn is vermeld. Bij niet-betaling op "
+"de vervaldag behoudt My Company zich het recht voor om een forfaitaire "
+"rentebetaling te vragen ten bedrage van 10% van het resterende bedrag. My "
+"Company heeft het recht om elke levering van diensten zonder voorafgaande "
+"waarschuwing op te schorten in geval van niet-tijdige betaling."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -36516,7 +36628,7 @@ msgstr "Verenigde Staten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Localizations"
-msgstr ""
+msgstr "Verenigde Staten - Lokalisaties"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll
