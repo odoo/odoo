@@ -57,7 +57,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Điều chuyển %s: Bạn không thể xác nhận các điều chuyển này nếu không có số lượng được dự trữ cũng như số lượng đã hoàn tất. Để bắt buộc điều chuyển này, hãy chuyển sang chỉnh sửa thêm và mã hoá số lượng đã thực hiện."
+"Điều chuyển %s: Bạn không thể xác nhận các điều chuyển này nếu không có số lượng được dự trữ cũng như số lượng đã hoàn tất. Để bắt buộc điều chuyển này, hãy chuyển sang chỉnh sửa thêm và nhập số lượng đã hoàn tất."
 
 #. module: stock
 #. odoo-python
@@ -2899,14 +2899,14 @@ msgstr "(Các) ngoại lệ:"
 #, python-format
 msgid ""
 "Existing Serial Numbers (%s). Please correct the serial numbers encoded."
-msgstr "Số sê-ri hiện có (%s). Vui lòng sửa các số sê-ri đã mã hoá."
+msgstr "Số sê-ri hiện có (%s). Vui lòng sửa các số sê-ri đã nhập."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Existing Serial numbers. Please correct the serial numbers encoded:"
-msgstr "Số sê-ri đã tồn tại. Vui lòng sửa các số sê-ri được mã hóa:"
+msgstr "Số sê-ri đã tồn tại. Vui lòng sửa các số sê-ri đã nhập:"
 
 #. module: stock
 #. odoo-javascript
@@ -7488,8 +7488,8 @@ msgid ""
 "Serial number (%s) already exists in location(s): %s. Please correct the "
 "serial number encoded."
 msgstr ""
-"Số sê-ri (%s) đã tồn tại trong (các) vị trí: %s. Vui lòng sửa số sê-ri được "
-"mã hoá."
+"Số sê-ri (%s) đã tồn tại trong (các) vị trí: %s. Vui lòng sửa số sê-ri đã "
+"nhập."
 
 #. module: stock
 #. odoo-python
@@ -9870,6 +9870,14 @@ msgstr "Bạn không thể thay đổi loại sản phẩm đã được sử d�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9906,6 +9914,15 @@ msgstr "Bạn chỉ có thể nhập số lượng lớn hơn 0."
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Bạn chỉ có thể xử lý 1.0 %s sản phẩm với số sê-ri duy nhất."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9953,8 +9970,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
-"Bạn không thể thay đổi Ngày theo kế hoạch trong phiếu dịch chuyển đã hoàn "
-"tất hoặc bị hủy."
+"Bạn không thể thay đổi Ngày theo kế hoạch trong một điều chuyển đã hoàn tất "
+"hoặc bị hủy."
 
 #. module: stock
 #. odoo-python
@@ -10127,8 +10144,7 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
-"Bạn không thể dùng cùng một số sê-ri hai lần. Vui lòng sửa số sê-ri được mã "
-"hóa."
+"Bạn không thể dùng cùng một số sê-ri hai lần. Vui lòng sửa số sê-ri đã nhập."
 
 #. module: stock
 #. odoo-python
@@ -10140,7 +10156,7 @@ msgid ""
 msgstr ""
 "Bạn không thể xác nhận một điều chuyển nếu không có số lượng được dự trữ "
 "cũng như không được hoàn tất. Để bắt buộc điều chuyển, hãy bật chế độ chỉnh "
-"sửa và mã hoá số lượng đã hoàn tất."
+"sửa và nhập số lượng đã hoàn tất."
 
 #. module: stock
 #. odoo-python

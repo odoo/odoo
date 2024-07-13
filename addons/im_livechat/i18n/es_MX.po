@@ -3,9 +3,9 @@
 # 	* im_livechat
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Wil Odoo, 2023
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -724,7 +724,7 @@ msgstr "Canal de conversaciones"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__display_name
 msgid "Display Name"
-msgstr "Nombre en pantalla"
+msgstr "Mostrar nombre"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
@@ -802,8 +802,9 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Dada la orden de encontrar una regla que coincida. Si 2 reglas coinciden "
-"para el país o URL dado, se elegirá la regla con la menor secuencia."
+"En caso de que haya una orden para encontrar una regla que coincida. Si 2 "
+"reglas coinciden para el país o la URL, se elegirá la regla con la secuencia"
+" más baja."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1710,7 +1711,7 @@ msgstr "Texto que invita al usuario a iniciar el chat."
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Thank you for your feedback"
-msgstr "Gracias por su retroalimentación"
+msgstr "Gracias por sus comentarios"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1962,6 +1963,11 @@ msgstr ""
 #, python-format
 msgid "Yesterday"
 msgstr "Ayer"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Usted"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
