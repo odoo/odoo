@@ -11,9 +11,9 @@
 # Jiří Podhorecký, 2024
 # Stanislav Kurinec, 2024
 # Jakub Smolka, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Katerina Horylova, 2024
 # Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,6 +533,8 @@ msgstr ""
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
 msgstr ""
+"<b>Byla uplatněna sleva za předčasnou platbu ve výši "
+"%(payment_reference).</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8010,6 +8012,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Neplatný \"Rozsah PSČ\", Musíte nakonfigurovat hodnoty \"Od\" i \"Do\" pro "
+"rozsah PSČ a \"Do\" by mělo být větší než \"Od\"."
 
 #. module: account
 #. odoo-python
@@ -16773,7 +16777,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "Nemůžete registrovat platby za příchozí i odchozí přesuny současně."
 
 #. module: account
 #. odoo-python
@@ -16892,7 +16896,7 @@ msgstr "Nemůžete smazat položku daně, neboť by to ovlivnilo daňový výkaz
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
+msgstr "Tento štítek účtu nelze smazat (%s), používá se v definici účtu."
 
 #. module: account
 #. odoo-python
@@ -17009,6 +17013,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Nemůžete importovat \"opening_balance\", pokud je úvodní záznam (%s) již "
+"zaúčtován.                 Pokud jste si naprosto jisti, že chcete upravit "
+"počáteční zůstatek svých účtů, resetujte záznam na návrh."
 
 #. module: account
 #. odoo-python
