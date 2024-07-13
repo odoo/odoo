@@ -3,11 +3,11 @@
 # 	* account_peppol
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # 湘子 南 <1360857908@qq.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -255,7 +255,7 @@ msgstr "联系方式已更新。"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and mobile number are required."
-msgstr ""
+msgstr "需要提供联系电子邮件和手机号码。"
 
 #. module: account_peppol
 #. odoo-python
@@ -536,13 +536,13 @@ msgstr "Peppol 状态更新：%s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Mobile Number"
-msgstr "移动电话号码"
+msgstr "移动号码"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Mobile number (for validation)"
-msgstr ""
+msgstr "移动号码（供验证）"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -556,7 +556,7 @@ msgstr "如果您需要进一步帮助，请随时联系我们的支持人员。
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a mobile number to verify your application."
-msgstr ""
+msgstr "请输入手机号码，以验证您的申请。"
 
 #. module: account_peppol
 #. odoo-python
@@ -574,6 +574,9 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"请以正确的国际格式输入手机号码。\n"
+"例如：+32123456789，其中 +32 是国家/地区代码。\n"
+"目前仅支持欧洲国家。"
 
 #. module: account_peppol
 #. odoo-python
@@ -895,7 +898,7 @@ msgstr "验证合作伙伴的 Peppol 终端点"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Verify mobile number"
-msgstr ""
+msgstr "验证移动号码"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -921,7 +924,7 @@ msgstr "你将无法再在 Odoo 中发送或接收 Peppol 文件。 确定要继
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "您将收到该手机号码的验证码"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
