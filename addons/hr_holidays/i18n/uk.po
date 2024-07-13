@@ -98,6 +98,18 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid "%(name)s (%(duration)s day(s))"
+msgstr "%(name)s (%(duration)s день(і))"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid "%(name)s (%(duration)s hour(s))"
+msgstr "%(name)s (%(duration)s година(и))"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr ""
@@ -138,12 +150,6 @@ msgstr "%s (від %s до %s)"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%s (from %s to No Limit)"
 msgstr "%s (від %s до необмеженості)"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "%s allocation request (%s %s)"
-msgstr "%s запит на розподіл (%s %s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1087,6 +1093,8 @@ msgid "Approve Allocations"
 msgstr "Затвердити розподіл"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate
@@ -1483,9 +1491,17 @@ msgid "Confirmation"
 msgstr "Підтвердження"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
 msgid "Confirmed"
 msgstr "Підтверджено"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
+msgid "Confirmed and Approved"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4434,7 +4450,6 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
-#, python-format
 msgid ""
 "You cannot have a cap on accrued time without setting a maximum amount."
 msgstr ""

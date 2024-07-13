@@ -20,6 +20,8 @@
 # Maria Muntean, 2024
 # Alin Miclea, 2024
 # Larisa_nexterp, 2024
+# Betty Keresztesi, 2024
+# Corina Calin, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-27 13:28+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Larisa_nexterp, 2024\n"
+"Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10831,7 +10833,7 @@ msgstr "Automatizare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automation Rules"
-msgstr ""
+msgstr "Regulă de automatizare"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
@@ -19057,6 +19059,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Nume server invalid!\n"
+" %s"
 
 #. module: base
 #. odoo-python
@@ -28937,7 +28941,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Technical Settings"
-msgstr ""
+msgstr "Setări tehnice"
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -30680,7 +30684,7 @@ msgstr "Pentru a returna o acțiune, atribuiți: <code>action = {...}</code>"
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr ""
+msgstr "De făcut"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -30989,6 +30993,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Tipul de acțiune a serverului. Sunt disponibile următoarele valori:\n"
+"- \"Update a Record\": actualizează valorile unei înregistrări\n"
+"- \"Create Activity\": crearea unei activități (discuție)\n"
+"- 'Send Email': postarea unui mesaj, a unei note sau trimiterea unui e-mail (Discuție)\n"
+"- 'Send SMS': trimiteți SMS-uri, înregistrați-le pe documente (SMS)- 'Add/Remove Followers': adăugați sau eliminați adepți la o înregistrare (Discuții)\n"
+"- \"Create Record\": creați o nouă înregistrare cu noi valori\n"
+"- \"Execute Code\": un bloc de cod Python care va fi executat\n"
+"- \"Send Webhook Notification\": trimiteți o cerere POST către un sistem extern, cunoscută și sub denumirea de Webhook\n"
+"- \"Execute Existing Actions\": definește o acțiune care declanșează mai multe alte acțiuni ale serverului\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type

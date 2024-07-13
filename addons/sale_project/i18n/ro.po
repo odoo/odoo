@@ -48,13 +48,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)sElementele comenzii de vânzare"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)sComenzile de vânzare ale"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -95,6 +95,12 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Comanda de vânzare\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Faceți facturabil\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -103,6 +109,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Comenzi de vânzări\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -114,7 +123,7 @@ msgstr "<span class=\"o_stat_text\">Comandă de vânzare</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -135,7 +144,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "În funcție de cantitatea livrată (manual)"
 
 #. module: sale_project
 #. odoo-python
@@ -164,13 +173,13 @@ msgstr "Setări de configurare"
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Creați un proiect"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Creare la comandă"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -199,12 +208,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Afișare comandă de vânzare"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__display_sales_stat_buttons
 msgid "Display Sales Stat Buttons"
-msgstr ""
+msgstr "Afișați butoanele statistice de vânzări"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -246,12 +255,12 @@ msgstr "Sarcini Generate"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Are comandă de vânzare de facturat"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr ""
+msgstr "Are o comandă de vânzare cu un status al facturii Nu"
 
 #. module: sale_project
 #. odoo-python
@@ -269,6 +278,7 @@ msgstr "Numărul facturilor"
 #: code:addons/sale_project/models/product.py:0
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr ""
+"Facturați cantitățile comandate de îndată ce acest serviciu este vândut."
 
 #. module: sale_project
 #. odoo-python
@@ -278,6 +288,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"Facturați cantitățile comandate de îndată ce acest serviciu este vândut. "
+"Creați un proiect pentru comandă cu o sarcină pentru fiecare linie a "
+"comenzii de vânzare pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -286,6 +299,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"Facturați cantitățile comandate de îndată ce acest serviciu este vândut. "
+"Creați o sarcină într-un proiect existent pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -294,6 +309,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Facturați cantitățile comandate de îndată ce acest serviciu este vândut. "
+"Creați un proiect gol pentru comandă pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -302,6 +319,8 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
 msgstr ""
+"Facturați acest serviciu atunci când este livrat (stabiliți manual "
+"cantitatea pe liniile comenzii de vânzare). "
 
 #. module: sale_project
 #. odoo-python
@@ -311,6 +330,10 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Facturați acest serviciu atunci când este livrat (stabiliți manual "
+"cantitatea pe liniile comenzii de vânzare). Creați un proiect pentru comandă"
+" cu o sarcină pentru fiecare linie a comenzii de vânzare pentru a urmări "
+"timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -320,6 +343,9 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Facturați acest serviciu atunci când este livrat (stabiliți manual "
+"cantitatea pe liniile comenzii de vânzare). Creați o sarcină într-un proiect"
+" existent pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -329,12 +355,15 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
+"Facturați acest serviciu atunci când este livrat (stabiliți manual "
+"cantitatea pe liniile comenzii de vânzare). Creați un proiect gol pentru "
+"comandă pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Facturați etapele importante atunci când acestea sunt atinse."
 
 #. module: sale_project
 #. odoo-python
@@ -343,6 +372,9 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
+"Facturați etapele importante atunci când acestea sunt atinse. Creați un "
+"proiect pentru comandă cu o sarcină pentru fiecare linie a comenzii de "
+"vânzare pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -351,6 +383,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Facturați etapele importante atunci când acestea sunt atinse. Creați o "
+"sarcină într-un proiect existent pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -359,6 +393,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
+"Facturați etapele importante atunci când acestea sunt atinse. Creați un "
+"proiect gol pentru comandă pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -387,7 +423,7 @@ msgstr "Politică de facturare"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr ""
+msgstr "Este etapa de referință a produsului"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
@@ -426,7 +462,7 @@ msgstr "Metoda de actualizare a cantității livrate"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Numărătoarea etapelor"
 
 #. module: sale_project
 #. odoo-python
@@ -434,13 +470,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Milestones"
-msgstr ""
+msgstr "Etape importante"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Element nou pentru comanda de vânzări"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -452,7 +488,7 @@ msgstr "Nefacturabil"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Nefacturat"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -462,7 +498,7 @@ msgstr "Nimic"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Număr de proiecte"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
@@ -476,6 +512,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"La confirmarea comenzii de vânzare, acest produs poate genera un proiect și/sau o sarcină. Din acestea, puteți urmări serviciul pe care îl vindeți.\n"
+"\"În proiectul comenzii de vânzare\": Va utiliza proiectul configurat al comenzii de vânzare, dacă este definit, sau va reveni la crearea unui proiect nou pe baza modelului selectat."
 
 #. module: sale_project
 #. odoo-python
@@ -500,6 +538,8 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"Procentul din cantitatea comandată care va fi livrat automat odată cu "
+"atingerea etapei."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
@@ -534,17 +574,17 @@ msgstr "Proiect"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Proiect și sarcină"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Etapa de referință a proiectului"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Etapele de referință ale proiectului"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -579,7 +619,7 @@ msgstr "Cantitate"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Cantitate (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -589,12 +629,12 @@ msgstr "Linia șablonului de ofertare"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "Etape importante atinse"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_display_name
 msgid "Sale Line Display Name"
-msgstr ""
+msgstr "Nume afișare linie de vânzare"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
@@ -604,7 +644,7 @@ msgstr "Numărul comenzilor de vânzare"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
 msgid "Sale Order Line Count"
-msgstr ""
+msgstr "Numărul de linii de comandă de vânzare"
 
 #. module: sale_project
 #. odoo-javascript
@@ -615,7 +655,7 @@ msgstr "Vânzări"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Vânzări & facturare"
 
 #. module: sale_project
 #. odoo-python
@@ -646,6 +686,8 @@ msgstr "Poziție comandă de vânzare"
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"Articolul comenzii de vânzări care va fi actualizat odată cu atingerea "
+"etapei."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -654,6 +696,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Articolul comenzii de vânzare la care va fi adăugat timpul petrecut cu această sarcină pentru a fi facturat clientului dvs.\n"
+"În mod implicit, se va selecta articolul de comandă de vânzare stabilit pentru proiect. În absența unuia, se va utiliza ultimul articol de comanda de vânzare preplătit care are timp rămas.\n"
+"Eliminați articolul de comandă de vânzare pentru ca această sarcină să nu fie facturabilă. De asemenea, puteți să modificați sau să eliminați articolul comenzii de vânzare pentru fiecare intrare din foaia de pontaj în parte."
 
 #. module: sale_project
 #. odoo-javascript
@@ -681,6 +726,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Articolul comenzii de vânzare care va fi selectat în mod implicit pe sarcinile și fișele de pontaj ale acestui proiect, cu excepția cazului în care angajatul stabilit pe fișele de pontaj este legat în mod explicit de un alt articol al comenzii de vânzare din cadrul proiectului.\n"
+"Dacă este necesar, acesta poate fi modificat individual pentru fiecare sarcină și fișă de pontaj."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -719,7 +766,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Selectați cui să facturați..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -730,17 +777,17 @@ msgstr "Politică de facturare servicii"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_create_project_button
 msgid "Show Create Project Button"
-msgstr ""
+msgstr "Afișați butonul Creare Proiect"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_project_button
 msgid "Show Project Button"
-msgstr ""
+msgstr "Afișați butonul Proiect"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_task_button
 msgid "Show Task Button"
-msgstr ""
+msgstr "Afișați butonul Sarcină"
 
 #. module: sale_project
 #. odoo-javascript
@@ -764,7 +811,7 @@ msgstr "Sarcină"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "Sarcină creată (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -831,12 +878,14 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
+"Această comandă de vânzare trebuie să conțină cel puțin un produs de tip "
+"\"Serviciu\"."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %s (%s)"
-msgstr ""
+msgstr "Această sarcină a fost creată din: %s (%s)"
 
 #. module: sale_project
 #. odoo-python
@@ -859,7 +908,7 @@ msgstr "Serviciu de urmărire"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Track what you sold, delivered, and invoiced."
-msgstr ""
+msgstr "Urmăriți ce ați vândut, livrat și facturat."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom
@@ -881,7 +930,7 @@ msgstr "Facturi furnizor"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Vizualizați comanda de vânzare"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
@@ -900,3 +949,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Nu puteți lega elementul de comandă %(order_id)s - %(product_id)s la această"
+" sarcină deoarece este o cheltuială refacturată."

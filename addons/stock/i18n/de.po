@@ -4667,7 +4667,7 @@ msgstr "Vorlaufzeiten"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr "Kleinste Pakete"
+msgstr "Wenige Pakete"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -10657,6 +10657,19 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Sie können keinen Ausschuss löschen, der erledigt ist."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Sie können über diese Ansicht nicht direkt Mengen aus unterschiedlichen "
+"Transfers im selben Paket verpacken. Fügen Sie sie zu einer "
+"Stapelkommissionierung hinzu und verpacken Sie sie dort."
 
 #. module: stock
 #. odoo-python

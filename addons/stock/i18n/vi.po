@@ -5353,6 +5353,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "Không tìm thấy hoạt động nào. Hãy tạo một điều chuyển!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr "Không tìm thấy sản phẩm nào để tạo Số sê-ri/lô."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "Không tìm thấy sản phẩm. Hãy tạo một sản phẩm mới!"
@@ -10523,6 +10529,16 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Bạn không thể xoá một phế phẩm đã hoàn tất."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python
