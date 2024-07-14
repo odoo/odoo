@@ -2670,6 +2670,8 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             const inputValueAsNumber = Number(inputValue);
             const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
             this.outputEl.value = `${ratio.toFixed(2)}x`;
+        } else if (this.el.dataset.displayRangeValueUnit) {
+            this.outputEl.value = inputValue + this.el.dataset.displayRangeValueUnit;
         } else {
             this.outputEl.value = inputValue;
         }
