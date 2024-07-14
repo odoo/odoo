@@ -2466,7 +2466,7 @@ msgstr "Bán hàng cơ bản & amp; tiếp thị cho tối đa 2 người dùng"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Beautiful snippets"
-msgstr "Beautiful snippets"
+msgstr "Snippet đẹp mắt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2579,7 +2579,7 @@ msgstr "Sách"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Bootstrap-based templates"
-msgstr "Bootstrap-based templates"
+msgstr "Mẫu dựa trên Bootstrap"
 
 #. module: website
 #. odoo-javascript
@@ -2598,7 +2598,7 @@ msgstr "Viền dưới"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 msgid "Border Color"
-msgstr "Border Color"
+msgstr "Màu viền"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2609,7 +2609,7 @@ msgstr "Bán kính viền"
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Border Width"
-msgstr "Border Width"
+msgstr "Độ rộng viền"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -8313,6 +8313,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Chỉ áp dụng nếu chế độ xem này kế thừa từ chế độ xem khác (inherit_id không phải là Sai/Không có).\n"
+"\n"
+"* Nếu yêu cầu mở rộng (mặc định), thì chế độ xem chính\n"
+"gần nhất sẽ được tìm kiếm (thông qua inherit_id), sau đó tất cả các chế độ xem kế thừa từ\n"
+"nó sẽ được áp dụng với mô hình của chế độ xem này.\n"
+"* nếu là chính, thì chế độ xem chính gần nhất được giải quyết hoàn toàn (ngay cả khi nó sử dụng \n"
+"một mô hình khác với chế độ xem này), sau đó thông số kế thừa của chế độ xem\n"
+"(<xpath/>) này sẽ được áp dụng và kết quả được sử dụng như arch thực của \n"
+"chế độ xem này.\n"
 
 #. module: website
 #. odoo-javascript
@@ -8936,7 +8945,7 @@ msgstr "Vị trí"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Post heading"
-msgstr "Post heading"
+msgstr "Heading của bài viết"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11246,6 +11255,8 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Trường này nên được sử dụng khi truy cập vào arch chế độ xem. Bản dịch sẽ được sử dụng.\n"
+"                              Lưu ý rằng nó sẽ đọc `arch_db` hoặc `arch_fs` nếu ở chế độ dev-xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch_db

@@ -13210,7 +13210,7 @@ msgstr "Truy cập"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr "Kiểm soát Truy cấp"
+msgstr "Kiểm soát truy cập"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -28565,15 +28565,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
+"Chỉ áp dụng nếu chế độ xem này kế thừa từ chế độ xem khác (inherit_id không phải là Sai/Không có).\n"
 "\n"
-"* if extension (default), if this view is requested the closest primary view\n"
-"is looked up (via inherit_id), then all views inheriting from it with this\n"
-"view's model are applied\n"
-"* if primary, the closest primary view is fully resolved (even if it uses a\n"
-"different model than this one), then this view's inheritance specs\n"
-"(<xpath/>) are applied, and the result is used as if it were this view's\n"
-"actual arch.\n"
+"* Nếu yêu cầu mở rộng (mặc định), thì chế độ xem chính\n"
+"gần nhất sẽ được tìm kiếm (thông qua inherit_id), sau đó tất cả các chế độ xem kế thừa từ\n"
+"nó sẽ được áp dụng với mô hình của chế độ xem này.\n"
+"* nếu là chính, thì chế độ xem chính gần nhất được giải quyết hoàn toàn (ngay cả khi nó sử dụng \n"
+"một mô hình khác với chế độ xem này), sau đó thông số kế thừa của chế độ xem\n"
+"(<xpath/>) này sẽ được áp dụng và kết quả được sử dụng như arch thực của \n"
+"chế độ xem này.\n"
 
 #. module: base
 #. odoo-python
@@ -30911,7 +30911,7 @@ msgstr "Bước kiểm soát chất lượng qua IoT"
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_worksheet
 #: model:ir.module.module,summary:base.module_quality_mrp_workorder_worksheet
 msgid "Quality Worksheet for Workorder"
-msgstr "Bảng chất lượng cho Workorder"
+msgstr "Bảng công tác chất lượng cho Công đoạn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_iot
@@ -35033,8 +35033,8 @@ msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
 msgstr ""
-"The path to the main report file (depending on Report Type) or empty if the "
-"content is in another field"
+"Đường dẫn đến tệp báo cáo chính (tùy thuộc vào Loại báo cáo) hoặc để trống "
+"nếu nội dung nằm trong trường khác"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -35363,8 +35363,8 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
-"This field should be used when accessing view arch. It will use translation.\n"
-"                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
+"Trường này nên được sử dụng khi truy cập vào arch chế độ xem. Bản dịch sẽ được sử dụng.\n"
+"                              Lưu ý rằng nó sẽ đọc `arch_db` hoặc `arch_fs` nếu ở chế độ dev-xml."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
@@ -36941,7 +36941,7 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
-"Sử dụng nguồn nhân lực cho quá trình gamification.\n"
+"Sử dụng nguồn nhân lực cho quá trình trò chơi hoá.\n"
 "\n"
 "Nhân viên nhân sự hiện có thể quản lý các thách thức và phù hiệu.\n"
 "Điều này cho phép người dùng gửi huy hiệu cho nhân viên thay vì người dùng đơn giản.\n"
@@ -38611,7 +38611,7 @@ msgstr "boolean"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr "bpost Shipping"
+msgstr "Vận chuyển bpost"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
@@ -38753,7 +38753,7 @@ msgstr "VD: Địa chỉ mới"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr "e.g. Sales Director"
+msgstr "VD: Giám đốc sales"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form

@@ -5561,7 +5561,7 @@ msgstr "لم يتم العثور على أي عمليات. فلنقم بإنشا
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "لم يتم العثور على منتج لإنشاء أرقام تسلسلية/أرقام مجموعات من أجله. "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -10832,6 +10832,16 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "لا يمكنك حذف عملية تحويل إلى مخلفات تصنيع منتهية بالفعل. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

@@ -3,8 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -499,11 +500,13 @@ msgstr ""
 msgid ""
 "<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
 msgstr ""
+"<b>Een vroegtijdige betalingskorting van %(payment_reference) is "
+"toegepast.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/> op deze rekening"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1204,7 +1207,7 @@ msgstr "<span>Overzicht</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Waarschuwing: dit document kan een duplicaat zijn van</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2214,7 +2217,7 @@ msgstr "Voeg je algemene voorwaarden toe onderaan facturen/orders/offertes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2574,6 +2577,8 @@ msgid ""
 "An error occurred when computing the inalterability. A gap has been detected"
 " in the sequence."
 msgstr ""
+"Er is een fout opgetreden bij het berekenen van de onveranderbaarheid. Er is"
+" een kloof ontdekt in de reeks."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3234,7 +3239,7 @@ msgstr "Gebaseerd op betaling"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Basic"
-msgstr ""
+msgstr "Basis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3907,7 +3912,7 @@ msgstr "Kies een algemene verkoop BTW voor je producten."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "City"
-msgstr ""
+msgstr "Plaats"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -5025,7 +5030,7 @@ msgstr "Controle op onveranderbaarheid van gegevens"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Controlerapport op onveranderbaarheid van gegevens -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5954,7 +5959,7 @@ msgstr "Gedupliceerde bankrekeningrelaties tellen mee"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Gedupliceerde documenten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -6158,7 +6163,7 @@ msgstr "Aantal boekingen"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Boekingen zijn correct gehasht"
 
 #. module: account
 #. odoo-python
@@ -7062,7 +7067,7 @@ msgstr "HTTP routing"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr ""
+msgstr "Half-up (verwijderd van 0)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7180,7 +7185,7 @@ msgstr "Hoe het BTW totaal berekend is in orders en facturen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
@@ -7437,6 +7442,9 @@ msgid ""
 "If ticked, the hash chain will be computed from the last move hashed to the "
 "new move to be hashed. The hash is performed on demand."
 msgstr ""
+"Als deze optie is aangevinkt, wordt de hashketen berekend vanaf de laatste "
+"gehashte stap tot de nieuwe stap die gehasht moet worden. De hash wordt op "
+"verzoek uitgevoerd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7448,6 +7456,9 @@ msgid ""
 "the last move hashed to the new move to be hashed. The hash can also be "
 "performed on demand."
 msgstr ""
+"Als deze optie is aangevinkt, wordt bij het verzenden van de factuur de "
+"hashketen berekend vanaf de laatste gehashte stap tot de nieuwe stap die "
+"gehasht moet worden. De hash kan ook op verzoek worden uitgevoerd."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7626,7 +7637,7 @@ msgstr "Onomkeerbare versleuteling"
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "Niet wijzigbare geen gap reeks #"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7865,7 +7876,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "Interne link"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7898,6 +7909,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Ongeldig \"postcodebereik\", je moet zowel de waaden \"Van\" als \"Tot\" "
+"configureren voor het postcodebereik en \"T/m\" moet groter zijn dan "
+"\"Van\"."
 
 #. module: account
 #. odoo-python
@@ -7915,7 +7929,7 @@ msgstr "Foutieve laatste dag voor boekjaar"
 #. module: account
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Voorraadwaardering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8272,7 +8286,7 @@ msgstr "Facturatie App historisch"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_with_gaps_in_sequence_filter
 msgid "Irregular Sequences"
-msgstr ""
+msgstr "Onregelmatige reeksen"
 
 #. module: account
 #. odoo-python
@@ -8281,6 +8295,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"Onregelmatigheden door ontworpen, geannuleerde of verwijderde facturen met "
+"een reeksnummer van de laatste vergrendelingsdatum."
 
 #. module: account
 #. odoo-python
@@ -8289,6 +8305,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"Onregelmatigheden door ontworpen, geannuleerde of verwijderde facturen met "
+"een reeksnummer van de laatste vergrendelingsdatum."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -8461,7 +8479,7 @@ msgstr "Boekingen per datum"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/company.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "Boekingen te hashen"
 
 #. module: account
 #. odoo-javascript
@@ -8925,7 +8943,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Late"
-msgstr ""
+msgstr "Te laat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9081,7 +9099,7 @@ msgstr "Bericht blokkeerdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Lock Entries Manually"
-msgstr ""
+msgstr "Boekingen handmatig vergrendelen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9089,7 +9107,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Sent Invoices with Hash"
-msgstr ""
+msgstr "Vergrendel verzonden facturen met hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -9879,7 +9897,7 @@ msgstr "Niet betaald"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Sent"
-msgstr ""
+msgstr "Niet verzonden"
 
 #. module: account
 #. odoo-javascript
@@ -10685,7 +10703,7 @@ msgstr "Relatienaam"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_partners_reports_menu
 msgid "Partner Reports"
-msgstr ""
+msgstr "Klant/leverancier rapportages"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
@@ -11290,7 +11308,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_prepaid_expenses
 msgid "Prepaid Expenses"
-msgstr ""
+msgstr "Vooruitbetaalde kosten"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -11487,7 +11505,7 @@ msgstr "QIF import"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "QR Code"
-msgstr ""
+msgstr "QR code"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
@@ -11552,7 +11570,7 @@ msgstr "RD uitgaven"
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Beoordelingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -12298,7 +12316,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Scan barcode"
-msgstr ""
+msgstr "Scan barcode"
 
 #. module: account
 #. odoo-python
@@ -12516,7 +12534,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Verkoop- en inkoopproducten in verschillende maateenheden"
 
 #. module: account
 #. odoo-python
@@ -12640,7 +12658,7 @@ msgstr "Verzend facturen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Sending these invoices will create a gap in the sequence."
-msgstr ""
+msgstr "Het verzenden van deze facturen zal een gat maken in de nummering."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
@@ -12721,7 +12739,7 @@ msgstr "Reeks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__sequence_gap_warning
 msgid "Sequence Gap Warning"
-msgstr ""
+msgstr "Waarschuwing gat in de nummering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
@@ -12909,7 +12927,7 @@ msgstr "Toon volledige boekhoudkundige opties"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Journal Entries to Hash"
-msgstr ""
+msgstr "Bekijk te hashen boekingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12988,6 +13006,8 @@ msgid ""
 "Some journal entries have not been hashed yet. You should hash them before "
 "locking the fiscal year."
 msgstr ""
+"Sommige boekingen zijn nog niet gehasht. Gelieve deze te hashen alvorens je "
+"het boekjaar afsluit."
 
 #. module: account
 #. odoo-python
@@ -13082,7 +13102,7 @@ msgstr "Beginsaldo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr ""
+msgstr "Provincie / Staat"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -13218,12 +13238,12 @@ msgstr "Storno boekhouding"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street 2..."
-msgstr ""
+msgstr "Straat 2..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street..."
-msgstr ""
+msgstr "Straat..."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
@@ -13775,7 +13795,7 @@ msgstr "Tekst Waarde"
 #. odoo-javascript
 #: code:addons/account/static/src/components/document_state/document_state_field.js:0
 msgid "Text copied"
-msgstr ""
+msgstr "Tekst gekopieerd"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -13876,6 +13896,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"belastingplichtig is."
 
 #. module: account
 #. odoo-python
@@ -13960,6 +13983,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Het bedrag voor %(partner_name)s lijkt ongewoon. Op basis van je historische gegevens is het verwachte bedrag %(mean)s (± %(wiggle)s).\n"
+"Gelieve te controleren of dit bedrag juist is."
 
 #. module: account
 #. odoo-python
@@ -14863,6 +14888,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Momenteel is er nog geen boeking dat voor boekhoudkundige waardering "
+"onveranderlijk wordt beschouwd."
 
 #. module: account
 #. odoo-python
@@ -15010,6 +15037,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
+"Dit document is beveiligd met een hash. Je kunt de volgende velden niet "
+"wijzigen: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -15103,7 +15132,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
-msgstr ""
+msgstr "Dit dagboek is niet beperkt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -15130,12 +15159,15 @@ msgid ""
 "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
 "- the move's date is anterior to the lock date"
 msgstr ""
+"Deze boeking kon niet vergrendeld worden omdat:\n"
+"- een boeking met hetzelfde reeksvoorvoegsel een hoger nummer heeft. Het kan zijn dat je de volgorde moet veranderen.\n"
+"- de datum van de boeking voorafgaat aan de datum van de vergrendeling"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This move has been locked."
-msgstr ""
+msgstr "Deze boeking is vergrendeld."
 
 #. module: account
 #. odoo-python
@@ -15279,12 +15311,12 @@ msgstr "Te factureren"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Pay"
-msgstr ""
+msgstr "Te betalen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Validate"
-msgstr ""
+msgstr "Te bevestigen"
 
 #. module: account
 #. odoo-python
@@ -15500,7 +15532,7 @@ msgstr "Soort transactie parameter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr ""
+msgstr "Transacties"
 
 #. module: account
 #. odoo-python
@@ -15649,12 +15681,12 @@ msgstr "Allemaal uitvouwen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr ""
+msgstr "Ongehashte boekingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr ""
+msgstr "Ongehashte boekingen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -15680,7 +15712,7 @@ msgstr "Maateenheid"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units of Measure"
-msgstr ""
+msgstr "Maateenheden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15691,7 +15723,7 @@ msgstr "Markeer als niet verzonden"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tax_tags/many2many_tax_tags.js:0
 msgid "Unnamed"
-msgstr ""
+msgstr "Naamloos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -16222,7 +16254,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__website_message_ids
@@ -16862,6 +16894,8 @@ msgstr "Je kunt geen rekeningen samenvoegen."
 msgid ""
 "You cannot modify a sent entry of this journal because it is in strict mode."
 msgstr ""
+"Je kunt een verzonden boeking van dit dagboek niet wijzigen omdat het "
+"dagboek zich in de strikte modus bevind."
 
 #. module: account
 #. odoo-python
@@ -17129,7 +17163,7 @@ msgstr "Jouw facturen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "ZIP"
-msgstr ""
+msgstr "Postcode"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17186,7 +17220,7 @@ msgstr "activeer de valuta van de factuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: account
 #. odoo-javascript
@@ -17300,7 +17334,7 @@ msgstr "bijv. F"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. My Company"
-msgstr ""
+msgstr "bijv. Mijn bedrijf"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -17310,12 +17344,12 @@ msgstr "bv. Betaalvoorwaarden: 30 dagen na factuurdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "bijvoorbeeld https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "bijv. mycompany.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -17432,7 +17466,7 @@ msgstr "op"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form

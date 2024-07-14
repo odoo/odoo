@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # 	* payment_flutterwave
 # 
+# Translators:
+# Martin Trigaux, 2024
+# ILMIR <karamov@it-projects.info>, 2024
+# Irina Fedulova <istartlin@gmail.com>, 2024
+# Collex100, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,79 +30,81 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
+"Во время обработки вашего платежа произошла ошибка (статус %s). Пожалуйста, "
+"попробуйте еще раз."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Не удалось установить соединение с API."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields.selection,name:payment_flutterwave.selection__payment_provider__code__flutterwave
 msgid "Flutterwave"
-msgstr ""
+msgstr "Флаттервейв"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "Электронная почта клиента Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Открытый ключ Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Секретный ключ Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Секрет веб-крючков Flutterwave"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Поставщик платежей"
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Платежный токен"
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платеж"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Public Key"
-msgstr ""
+msgstr "Открытый ключ"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Получены данные с отсутствующей ссылкой."
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Secret Key"
-msgstr ""
+msgstr "Секретный ключ"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -103,35 +113,39 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"Связь с API завершилась неудачей. Flutterwave выдал нам следующую "
+"информацию: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "Электронная почта клиента на момент создания токена."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
 msgstr ""
+"Ключ, используемый исключительно для идентификации учетной записи в "
+"Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Технический код данного провайдера платежей."
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Транзакция не привязана к токену."
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "Неизвестный статус платежа: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Секрет вебхука"

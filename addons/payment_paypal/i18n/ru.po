@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # 	* payment_paypal
 # 
+# Translators:
+# Collex100, 2024
+# ILMIR <karamov@it-projects.info>, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,72 +26,75 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "Как настроить свою учетную запись PayPal?"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr ""
+"Отсутствует значение для txn_id (%(txn_id)s) или txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Маркер удостоверения PDT"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Тип транзакции PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Поставщик платежей"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платеж"
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Получены данные с недопустимым статусом платежа: %s"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Клиент покинул страницу оплаты."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Публичная рабочая электронная почта, используемая исключительно для "
+"идентификации счета в PayPal"
 
 #. module: payment_paypal
 #. odoo-python
@@ -93,8 +104,10 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"Статус транзакции со ссылкой %(ref)s не был синхронизирован, потому что на "
+"панели PayPal не включена опция \"Передача данных платежа\"."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Технический код данного провайдера платежей."

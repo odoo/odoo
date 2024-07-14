@@ -150,7 +150,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "另外%(recipientCount)s人"
 
 #. module: mail
 #. odoo-javascript
@@ -162,7 +162,7 @@ msgstr "%(user)s 已连接。这是他们第一次登入。祝他们好运。"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 msgid "%(user)s has reacted with %(reaction)s"
-msgstr ""
+msgstr "%(user)s回应了%(reaction)s"
 
 #. module: mail
 #. odoo-javascript
@@ -174,13 +174,13 @@ msgstr "%(user1)s和%(user2)s在输入..."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 msgid "%(user1)s and %(user2)s have reacted with %(reaction)s"
-msgstr ""
+msgstr "%(user1)s及%(user2)s回应了%(reaction)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%(user1)s, %(user2)s and more are typing..."
-msgstr ""
+msgstr "%(user1)s、%(user2)s及其他人正在输入⋯"
 
 #. module: mail
 #. odoo-javascript
@@ -188,7 +188,7 @@ msgstr ""
 msgid ""
 "%(user1)s, %(user2)s, %(user3)s and %(count)s other persons have reacted "
 "with %(reaction)s"
-msgstr ""
+msgstr "%(user1)s、%(user2)s、%(user3)s及另外%(count)s人回应了%(reaction)s"
 
 #. module: mail
 #. odoo-javascript
@@ -196,13 +196,13 @@ msgstr ""
 msgid ""
 "%(user1)s, %(user2)s, %(user3)s and 1 other person have reacted with "
 "%(reaction)s"
-msgstr ""
+msgstr "%(user1)s、%(user2)s、%(user3)s及另一人回应了%(reaction)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.js:0
 msgid "%(user1)s, %(user2)s, %(user3)s have reacted with %(reaction)s"
-msgstr ""
+msgstr "%(user1)s、%(user2)s、%(user3)s回应了%(reaction)s"
 
 #. module: mail
 #. odoo-python
@@ -1423,7 +1423,7 @@ msgstr "形象 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "头像缓存键"
 
 #. module: mail
 #. odoo-javascript
@@ -1479,7 +1479,7 @@ msgstr "批处理日志无法支持 1 份以上文档的附件或追踪值"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "计划日期前"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -3599,6 +3599,7 @@ msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
+"字段“%(field)s”（位于模型“%(model)s”内）必须是Many2one 类型，而且计算持续时间设为 tracking=True。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -4300,7 +4301,7 @@ msgstr "如果设置，队列管理器将在日期之后发送电子邮件。如
 msgid ""
 "If set, the user will not receive notifications from all the channels until "
 "this date."
-msgstr ""
+msgstr "如果设置了该选项，用户在此日期之前将不会收到来自所有频道的通知。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4997,7 +4998,7 @@ msgstr "上次查看日期"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "上次使用该canned_response的时间"
 
 #. module: mail
 #. odoo-javascript
@@ -5603,7 +5604,7 @@ msgstr "消息描述：主题或正文的开始部分"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__new_message_separator
 msgid "Message id before which the separator should be displayed"
-msgstr ""
+msgstr "应在其之前显示分隔符的信息 ID"
 
 #. module: mail
 #. odoo-javascript
@@ -5819,7 +5820,7 @@ msgstr "静音通知，直到"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid ""
 "Muting a server prevents unread indicators and notifications from appearing."
-msgstr ""
+msgstr "将服务器静音，则不会出现未读信息指示符和通知。"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -5878,7 +5879,7 @@ msgstr "新消息"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__new_message_separator
 msgid "New Message Separator"
-msgstr ""
+msgstr "新信息分割符"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -6270,7 +6271,7 @@ msgstr "操作数量"
 msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
-msgstr ""
+msgstr "在计划日期之后或之前执行行动的天数/周数/月数。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6542,7 +6543,7 @@ msgstr "原邮件已删除"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "原始备注："
 
 #. module: mail
 #. odoo-python
@@ -6747,7 +6748,7 @@ msgstr "电话"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "选择启动一项活动计划"
 
 #. module: mail
 #. odoo-javascript
@@ -6884,13 +6885,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_view.xml:0
 msgid "Pop out"
-msgstr ""
+msgstr "弹出"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
-msgstr ""
+msgstr "弹出附件"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -7827,7 +7828,7 @@ msgstr "选择用户…"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Select duration"
-msgstr ""
+msgstr "选择持续时间"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10318,7 +10319,7 @@ msgstr "down ICE:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "e.g \"Asked to receive our next newsletters\""
-msgstr ""
+msgstr "例：“被要求接收我们之后的最新通讯”"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10381,7 +10382,7 @@ msgstr "例如：联系"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Discuss Proposal"
-msgstr ""
+msgstr "例：讨论提案"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -10394,7 +10395,7 @@ msgstr "例如.讨论提案"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 msgid "e.g. Log a note"
-msgstr ""
+msgstr "例：记录备注"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form

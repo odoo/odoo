@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* base_vat
 # 
+# Translators:
+# ILMIR <karamov@it-projects.info>, 2024
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# Collex100, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,12 +68,12 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компании"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Параметры конфигурации"
 
 #. module: base_vat
 #. odoo-python
@@ -75,11 +82,13 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"Не удалось установить соединение с сервером VIES. Номер НДС %s не может быть"
+" подтвержден."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Контакты"
 
 #. module: base_vat
 #. odoo-python
@@ -97,12 +106,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
-msgstr ""
+msgstr "Европейские номера НДС автоматически проверяются по базе данных VIES."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Финансовое положение"
 
 #. module: base_vat
 #. odoo-python
@@ -122,12 +131,14 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Если этот флажок установлен, фискальная позиция, применяемая по умолчанию, "
+"будет зависеть от результатов проверки Европейской службой VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Внутриобщинный валидный"
 
 #. module: base_vat
 #. odoo-python
@@ -139,7 +150,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Выполните проверку подлинности Vies"
 
 #. module: base_vat
 #. odoo-python
@@ -150,7 +161,7 @@ msgstr ""
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
-msgstr ""
+msgstr "Tax ID"
 
 #. module: base_vat
 #. odoo-python
@@ -159,6 +170,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Число %(vat_label)s [%(wrong_vat)s], по-видимому, недопустимо. \n"
+"Примечание: ожидаемый формат - %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -167,12 +180,14 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Число %(vat_label)s [%(wrong_vat)s] для %(record_label)s, похоже, недопустимо. \n"
+"Примечание: ожидаемый формат - %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "Номер НДС %s не может быть интерпретирован сервером VIES."
 
 #. module: base_vat
 #. odoo-python
@@ -181,6 +196,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Страна, указанная для этого иностранного номера НДС, не совпадает со "
+"страной, указанной в данной фискальной позиции."
 
 #. module: base_vat
 #. odoo-python
@@ -189,34 +206,36 @@ msgid ""
 "The request for VAT validation was not processed. VIES service has responded"
 " with the following error: %s"
 msgstr ""
+"Запрос на подтверждение НДС не был обработан. Служба VIES ответила следующей"
+" ошибкой: %s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "VAT"
-msgstr ""
+msgstr "НДС"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Проверка номеров НДС"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Проверка номера НДС, используя службу European VIES"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "Vies Vat Для проверки"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "например, 7736050003"
 
 #. module: base_vat
 #. odoo-python
@@ -228,10 +247,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "фискальная позиция [%s]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
-msgstr ""
+msgstr "партнер [%s]"

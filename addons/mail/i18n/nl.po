@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Martin Trigaux, 2024
 # Manon Rondou, 2024
 # 
 msgid ""
@@ -158,7 +159,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "%(recipientCount)s meer"
 
 #. module: mail
 #. odoo-javascript
@@ -401,6 +402,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Aantal "
+"stappen\" title=\"Aantal stappen\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -713,7 +716,7 @@ msgstr "Activiteiten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "Activiteiten om aan te maken"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -752,7 +755,7 @@ msgstr "Activiteit Mixin"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "Overzicht activiteiten"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -799,7 +802,7 @@ msgstr "Activiteitensoort icoon"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "Naam activiteitstype"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -819,6 +822,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"Activiteitenplannen worden gebruikt om een lijst met activiteiten toe te wijzen in slechts een paar klikken\n"
+"                    (bijv 'Onboarding', 'Opvolging verkoopkansen', 'Vergadering projectmijlpaal', ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -972,7 +977,7 @@ msgstr "Geavanceerde opties"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "Na Plandatum"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
@@ -1461,7 +1466,7 @@ msgstr "Avatar 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr ""
+msgstr "Avatar Cachesleutel"
 
 #. module: mail
 #. odoo-javascript
@@ -1519,7 +1524,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "Voor Plandatum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1746,12 +1751,12 @@ msgstr "Geannuleerd"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "Standaardantwoord"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "Beheerder Standaardantwoorden"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1767,7 +1772,7 @@ msgstr "Automatische antwoorden zoeken"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "Standaardantwoord"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1776,11 +1781,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"Standaardantwoord dat automatisch wordt vervangen met een langere inhoud in "
+"je berichten. Typ ':' gevolgd door de naam van je sneltoets (bijv.: hello) "
+"om deze in je berichten te gebruiken."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "Standaardantwoorden"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1790,6 +1798,10 @@ msgid ""
 "                    replaced directly in your message, so that you can still edit\n"
 "                    it before sending."
 msgstr ""
+"Met standaardantwoorden kan je voorgeschreven reacties toevoegen in\n"
+"                    je berichten door <i>:sneltoets</i>te typen. De sneltoets wordt\n"
+"                    meteen in je bericht omgezet, zodat je het steeds kunt bewerken\n"
+"                    vooraleer je het verstuurt."
 
 #. module: mail
 #. odoo-python
@@ -2272,6 +2284,9 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
+"Bevat de datum en tijd van de laatste interessante gebeurtenis die voor deze"
+" gebruiker in dit kanaal heeft plaatsgevonden. Dit omvat: aanmaken, "
+"deelnemen, pinnen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2279,11 +2294,15 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
+"Bevat de datum en tijd van de laatste interessante gebeurtenis die in dit "
+"kanaal heeft plaatsgevonden. Dit wordt bijgewerkt wanneer een nieuw bericht "
+"wordt geplaatst."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
 msgid "Contains the date and time when the channel was unpinned by the user."
 msgstr ""
+"Bevat de datum en tijd waarop het kanaal is verwijderd door de gebruiker."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_reaction__content
@@ -2322,6 +2341,8 @@ msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"Kon je e-mails niet ophalen. Bekijk de foutmelding hieronder voor meer informatie:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2382,7 +2403,7 @@ msgstr "Maak een nieuw standaard antwoord aan"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Een activiteitenplan aanmaken"
 
 #. module: mail
 #. odoo-python
@@ -2680,7 +2701,7 @@ msgstr "Standaard samenvatting"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "Standaardsamenvatting:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -2697,7 +2718,7 @@ msgstr "Standaardwaarden"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "Standaarddeadline voor de activiteiten ..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -2840,11 +2861,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
 msgstr ""
+"Bepaalt of het standaardantwoord bewerkt kan worden door de huidige "
+"gebruiker"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
+"Bepaalt of het standaardantwoord momenteel met andere gebruikers wordt "
+"gedeeld"
 
 #. module: mail
 #. odoo-javascript
@@ -3634,7 +3659,7 @@ msgstr "Favorieten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "Feedback:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4848,7 +4873,7 @@ msgstr "Is een volger"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "Is verborgen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5147,7 +5172,7 @@ msgstr "Datum laatst gezien"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
 msgid "Last time this canned_response was used"
-msgstr ""
+msgstr "Laatste keer dat dit standaardantwoord is gebruikt"
 
 #. module: mail
 #. odoo-javascript
@@ -5243,7 +5268,7 @@ msgstr "Laden"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu.xml:0
 msgid "Loading…"
-msgstr ""
+msgstr "Laden …"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__local
@@ -5664,7 +5689,7 @@ msgstr "Alleen vermeldingen"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
@@ -6009,7 +6034,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "Mijn activiteiten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6026,7 +6051,7 @@ msgstr "Mijn sjablonen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr ""
+msgstr "Mijn standaardantwoorden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -6463,6 +6488,8 @@ msgid ""
 "Number of days/week/month before executing the action after or before the "
 "scheduled plan date."
 msgstr ""
+"Aantal dagen/week/maand voor of na de geplande plandatum, voor het uitvoeren"
+" van de actie."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6750,7 +6777,7 @@ msgstr "Oorspronkelijk bericht is verwijderd"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Original note:"
-msgstr ""
+msgstr "Originele notitie:"
 
 #. module: mail
 #. odoo-python
@@ -6958,7 +6985,7 @@ msgstr "Telefoongesprek"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "Kies een activiteitenplan om uit te voeren"
 
 #. module: mail
 #. odoo-javascript
@@ -7896,7 +7923,7 @@ msgstr "Plan een activiteit voor geselecteerde records"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
 msgid "Scheduled Actions"
-msgstr ""
+msgstr "Geplande acties"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -8279,7 +8306,7 @@ msgstr "Scherm delen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared canned responses"
-msgstr ""
+msgstr "Gedeelde standaardantwoorden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
@@ -8398,7 +8425,7 @@ msgstr "Site naam"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Snooze 7d"
-msgstr ""
+msgstr "Snooze 7 dagen"
 
 #. module: mail
 #. odoo-javascript
@@ -9601,7 +9628,7 @@ msgstr "Bericht losmaken"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
 msgid "Unpin date"
-msgstr ""
+msgstr "Datum losmaken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
@@ -10497,7 +10524,7 @@ msgstr "na deadline vorige activiteit"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: mail
 #. odoo-python
@@ -10615,7 +10642,7 @@ msgstr "doof"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "default"
-msgstr ""
+msgstr "standaard"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__mail_push_device_id
@@ -10715,7 +10742,7 @@ msgstr "bijv. Contact"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Discuss Proposal"
-msgstr ""
+msgstr "bijv. Voorstel bespreken"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -10728,7 +10755,7 @@ msgstr "Bijv. Bespreken van de offerte"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
 msgid "e.g. Log a note"
-msgstr ""
+msgstr "bijv. Opmerking toevoegen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -10744,7 +10771,7 @@ msgstr "bijv. Een afspraak plannen"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "bijv. mycompany.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
