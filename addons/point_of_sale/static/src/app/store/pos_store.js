@@ -244,8 +244,7 @@ export class PosStore extends Reactive {
         window.addEventListener("beforeunload", () =>
             this.db.save("TO_REFUND_LINES", this.toRefundLines)
         );
-        const { start_category, iface_start_categ_id } = this.config;
-        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.resetProductScreenSearch();
         this.hasBigScrollBars = this.config.iface_big_scrollbars;
         // Push orders in background, do not await
         this.push_orders();
@@ -1054,20 +1053,8 @@ export class PosStore extends Reactive {
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    const price_without_taxes = this.compute_all(
-                        mapped_included_taxes,
-                        price,
-                        1,
-                        this.currency.rounding,
-                        true
-                    ).total_excluded;
-                    return this.compute_all(
-                        new_included_taxes,
-                        price_without_taxes,
-                        1,
-                        this.currency.rounding,
-                        false
-                    ).total_included;
+                    //If previous tax and new tax where both included in price. The price including tax is the same
+                    return price;
                 } else {
                     return this.compute_all(
                         mapped_included_taxes,
@@ -2050,6 +2037,12 @@ export class PosStore extends Reactive {
 
     redirectToBackend() {
         window.location = "/web#action=point_of_sale.action_client_pos_menu";
+    }
+
+    resetProductScreenSearch() {
+        this.searchProductWord = "";
+        const { start_category, iface_start_categ_id } = this.config;
+        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
     }
 }
 

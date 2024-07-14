@@ -1739,6 +1739,45 @@ class TestPacking(TestPackingCommon):
         self.assertTrue(picking1.hide_picking_type)
         self.assertFalse(picking2.hide_picking_type)
 
+    def test_put_in_pack_partial_different_destinations(self):
+        """ Test putting some of the move lines of a pikcing with different destinations in a package """
+        self.productA.tracking = 'serial'
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+        })
+        picking_form = Form(picking)
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 5.0
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        serial_wizard_dict = picking.move_ids_without_package.action_assign_serial()
+        serial_wizard = self.env[serial_wizard_dict['res_model']].with_context(serial_wizard_dict['context']).create({
+            'next_serial_number': '1',
+            'next_serial_count': 5,
+        })
+        serial_wizard.generate_serial_numbers()
+
+        self.assertItemsEqual(picking.move_line_ids.mapped('quantity'), [1.0] * 5)
+
+        sub_location = self.env['stock.location'].create({
+            'name': 'Sub Location',
+            'location_id': self.stock_location.id,
+        })
+        picking.move_line_ids[0].location_dest_id = sub_location
+
+        destination_wizard_dict = picking.move_line_ids[0:2].action_put_in_pack()
+        destination_wizard = self.env[destination_wizard_dict['res_model']].with_context(destination_wizard_dict['context']).browse(destination_wizard_dict['res_id'])
+        self.assertEqual(len(destination_wizard.move_line_ids), 2)
+        destination_wizard.action_done()
+
+        self.assertEqual(len(picking.move_line_ids[0:2].result_package_id), 1)
+        self.assertEqual(picking.move_line_ids[0].result_package_id, picking.move_line_ids[1].result_package_id)
+        self.assertEqual(len(picking.move_line_ids[2:].result_package_id), 0)
+        self.assertEqual(picking.move_line_ids[0:2].location_dest_id, destination_wizard.location_dest_id)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):

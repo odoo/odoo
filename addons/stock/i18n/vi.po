@@ -3146,7 +3146,7 @@ msgstr "(Các) ngoại lệ:"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Existing Serial numbers. Please correct the serial numbers encoded:"
-msgstr "Số sê-ri đã tồn tại. Vui lòng sửa các số sê-ri được mã hóa:"
+msgstr "Số sê-ri đã tồn tại. Vui lòng sửa các số sê-ri đã nhập:"
 
 #. module: stock
 #. odoo-javascript
@@ -5404,6 +5404,12 @@ msgstr "Không có hoạt động liên quan đến lô này."
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
 msgstr "Không tìm thấy hoạt động nào. Hãy tạo một điều chuyển!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr "Không tìm thấy sản phẩm nào để tạo Số sê-ri/lô."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -7991,8 +7997,8 @@ msgid ""
 "Serial number (%s) already exists in location(s): %s. Please correct the "
 "serial number encoded."
 msgstr ""
-"Số sê-ri (%s) đã tồn tại trong (các) vị trí: %s. Vui lòng sửa số sê-ri được "
-"mã hoá."
+"Số sê-ri (%s) đã tồn tại trong (các) vị trí: %s. Vui lòng sửa số sê-ri đã "
+"nhập."
 
 #. module: stock
 #. odoo-python
@@ -10488,10 +10494,14 @@ msgstr "Bạn không thể thay đổi loại sản phẩm đã được sử d�
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
-msgstr "Bạn không thể xoá các dịch chuyển được liên kết với hoạt động khác"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10546,6 +10556,15 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Bạn chỉ có thể xử lý 1.0 %s sản phẩm với số sê-ri duy nhất."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10658,6 +10677,16 @@ msgstr "Bạn không thể xoá một phế phẩm đã hoàn tất."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10765,8 +10794,7 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
-"Bạn không thể dùng cùng một số sê-ri hai lần. Vui lòng sửa số sê-ri được mã "
-"hóa."
+"Bạn không thể dùng cùng một số sê-ri hai lần. Vui lòng sửa số sê-ri đã nhập."
 
 #. module: stock
 #. odoo-python
@@ -10777,7 +10805,7 @@ msgid ""
 "transfer, encode quantities."
 msgstr ""
 "Bạn không thể xác nhận một điều chuyển nếu không có số lượng được dự trữ. Để"
-" tiếp tục, hãy mã hoá số lượng."
+" tiếp tục, hãy nhập số lượng."
 
 #. module: stock
 #. odoo-python

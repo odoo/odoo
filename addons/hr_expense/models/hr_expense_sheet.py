@@ -734,7 +734,7 @@ class HrExpenseSheet(models.Model):
 
     def _validate_analytic_distribution(self):
         for line in self.expense_line_ids:
-            line._validate_distribution(account=line.account_id.id, business_domain='expense', company_id=line.company_id.id)
+            line._validate_distribution(account=line.account_id.id, product=line.product_id.id, business_domain='expense', company_id=line.company_id.id)
 
     def _get_responsible_for_approval(self):
         if self.user_id:
@@ -750,7 +750,7 @@ class HrExpenseSheet(models.Model):
         if self.payment_mode == 'company_account':
             journal = self.payment_method_line_id.journal_id
             account_dest = (
-                journal.outbound_payment_method_line_ids[:1].payment_account_id
+                self.payment_method_line_id.payment_account_id
                 or journal.company_id.account_journal_payment_credit_account_id
             )
         else:

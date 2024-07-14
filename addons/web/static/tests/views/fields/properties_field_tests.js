@@ -335,13 +335,14 @@ QUnit.module("Fields", (hooks) => {
      * change the properties value).
      */
     QUnit.test("properties: no access to parent", async function (assert) {
+        assert.expect(6);
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return false;
             }
         }
 
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -359,6 +360,16 @@ QUnit.module("Fields", (hooks) => {
             actionMenus: {},
         });
 
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, options) => {
+                assert.strictEqual(
+                    message,
+                    "You need edit access on the parent document to update these property fields"
+                );
+                assert.strictEqual(options.type, "warning");
+            },
+        });
+
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
@@ -368,6 +379,13 @@ QUnit.module("Fields", (hooks) => {
             ".o_cp_action_menus span:contains(Add Properties)",
             "Show Add Properties btn in cog menu",
         );
+        const menuItems = target.querySelectorAll(".o_cp_action_menus span.o_menu_item")
+        for (const item of menuItems) {
+            if (item.textContent === "Add Properties") {
+                await click(item, null);
+                break;
+            }
+        }
 
         const editButton = field.querySelector(".o_field_property_open_popover");
         assert.notOk(editButton, "The edit definition button must not be in the view");

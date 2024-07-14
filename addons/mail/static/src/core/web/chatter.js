@@ -244,7 +244,8 @@ export class Chatter extends Component {
                 )}">${escape(text)}</span>`;
             });
         const formatter = new Intl.ListFormat(
-            pyToJsLocale(this.store.env.services["user"].lang),
+            this.store.env.services["user"].lang &&
+                pyToJsLocale(this.store.env.services["user"].lang),
             { type: "unit" }
         );
         if (this.state.thread && this.state.thread.recipients.length > 5) {

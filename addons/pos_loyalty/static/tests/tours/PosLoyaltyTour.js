@@ -236,7 +236,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickDisplayedProduct("Test Product A"),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 1 per point on your order"),
-            ProductScreen.totalAmountIs("138.50"),
+            ProductScreen.totalAmountIs("165.00"),
         ].flat(),
 });
 
@@ -295,12 +295,12 @@ registry.category("web_tour.tours").add('PosLoyaltyTour9', {
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
-
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
             ProductScreen.clickDisplayedProduct('Product B'),
             ProductScreen.clickDisplayedProduct('Product A'),
             ProductScreen.totalAmountIs('210.00'),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 5"),
@@ -319,12 +319,12 @@ registry.category("web_tour.tours").add('PosLoyaltyTour10', {
         [
             ProductScreen.clickHomeCategory(),
             ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer('AAA Partner'),
-            PosLoyalty.customerIs('AAA Partner'),
             ProductScreen.clickDisplayedProduct('Product Test'),
             ProductScreen.totalAmountIs('1.00'),
             ProductScreen.selectedOrderlineHas("Product Test", "1.00"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer('AAA Partner'),
+            PosLoyalty.customerIs('AAA Partner'),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem('Free Product with Tag'),

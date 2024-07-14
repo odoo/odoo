@@ -1498,6 +1498,56 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "line chart rendering (one groupBy, several domains with date identification) without stacked attribute",
+        async function (assert) {
+            serverData.models.foo.records = [
+                { date: "2021-01-04", revenue: 12 },
+                { date: "2021-01-12", revenue: 5 },
+                { date: "2021-01-19", revenue: 15 },
+                { date: "2021-01-26", revenue: 2 },
+                { date: "2021-02-04", revenue: 14 },
+                { date: "2021-02-17", revenue: false },
+                { date: false, revenue: 0 },
+            ];
+            await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph type="line">
+                        <field name="revenue" type="measure"/>
+                        <field name="date" interval="week"/>
+                    </graph>
+                `,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
+            });
+            assert.doesNotHaveClass(
+                target.querySelector(".o_graph_button[data-tooltip=Stacked]"),
+                "active",
+                "The stacked mode should be disabled"
+            );
+        }
+    );
+
+    QUnit.test(
         "line chart rendering (one groupBy, several domains with date identification)",
         async function (assert) {
             assert.expect(19);

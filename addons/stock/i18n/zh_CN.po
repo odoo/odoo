@@ -8,8 +8,8 @@
 # Wil Odoo, 2024
 # Yazi Tian, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -410,7 +410,7 @@ msgstr ""
 msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
-msgstr "<br>需求产生于 <b>%s</b> 为满足这个需求，规则将会被触发。"
+msgstr "<br>需求创建于 <b>%s</b> ，规则将会被触发为满足这个需求。"
 
 #. module: stock
 #. odoo-python
@@ -419,7 +419,7 @@ msgstr "<br>需求产生于 <b>%s</b> 为满足这个需求，规则将会被触
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
-msgstr "<br>如果产品不可用 <b>%s</b>, 将触发规则以将产品带入此位置。"
+msgstr "<br>如果位于 <b>%s</b>的产品不可用, 规则将会被触发，将产品带入此位置。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -849,7 +849,7 @@ msgstr "警告消息可以针对合作伙伴设置(库存)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
 msgid "Action"
-msgstr "操作"
+msgstr "动作"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
@@ -1470,7 +1470,7 @@ msgstr "通过取消勾选启用字段，您能隐藏一个位置而不是删除
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "COPY"
-msgstr "复制"
+msgstr "COPY"
 
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
@@ -2705,12 +2705,12 @@ msgstr "拣货说明"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
 msgid "Dest Location"
-msgstr "目的库位"
+msgstr "目的位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
 msgid "Dest Package"
-msgstr "目的包装"
+msgstr "目的包裹"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
@@ -3311,7 +3311,7 @@ msgstr "预测报告"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr "预测库存"
+msgstr "预测的库存"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
@@ -4662,7 +4662,7 @@ msgstr "位置：到达"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #, python-format
 msgid "Locations"
-msgstr "地点"
+msgstr "位置"
 
 #. module: stock
 #. odoo-python
@@ -5275,6 +5275,12 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "没有作业。让我们创建一个调拨！"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "现在还没有产品， 我们先创建一个!"
@@ -5549,7 +5555,7 @@ msgstr "作业类型"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "不支持的操作"
+msgstr "操作不支持"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
@@ -5647,7 +5653,7 @@ msgstr "订购至最大值"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed"
-msgstr "已签署订单"
+msgstr "订单已签署"
 
 #. module: stock
 #. odoo-python
@@ -5790,7 +5796,7 @@ msgstr "包裹"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
-msgstr "包装日期"
+msgstr "打包日期"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -5824,7 +5830,7 @@ msgstr "包装产品， 发送到待出货区，再送货（3步发货)"
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_tree
 msgid "Package"
-msgstr "服务包"
+msgstr "包裹"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -6601,7 +6607,7 @@ msgstr "承运商的传播"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_properties
 #: model:ir.model.fields,field_description:stock.field_stock_quant__lot_properties
 msgid "Properties"
-msgstr "权益"
+msgstr "属性"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull_push
@@ -6621,7 +6627,7 @@ msgstr "拉规则"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Push Rule"
-msgstr "推式规则"
+msgstr "推规则"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__push
@@ -6709,7 +6715,7 @@ msgstr "质量工作表"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
-msgstr "量化"
+msgstr "库存量"
 
 #. module: stock
 #. odoo-python
@@ -6792,7 +6798,7 @@ msgstr "在手数量"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity Relocated"
-msgstr "搬迁数量"
+msgstr "调动数量"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -6903,7 +6909,7 @@ msgstr "数量："
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
-msgstr "量化"
+msgstr "库存量"
 
 #. module: stock
 #. odoo-python
@@ -7018,7 +7024,7 @@ msgstr "2步接收(收货+库存）"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
-msgstr "3步接收(收货+质检+入库)"
+msgstr "3步接收(收货+质检+库存)"
 
 #. module: stock
 #. odoo-python
@@ -7165,7 +7171,7 @@ msgstr "重订货规则搜索"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Replenish"
-msgstr "执行补货"
+msgstr "补充"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -7219,7 +7225,7 @@ msgstr "补货信息"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Information for %s in %s"
-msgstr "在%s中的%s的补给信息"
+msgstr "在%s中的%s的补货信息"
 
 #. module: stock
 #. odoo-python
@@ -7255,7 +7261,7 @@ msgstr "报告"
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "要求计数"
+msgstr "请求盘点"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7473,7 +7479,7 @@ msgstr "路线公司"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
 msgid "Route Sequence"
-msgstr "路线序列"
+msgstr "路线序号"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -7516,7 +7522,7 @@ msgstr "将会为这些补充仓库创建路线，而且您可以在产品和产
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr "规则%s属于%s，而路径属于%s。"
+msgstr "规则%s属于%s，而路线属于%s。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7653,7 +7659,7 @@ msgstr "报废单"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #, python-format
 msgid "Scrap Products"
-msgstr "废品"
+msgstr "报废产品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -8649,7 +8655,7 @@ msgstr "预测库存"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
-msgstr "已生成仓库间的库存移动"
+msgstr "仓库间的库存移动已生成"
 
 #. module: stock
 #. odoo-python
@@ -8752,7 +8758,7 @@ msgstr "请求的作业无法处理，因为一个程序错误，设置`product_
 msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
-msgstr "所选的库存频率（天数）创建的日期过于遥远。"
+msgstr "所选的盘点频率（天数）创建的日期过于遥远。"
 
 #. module: stock
 #. odoo-python
@@ -9360,7 +9366,7 @@ msgstr "触发其他规则"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule If No Stock"
-msgstr "如果没有库存，触发另一个规则"
+msgstr "如果没有库存，触发其他规则"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9989,7 +9995,7 @@ msgstr "当产品到达"
 msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
-msgstr "当 <b>%s</b>需要产品时, <br/> <b>%s</b> 将由 <b>%s</b>创建以用来满足需求。"
+msgstr "当 <b>%s</b>需要产品时, <br/> <b>%s</b> 将由 <b>%s</b>创建以用来满足此需求。"
 
 #. module: stock
 #. odoo-python
@@ -9998,7 +10004,7 @@ msgstr "当 <b>%s</b>需要产品时, <br/> <b>%s</b> 将由 <b>%s</b>创建以�
 msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
-msgstr "当产品到达<b>%s</b>时，<br/><b>%s</b>会被建立并送到<b>%s</b>。"
+msgstr "当产品到达<b>%s</b>时，<br/><b>%s</b>会创建并送到<b>%s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10188,10 +10194,14 @@ msgstr "不能变更产品的类型，因为它早已使用。"
 
 #. module: stock
 #. odoo-python
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You can not delete moves linked to another operation"
-msgstr "不能删除与其他操作关联的移动"
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10240,6 +10250,15 @@ msgstr "每次搬迁只能搬迁存放在单个公司使用的地点的正数数
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "只能处理1.0%s具有唯一序列号的产品。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10329,6 +10348,16 @@ msgstr "您无法更改计量单位，因为此产品已有库存变动。如果
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "不能删除已完成的报废。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
 
 #. module: stock
 #. odoo-python

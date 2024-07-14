@@ -276,7 +276,7 @@ class LinkTrackerClick(models.Model):
     _description = "Link Tracker Click"
 
     campaign_id = fields.Many2one(
-        'utm.campaign', 'UTM Campaign',
+        'utm.campaign', 'UTM Campaign', index='btree_not_null',
         related="link_id.campaign_id", store=True, ondelete="set null")
     link_id = fields.Many2one(
         'link.tracker', 'Link',

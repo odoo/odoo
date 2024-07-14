@@ -104,6 +104,7 @@ export class ReceiptScreen extends Component {
     orderDone() {
         this.pos.removeOrder(this.currentOrder);
         this._addNewOrder();
+        this.pos.resetProductScreenSearch();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
